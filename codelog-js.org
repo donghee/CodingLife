@@ -1,0 +1,149 @@
+** React Programming 책읽기. 저자 쿠지라히코우즈쿠에   <2018-04-07 Sat>
+
+파일 저장하고, open. createWriteStream ok난후 open 해야함. 
+
+#+BEGIN_SRC javascript
+// 1.js
+const fs = require('fs')
+const request = require('request')
+const { exec } = require('child_process')
+const colors = require('colors')
+
+var stream = request('http://uta.pw/shodou/img/28/214.png').pipe(fs.createWriteStream('214.png'))
+
+stream.on('finish', () => {
+  exec('open 214.png', (err, stdout, stderr) => {})
+})
+
+var msg = 'hello world'
+const msg_ = 'hello world'
+console.log(msg.underline.red)
+console.log(msg_.inverse.red)
+
+----
+// 2.js
+const http = require('http')
+
+const svr = http.createServer(handler)
+svr.listen(8081)
+
+function handler (req, res) {
+  console.log('url:', req.url)
+  console.log('method:', req.method)
+  res.writeHead(200, {'Contant-Type': 'text/html'})
+  res.end('<h1> Hello, World!</h1>\n')
+}
+
+
+
+----
+// 3.js
+function * getFibonacci () {
+  let a = 0
+  let b = 1
+  while (true) {
+    [a,b] = [b, a+ b]
+    yield a
+  }
+}
+
+const fib = getFibonacci()
+
+for (const num of fib) {
+  if (num > 50) break
+  console.log(num)
+}
+
+----
+// 4.js
+// async and await
+const fs = require('fs')
+
+function readFileEx (fname) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(fname, 'utf-8', (err, data) => {
+	  resolve(data)
+    })
+  })
+}
+
+async function readAll () {
+  const a = await readFileEx('1.js')
+  console.log(a)
+  const b = await readFileEx('2.js')
+  console.log(b)
+  const c = await readFileEx('3.js')
+  console.log(c)
+}
+
+// readAll()
+
+const glob = require('glob')
+
+function readJsFiles () {
+  glob('*.js', async (err, files) => {
+    // for (i in files) {
+    for (var file of files) {
+      // console.log('// ' + files[i])
+      console.log('// ' + file)
+      // const jsFile = await readFileEx(files[i])
+      const jsFile = await readFileEx(file)
+      console.log(jsFile)
+      console.log('----')
+    }
+  })
+}
+
+readJsFiles()
+
+----
+
+#+END_SRC
+
+*** Reat Introduction 리액트 입문 2장. <2018-04-08 Sun>
+
+
+
+** 자동완성 tern 프로그램 프로젝트 설정 파일 <2018-04-08 Sun>
+#+BEGIN_SRC
+
+cat ~/.tern-config
+
+{
+  "plugins": {
+    "node": {},
+    "es_modules": {}
+  },
+  "libs": [
+    "browser",
+    "jquery",
+    "react",
+    "ecma5",
+    "ecma6"
+  ],
+  "ecmaVersion": 6
+}
+
+cat .tern-project
+
+{
+  "plugins": {
+    "requirejs": {
+      "baseURL": "./",
+      "paths": {}
+    },
+    "node": {}
+  },
+  "libs": [
+    "browser",
+    "jquery",
+    "ecma5",
+    "ecma6"
+  ],
+  "ecmaVersion": 6,
+  "loadEagerly": [
+    "./**/*.js",
+    "**/node_modules/!(react*|redux)/**/*.js"
+  ]
+}
+#+END_SRC
