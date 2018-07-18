@@ -1,0 +1,608 @@
+* Code
+
+  Log of Codinglife
+
+** PX4 Commander  <2017-09-09 Sat>
+   commander_thead_main()
+
+   [[file:~/tmp/PX4/Firmware/src/modules/commander/commander.cpp::int%20commander_thread_main(int%20argc,%20char%20*argv%5B%5D)]]
+
+** PTP: Timesync 위치  <2017-09-09 Sat>
+  코드 수정 
+  [[file:~/tmp/PX4/Firmware/src/modules/mavlink/mavlink_receiver.cpp::MavlinkReceiver::handle_message_timesync(mavlink_message_t%20*msg)][MavlinkReceiver::handle_message_timesync]]
+** Ardupilot TIMESYNC 구현 <2017-09-12 Tue>
+   
+1. SYSTEM_TIME 메시지 
+
+2. TIMESYNC 관련 PR
+
+  - https://github.com/ArduPilot/ardupilot/pull/5888
+  - https://github.com/ArduPilot/ardupilot/pull/5944
+
+MAVROS에서 실제 timesync하는 부분 
+
+  - https://github.com/mavlink/mavros/blob/6bb267295ec87d8a089cc0f2f7d23555ea342943/mavros/src/lib/uas_timesync.cpp#L32
+
+date -s "JAN 1 0:0:00 2000"
+
+** code navigation in emacs <2017-09-13 Wed>
+
+참고: http://tuhdo.github.io/c-ide.html
+
+C-M-a: beginning-of-defun
+C-M-e: end-of-defun
+C-M-f: forward-sexp
+C-M-b: backward-sexp
+C-M-k: kill-sexp
+C-M-<SPC> or C-M-@: mark-sexp
+C-M-h: mark-defun
+
+code folding
+hs-minior-mode
+
+(add-hook 'c-mode-common-hook   'hs-minor-mode)
+
+function-args moo-jump-local
+
+** mavlink v2 in c  <2017-09-14 목>
+
+Reading mavlink packet from PX4(1.6x, /dev/ttyACM0) based on
+c_library_v1 module, does not working. 
+
+change c_library_v2 module. why?
+
+from https://github.com/mavlink/c_library_v1
+
+** ptp mavlink generation <2017-09-15 금>
+
+
+python mavgenerate.py
+
+tv_sec_option은 사용하지 말자 
+
+----
+
+px4도 컴파일되게 만들어 보자.
+
+Firmware/mavlink/include/mavlink/v2.0
+
+common.xml에 다음 추가 
+
+#+BEGIN_SRC xml  
+    <message id="229" name="PTP_TIMESYNC">
+      <description>Time synchronization message based on PTP.</description>
+      <field type="uint8_t" name="msg_type">Type of PTP message</field>
+      <field type="uint8_t" name="seq">Sequence of PTP message</field>
+      <field type="int64_t" name="tv_sec">Time sync Second timestamp</field>
+      <field type="int64_t" name="tv_nsec">Time sync Nanosecond timestamp</field>
+      <field type="int64_t" name="tv_sec_option">Optional Time sync Second timestamp</field>
+      <field type="int64_t" name="tv_nsec_option">Optional Time sync Nanosecond timestamp</field>
+    </message>
+#+END_SRC
+
+#+BEGIN_SRC shell
+python mavgenerate.py
+#+END_SRC
+
+ardupilotmega.xml, common.xml
+
+LANGUAGE C
+Protocol 2.0
+Check Validate 
+Click Generate
+
+**  mavlink receiver 분석 <2017-09-18 월>
+  
+  [[file:~/src/Firmware/src/modules/mavlink/mavlink_receiver.cpp][file:~/src/Firmware/src/modules/mavlink/mavlink_receiver.cpp]]
+**  discrite kalman filter <2017-10-08 Sun>
+  
+  [[file:~/Dropbox/docs/log/codelog.org::*discrete%20kalman%20filter%20<2017-09-16%20%ED%86%A0>][discrete kalman filter <2017-09-16 토>]]
+
+
+* Code Snippets
+
+  Collection of code Snippets
+** serialport proxy <2017-09-11 Mon>
+   c++ 이용하여 serial proxy 만들기 
+
+   #+BEGIN_SRC c++  
+        static SerialPort sp1(port1,baudRate1),sp2(port2,baudRate2);
+        sp1.open_serial();
+        sp2.open_serial();
+        static char buffer1[BUFFER_LENGTH],buffer2[BUFFER_LENGTH];
+
+        signal(SIGINT, signal_callback_handler); // for exit process
+
+        thread([](){
+            while(true){
+                int l = sp2._read_port(buffer2,BUFFER_LENGTH);
+                if(l>0){
+                    sp1._write_port(buffer2, l);
+                }
+                usleep(5*1000);
+            }
+            
+        }).detach();
+
+        while(true){
+            int l = sp1._read_port(buffer1,BUFFER_LENGTH);
+            if(l>0){
+                sp2._write_port(buffer1, l);
+            }
+            usleep(5*1000);
+            
+        }
+   #+END_SRC
+
+   using thread safe queue
+
+   #+BEGIN_SRC c++
+
+template
+class thread_safe_queue{
+    queue q;
+    mutex m;
+    condition_variable cv;
+public:
+    K pop(){
+        unique_lock l(m);
+        if(!q.size()){
+            cv.wait(l);
+        }
+        auto m = q.front();
+        q.pop();
+        return m;
+    }
+    void push(K k){
+        lock_guard l(m);
+        q.push(k);
+        cv.notify_one();
+    }
+};
+ 
+ 
+ static thread_safe_queue q;
+ thread([]{
+         while(true){
+             auto m = v.pop();
+             if(m.msgid == MAVLINK_MSG_ID_HEARTBEAT){
+			 	// handling heartbeat
+			 }else{
+			 	// some vision code
+			 }
+         }
+     }).detach();
+	 
+ 
+ static char buffer1[BUFFER_LENGTH];
+ int l = sp1._read_port(buffer1,BUFFER_LENGTH);
+ if(l>0){
+    static mavlink_message_t msg;
+    static mavlink_status_t status;
+    for (int i = 0; i < l; ++i)
+    {
+    	if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &msg, &status)){
+           q.push(msg);
+         }
+     }
+  }
+   #+END_SRC
+
+   #+BEGIN_SRC sh
+setserial /dev/ttyACM0 low_latency
+setserial /dev/S0 low_latency
+
+g++ -Ofast -std=c++11 -o bin  main.cpp serial_port.cpp -lpthread
+
+./repeater /dev/ttyACM0 /dev/ttyUSB0
+
+sudo apt-get install supervisor
+sudo service supervisor restart
+ 
+Then we need to generate config file as below for the example repeater app.
+
+[program:repeater]
+command=/home/pi/repeater /dev/ttyACM0 115200 /dev/ttyS0 115200
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/repeater.err.log
+stdout_logfile=/var/log/repeater.out.log
+   #+END_SRC 
+
+   참고 
+   - https://dron.ee/blogs/dronee-pilot-blog/how-to-use-rpi3-as-a-companion-device-between-pixhawkpx4-apm-and-ground-station-with-dronee-pilot
+   - https://github.com/maksimpiriyev/serial_port_repeater/blob/master/main_companion.cpp
+
+** drone python script <2017-09-14 목>
+
+   https://github.com/alduxvm/DronePilot
+
+pix-velocity-vector.py
+
+$+BEGIN_SRC python
+#!/usr/bin/env python
+""" Drone Pilot - Control of MRUAV """
+""" pix-velocity-vector.py -> Script that send the vehicle a velocity vector to form a square and diamond shape. """
+
+__author__ = "Aldo Vargas"
+__copyright__ = "Copyright 2016 Altax.net"
+
+__license__ = "GPL"
+__version__ = "1"
+__maintainer__ = "Aldo Vargas"
+__email__ = "alduxvm@gmail.com"
+__status__ = "Development"
+
+import time
+from dronekit import connect, VehicleMode
+import modules.UDPserver as udp
+from modules.utils import *
+from modules.pixVehicle import *
+
+# Connection to the vehicle
+# SITL via TCP
+#vehicle = connect('tcp:127.0.0.1:5760', wait_ready=True)
+# SITL/vehicle via UDP (connection coming from mavproxy.py)
+vehicle = connect('udp:127.0.0.1:14549', wait_ready=True)
+# Direct UART communication to Pixhawk
+#vehicle = connect('/dev/ttyAMA0', wait_ready=True)
+
+""" Mission starts here """
+
+arm_and_takeoff(vehicle, 10)
+
+NORTH=2
+SOUTH=-2
+EAST=2
+WEST=-2
+UP=-0.5
+DOWN=0.5
+
+DURATION=20
+
+# Shape shape
+print "Making a square!"
+
+condition_yaw(vehicle,0)
+send_ned_velocity(vehicle,NORTH,0,0,DURATION)
+print "Flying for 20 seconds direction NORTH!"
+#send_ned_velocity(vehicle,0,0,0,5)
+
+condition_yaw(vehicle,90)
+send_ned_velocity(vehicle,0,EAST,0,DURATION)
+print "Flying for 20 seconds direction EAST!"
+#send_ned_velocity(vehicle,0,0,0,5)
+
+condition_yaw(vehicle,180)
+send_ned_velocity(vehicle,SOUTH,0,0,DURATION)
+print "Flying for 20 seconds direction SOUTH!"
+#send_ned_velocity(vehicle,0,0,0,5)
+
+condition_yaw(vehicle,270)
+send_ned_velocity(vehicle,0,WEST,0,DURATION)
+print "Flying for 20 seconds direction WEST!"
+#send_ned_velocity(vehicle,0,0,0,5)
+
+# Diamond shape
+print "Making a diamond!"
+
+print("Going North, East and up")
+condition_yaw(vehicle,90)
+send_ned_velocity(vehicle,NORTH,EAST,UP,DURATION)
+
+print("Going South, East and down")
+condition_yaw(vehicle,90)
+send_ned_velocity(vehicle,SOUTH,EAST,DOWN,DURATION)
+
+print("Going South and West")
+condition_yaw(vehicle,90)
+send_ned_velocity(vehicle,SOUTH,WEST,0,DURATION)
+
+print("Going North and West")
+condition_yaw(vehicle,90)
+send_ned_velocity(vehicle,NORTH,WEST,0,DURATION)
+
+
+print "Returning to Launch"
+vehicle.mode    = VehicleMode("RTL")
+print "Waiting 10 seconds RTL"
+time.sleep(10)
+
+print "Landing the Aircraft"
+vehicle.mode    = VehicleMode("LAND")
+#+END_SRC
+
+** discrete kalman filter <2017-09-16 토>
+
+https://dobratech.com/courses/kalman-filtering-for-drones/
+
+https://dobratech.com/tools/pycopter/
+
+https://i.imgur.com/s9jYBiz.png
+
+#+BEGIN_SRC python  
+from scipy import linalg as la
+import matplotlib.pyplot as pl
+import matplotlib.mlab as mlab
+import numpy as np
+
+# Take pics for video or animated gif
+video = 0
+
+# Simulation parameters
+tf = 15
+dt = 1e-3
+time = np.linspace(0, tf, tf/dt)
+it = 0;
+frames = 100
+
+# States
+X = np.array([0, 0, 0])
+P = np.array([[1, 0, 0], \
+              [0,  1, 0], \
+              [0,  0, 1]])
+
+F = np.array([[1, dt, -0.5*dt*dt], \
+              [0,  1,-dt], \
+              [0,  0, 1]])
+G = np.array([0.5*dt*dt, dt, 0])
+
+
+# Measurements
+GPS = 0.0
+VEL = 0.0
+
+acc_sigma = 0.01
+acc_bias = 0.7
+gps_sigma = 2
+radar_sigma = 0.01
+
+H1 = np.array([1, 0, 0])
+H2 = np.array([0, 1, 0])
+H3 = np.array([[1, 0, 0], \
+               [0, 1, 0]])
+
+H1obs = np.array([1])
+H2obs = np.array([1])
+H3obs = np.array([[1, 0], \
+                  [0, 1]])
+
+Q = np.outer(G*acc_sigma,acc_sigma*G.transpose())
+R1 = (H1obs*gps_sigma).dot(gps_sigma*H1obs.transpose())
+R2 = (H2obs*radar_sigma).dot(radar_sigma*H2obs.transpose())
+R3 = (H3obs.dot(np.array([gps_sigma, radar_sigma]))).dot((np.array([gps_sigma, radar_sigma]).transpose()).dot(H3obs.transpose()))
+
+
+# Data log
+acc_log = np.zeros(time.size)
+X_log = np.zeros((time.size, X.size))
+P_log = np.zeros((time.size, P.size))
+
+# Plotting stuff
+pl.close("all")
+pl.ion()
+fig, axis = pl.subplots(4, 1)
+fig.tight_layout()
+if video == 1:
+    mng = pl.get_current_fig_manager()
+    mng.window.showMaximized()
+    pl.pause(2)
+
+xpl, xvl, xbl = 15, 5, 1.5
+ypl, yvl, ybl = 0.5, 1.5, 8
+
+xlimits0 = np.linspace(-xpl, xpl, 300)
+xlimits1 = np.linspace(-xvl, xvl, 300)
+xlimits2 = np.linspace(-xbl, xbl, 300)
+
+for t in time:
+
+    acc = np.random.normal(acc_bias, acc_sigma)
+    
+    # Propagation
+    X = F.dot(X) + G.dot(acc)
+    P = F.dot(P).dot(F.transpose()) + Q
+
+    # Correction (measurements)
+    if it%1000 == 0:
+        X_saved = X
+        P_saved = P
+
+        S = H1.dot(P).dot(H1.transpose()) + R1
+        if np.size(S) == 1:
+            K = P.dot(H1.transpose())/S
+            P = P - np.outer(K, H1.dot(P))
+        else:
+            K = P.dot(H1.transpose()).dot(la.inv(S))
+            P = P - K.dot(H1.dot(P))
+        
+        X = X + K*(H1obs.dot(GPS) - H1.dot(X))
+        if not np.all(la.eigvals(P) > 0):
+            X = X_saved
+            P = P_saved
+
+    # Animation
+    if it%frames == 0:
+        axis[0].clear()
+        axis[0].grid("on")
+        pgauss = mlab.normpdf(xlimits0, X[0], np.sqrt(P[0,0]))
+        axis[0].plot(xlimits0, pgauss)
+        axis[0].fill_between(xlimits0, pgauss, color='cyan')
+        axis[0].set_xlim([-xpl, xpl])
+        axis[0].set_ylim([0, ypl])
+        axis[0].set_yticks([0, 0.5*ypl, ypl])
+        axis[0].set_title("Estimated position")
+        axis[0].set_xlabel("[m]")
+        axis[0].arrow(0, 0, 0, ypl, \
+                head_width=0.05, head_length=0.1, fc='k', ec='k')
+
+        axis[1].clear()
+        axis[1].grid("on")
+        vgauss = mlab.normpdf(xlimits1, X[1], np.sqrt(P[1,1]))
+        axis[1].plot(xlimits1, vgauss)
+        axis[1].fill_between(xlimits1, vgauss, color='cyan')
+        axis[1].set_xlim([-xvl, xvl])
+        axis[1].set_ylim([0, yvl])
+        axis[1].set_yticks([0, 0.5*yvl, yvl])
+        axis[1].set_title("Estimated velocity")
+        axis[1].set_xlabel("[m/s]")
+        axis[1].arrow(0, 0, 0, yvl, \
+                head_width=0.05, head_length=0.1, fc='k', ec='k')
+
+        axis[2].clear()
+        axis[2].grid("on")
+        bgauss = mlab.normpdf(xlimits2, X[2], np.sqrt(P[2,2]))
+        axis[2].plot(xlimits2, bgauss)
+        axis[2].fill_between(xlimits2, bgauss, color='cyan')
+        axis[2].set_xlim([-xbl, xbl])
+        axis[2].set_ylim([0, ybl])
+        axis[2].set_yticks([0, 0.5*ybl, ybl])
+        axis[2].set_title("Estimated accelerometer's bias")
+        axis[2].set_xlabel("[m/$s^2$]")
+        axis[2].arrow(acc_bias, 0, 0, ybl, \
+                head_width=0.05, head_length=0.1, fc='k', ec='k')
+
+        axis[3].clear()
+        axis[3].grid("on")
+        axis[3].plot(time[0:it], acc_log[0:it], 'r')
+        axis[3].plot(time[0:it], X_log[0:it,2], 'b')
+        axis[3].set_xlim([0, tf])
+        axis[3].set_ylim([0, 1.5*acc_bias])
+        axis[3].set_title("Accelerometer readings & estimated bias")
+        axis[3].set_xlabel("[m/$s^2$]")
+
+        pl.pause(0.001)
+
+        if video == 1:
+            namepic = '%i'%it
+            digits = len(str(it))
+            for j in range(0, 5-digits):
+                namepic = '0' + namepic
+            pl.savefig("./images/%s.png"%namepic)
+
+    # Log
+    X_log[it,:] = X
+    P_log[it,:] = P.reshape((1,9))
+    acc_log[it] = acc
+
+    it = it + 1
+
+fig2, axis2 = pl.subplots()
+axis2.clear()
+axis2.grid("on")
+pgauss = mlab.normpdf(xlimits0, 5, np.sqrt(P[0,0]))
+axis2.plot(xlimits0, pgauss)
+axis2.fill_between(xlimits0, pgauss, color='cyan')
+axis2.set_xlim([-xpl, xpl])
+axis2.set_ylim([0, 0.3])
+axis2.set_yticks([0, 0.3*ypl, 0.6*ypl])
+axis2.set_title("Estimated position")
+axis2.set_xlabel("[m]")
+
+axis2.annotate(s='', xy=(-np.sqrt(P[0,0])+5,0.27), xytext=(np.sqrt(P[0,0])+5,0.27), arrowprops=dict(arrowstyle='<->'))
+axis2.annotate(s='', xy=(5,0), xytext=(5,np.max(pgauss)), arrowprops=dict(arrowstyle='<-'))
+axis2.annotate('$\sigma_p$', xy=(5, 0.275), xytext=(5, 0.275))
+axis2.annotate('$\hat p$', xy=(4.2, 0.17), xytext=(4.2, 0.17))
+#+END_SRC
+
+** React Programming <2018-04-07 Sat>
+
+#+BEGIN_SRC javascript
+
+
+// 1.js
+const fs = require('fs')
+const request = require('request')
+const { exec } = require('child_process')
+const colors = require('colors')
+
+var stream = request('http://uta.pw/shodou/img/28/214.png').pipe(fs.createWriteStream('214.png'))
+
+stream.on('finish', () => {
+  exec('open 214.png', (err, stdout, stderr) => {})
+})
+
+var msg = 'hello world'
+const msg_ = 'hello world'
+console.log(msg.underline.red)
+console.log(msg_.inverse.red)
+
+----
+// 2.js
+const http = require('http')
+
+const svr = http.createServer(handler)
+svr.listen(8081)
+
+function handler (req, res) {
+  console.log('url:', req.url)
+  console.log('method:', req.method)
+  res.writeHead(200, {'Contant-Type': 'text/html'})
+  res.end('<h1> Hello, World!</h1>\n')
+}
+
+
+
+----
+// 3.js
+function * getFibonacci () {
+  let a = 0
+  let b = 1
+  while (true) {
+    [a,b] = [b, a+ b]
+    yield a
+  }
+}
+
+const fib = getFibonacci()
+
+for (const num of fib) {
+  if (num > 50) break
+  console.log(num)
+}
+
+----
+// 4.js
+// async and await
+const fs = require('fs')
+
+function readFileEx (fname) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(fname, 'utf-8', (err, data) => {
+	  resolve(data)
+    })
+  })
+}
+
+async function readAll () {
+  const a = await readFileEx('1.js')
+  console.log(a)
+  const b = await readFileEx('2.js')
+  console.log(b)
+  const c = await readFileEx('3.js')
+  console.log(c)
+}
+
+// readAll()
+
+const glob = require('glob')
+
+function readJsFiles () {
+  glob('*.js', async (err, files) => {
+    // for (i in files) {
+    for (var file of files) {
+      // console.log('// ' + files[i])
+      console.log('// ' + file)
+      // const jsFile = await readFileEx(files[i])
+      const jsFile = await readFileEx(file)
+      console.log(jsFile)
+      console.log('----')
+    }
+  })
+}
+
+readJsFiles()
+
+----
+
+#+END_SRC
