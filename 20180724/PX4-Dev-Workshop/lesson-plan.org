@@ -1,0 +1,46 @@
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+TITLE:    PX4 개발 워크숍 
+#+SUBTITLE:  세종대 유도항법제어랩
+#+SETUPFILE: theme-gongzhitaao.setup
+
+
+* 워크숍 개요
+
+ - 목표: 본 워크숍 참가자가 PX4에 대한 구조이해하고, PX4를 이용한 어플리케이션 개발을 할 수 있다. 
+ - 장소: 세종대학교 충무관
+ - 참가자: 박동희
+ - 일시: 2018-7-25~ , 12주차. 
+ - 참고: http://dh8.kr/docs/log/sejong/
+
+* 주계획
+
+ - 1주차 PX4 개발환경 설치 및 소개
+ - 2주차 C언어 기초1, PX4 Posix Programming
+ - 3주차 C언어 기초2, PX4 Posix Programming
+ - 4주차 ROS
+ - 5주차 MAVLINK
+ - 6주차 PX4 OFFBOARD Programming
+ - 7주차 MAVROS
+ - 8주차 Vision, OPENCV
+ - 9주차 ROS 심화
+ - 10주차 Project: Pricision Landing 개발
+ - 11주차 Project: Precision Landing 개발
+ - 12주차 Project: Procision Landing 비행 
+
+* 세부 계획
+** 1주차 PX4 개발환경 설치 및 소개
+ - 워크숍, 참가자 소개 
+ - PX4, ROS, OpenCV 소개
+ - PX4 소프트웨어 구조
+ - PX4 부팅 분석 
+ - C언어 형성 평가 
+
+** 2주차 C언어 기초 1, Posix Programming
+ - C언어 기초: 에러로 배우는 프로그래밍, 
+ - C언어 기초: 변수, 제어구문, 반복구문
+ - PX4 미들웨어 및 앱 구조 소개
+ - PX4 앱 만들기 (hello-skyworld)
+
+
+* 수업 후 요구사항 
