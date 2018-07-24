@@ -11,7 +11,7 @@
  - 장소: 세종대학교 충무관
  - 참가자: 박동희
  - 일시: 2018-7-25~ , 12주차. 
- - 참고: http://dh8.kr/docs/log/sejong/
+ - 참고: https://dh8.kr/docs/log/sejong.html
 
 * 주계획
 
@@ -42,5 +42,33 @@
  - PX4 미들웨어 및 앱 구조 소개
  - PX4 앱 만들기 (hello-skyworld)
 
+** 3주차 C언어 기초2, PX4 Posix Programming
+ - C언어 기초: Pointer, Struct
+ - Posix Programming: Open, Poll, ioctl, Close
+ - PX4 앱 만들기 (토픽 구독하기)
+
+** 4주차 ROS
+ - ROS 소개, 
+  - ROS미들웨어, 
+  - ROS 컴포넌트 라이브러리
+  - Node, Topics, Message Passing, Services
+ - Hello ROS (catkin build)
+ - 드론 관련 패키지 소개
+
+** 5주차 MAVLINK
+  - Mavlink 소개 
+  - Mavlink 프로그래밍, SDK
+   - C, Python
+   - Command Message, Subscription Message
+  - Simulator를 이용하여 드론 제어 
+   - 모드 바꾸기, 드론 데이터 읽기
+
+** 6주차 PX4 OFFBOARD Programming
+** 7주차 MAVROS
+** 8주차 Vision, OPENCV
+** 9주차 ROS 심화
+** 10주차 Project: Pricision Landing 개발
+** 11주차 Project: Precision Landing 개발
+** 12주차 Project: Procision Landing 비행 
 
 * 수업 후 요구사항 
