@@ -1,6 +1,5 @@
 # graphql server test
 
-
 ## Install and Start
 
 ```
@@ -9,18 +8,39 @@ npm run build
 npm run start
 ```
 
-## Query
-### curl
+## GraphQL
 
+
+### Query
+
+HTTP GET or POST
+
+```
+# GET
+curl -g -GET 'http://localhost:3100/api?query=query+{author(id:1){firstName+lastName+posts+{votes}}}'
+
+# POST
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "{ author(id: 1) { firstName lastName posts { votes } } }" }' \
+  http://localhost:3100/api
+
+```
+
+## Mutation
+
+HTTP POST
 ```
 curl \
   -X POST \
   -H "Content-Type: application/json" \
-  --data '{ "query": "{ author(id: 1) { firstName lastName } }" }' \
+  --data '{ "query": "mutation { upvotePost(postId: 1) { id votes } }" }' \
   http://localhost:3100/api
 ```
 
-### graphiql
+### GraphQL playground: graphiql
+
 works on dev mode
 
 ```
