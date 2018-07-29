@@ -1,11 +1,12 @@
-# graphql server test for dronemap
+# graphql server test
+
 
 ## Install and Start
 
 ```
 npm install
-npm build
-npm start
+npm run build
+npm run start
 ```
 
 ## Query
@@ -23,7 +24,7 @@ curl \
 works on dev mode
 
 ```
-npm dev
+npm run dev
 ```
 
  - http://localhost:3100/api/graphiql
