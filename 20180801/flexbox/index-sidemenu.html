@@ -1,0 +1,119 @@
+<html lang="ko">
+  <head>
+    <style>
+     * {
+       margin: 0;
+       padding: 0;
+       border: 0;
+     }
+
+     .header {
+       top: 0;
+       left: 0;
+       background-color: #FFF;
+       box-shadow: 0 2px 10px rgba(0,0,0,.25);
+     }
+
+     .nav {
+       margin-right: auto;
+       margin-left: auto;
+       max-width: 960px;
+     }
+
+     .navbar {
+       display: flex;
+       flex-direction: row;
+       align-items: center;
+       height: 60px;
+     }
+
+     .navbar a {
+       vertical-align: baseline;
+     }
+
+     .root-flex {
+       display: flex;
+       /* min-height: 100%;
+          width: 100%; */
+     }
+
+     .side-menu-container {
+       position: relative;
+       z-index: 2;
+       width: 304px;
+     }
+
+     .side-menu-container-flex {
+       height: 100vh;
+       transition: height 0.25s easeinout 0s;
+       display: flex;
+       flex-direction: row;
+       position: fixed;
+       left: 0px;
+       width: inherit;
+       z-index: 300;
+     }
+
+     .side-main-menu {
+       width: 64px;
+       display: flex;
+       flex-shrink: 0;
+       background-color: rgb(7, 71, 166);
+       color: rgb(222, 235, 255); 
+     }
+
+     .side-sub-menu {
+       /* min-width: 304px; */
+       -moz-box-flex: 1;
+       flex-grow: 1;
+       display: flex;
+       background-color: rgb(7, 71, 166);
+       color: rgb(222, 235, 255);
+     }
+
+     .content-container {
+       flex: 1 1 auto;
+       position: relative;
+       z-index: 1;
+       min-width: 0px;
+       max-width: 800px;
+       margin: 0 auto;
+     }
+
+     .content-item {
+       border: 5px solid violet;
+       margin: auto; /* Magic! This relies on the fact a margin set to 'auto' in a flex container absorb extra space. */
+       margin-top: 20px;
+     }
+
+     .content-item img{
+       width: 100%;
+     }
+
+    </style>
+  </head>
+  <body>
+    <div class="root-flex">
+      <div class="side-menu-container">
+        <div class="side-menu-container-flex">
+          <div class="side-main-menu">
+            <span class="sc-cHGsZl eXWZkF" aria-label="Bitbucket"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" role="presentation"><defs><linearGradient x1="97.526%" y1="25.488%" x2="46.927%" y2="78.776%" id="a-c032ed4d-c442-4f93-9ea0-ee6d7b95805e"><stop stop-color="inherit" stop-opacity=".4" offset="0%"></stop><stop stop-color="inherit" offset="100%"></stop></linearGradient></defs><path d="M20.063 9.297h-5.279l-.886 5.16h-3.656l-4.317 5.116a.763.763 0 0 0 .492.186h11.458a.562.562 0 0 0 .563-.472l1.625-9.99z" fill="url(#a-c032ed4d-c442-4f93-9ea0-ee6d7b95805e)"></path><path d="M3.844 4a.563.563 0 0 0-.563.651L5.67 19.12a.763.763 0 0 0 .748.637l4.433-5.3h-.622l-.976-5.16h10.811l.76-4.64A.56.56 0 0 0 20.269 4H3.844z" fill="currentColor"></path></svg></span>            
+          </div>
+          <div class="side-sub-menu">
+            <h2> Dashboard </h2>
+            <div>
+              test
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-container">
+        <div class="content-item"><img src="https://placeimg.com/300/200/animals" alt="animals"></div>
+        <div class="content-item"><img src="https://placeimg.com/300/200/animals" alt="animals"></div>
+        <div class="content-item"><img src="https://placeimg.com/300/200/animals" alt="animals"></div>
+        <div class="content-item"><img src="https://placeimg.com/300/200/animals" alt="animals"></div>
+        <div class="content-item"><img src="https://placeimg.com/300/200/animals" alt="animals"></div>
+      </div>
+    </div>
+  </body>
+</html>
