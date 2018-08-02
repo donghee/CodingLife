@@ -2,7 +2,7 @@
 #+EMAIL:     dongheepark@gmail.com
 #+TITLE:    PX4 개발 워크숍 
 #+SUBTITLE:  세종대 유도항법제어랩
-#+SETUPFILE: theme-gongzhitaao.setup
+#+SETUPFILE: ../../../docs/css/theme-gongzhitaao.setup
 
 
 * 워크숍 개요
@@ -31,10 +31,16 @@
 * 세부 계획
 ** 1주차 PX4 개발환경 설치 및 소개
  - 워크숍, 참가자 소개 
- - PX4, ROS, OpenCV 소개
- - PX4 소프트웨어 구조
- - PX4 부팅 분석 
- - C언어 형성 평가 
+ - PX4, Linux, ROS 소개 
+ - PX4 Build
+  - jMavSim 사용하기
+ - Git 사용
+ - 과제
+  - dev.px4.io 질문 3
+  - 리눅스 기본 명령어 정리
+  - 컴파일 방법
+  - C언어 형성 평가 
+
 
 ** 2주차 C언어 기초 1, Posix Programming
  - C언어 기초: 에러로 배우는 프로그래밍, 

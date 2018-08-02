@@ -1,0 +1,24 @@
+#+STARTUP: showeverything
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+
+2018. 7. 25
+
+1. 워크숍 소개, 참가자 소개
+
+2. PX4소개
+
+3. Linux 사용하기
+
+4. PX4 Firmware Build
+  - jMavSim 사용하기, QGroundControl 사용하기.
+
+5. Git 사용하기
+
+과제: 
+ - 리눅스 기본 명령어 정리
+ - dev.px4.io 읽고 질문 3개
+
