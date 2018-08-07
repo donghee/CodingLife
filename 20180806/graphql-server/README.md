@@ -6,10 +6,16 @@ Using apollo-server
 
 ```
 npm install
+```
+
+Start apollo-server or
+```
 node index.js
 ```
 
+Start apollo-server-express
 ```
+node index-server-express.js
 ```
 
 ## GraphQL
