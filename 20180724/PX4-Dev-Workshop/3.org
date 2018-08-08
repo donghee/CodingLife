@@ -1,0 +1,247 @@
+#+STARTUP: showeverything
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+
+2018. 8. 9
+
+1. 질문(과제) 15분
+ - 윤년과제 
+ - Pixhawk Pro3 QGC 셋업. 
+
+2. C언어 기초 1시간
+ - 포멧스트링
+ - 조건문
+ - 반복문
+ - 함수
+ - Pointer, Struct
+ - Posix Programming: Open, Poll, ioctl, Close
+
+3. PX4 앱만들기 (토픽 구독하기) 1시간 
+ - uORB
+ - PX4 shell(nsh) 사용하기
+ - hello-skyworld
+
+4. PX4 앱 분석 30분
+ - px4_simple_app` 코드 분석
+
+5. 과제
+ - `px4_simple_app` 수정 (lat, lon 값 화면에 1회 출력). jmavsim 이용.
+ - px4_daemon_app 코드 분석 
+   https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_daemon_app/px4_daemon_app.c
+ - code github에 올리기
+
+ ----
+
+#+BEGIN_SRC
+
+#include <stdio.h>
+#include <px4_posix.h>
+
+__EXPORT int px4_simple_app_main(int argc, char *argv[]);
+
+int px4_simple_app_main(int argc, char *argv[])
+{
+	printf("Hello Sky!");
+  PX4_INFO("px4_simple_app");
+
+	return 0;
+}
+
+#+END_SRC
+
+** nsh
+
+```
+help
+ls
+cd
+
+uorg top
+listener sensor_accel 5
+```
+
+uorb
+
+https://dev.px4.io/en/middleware/uorb_graph.html#instructions
+
+
+** Posix 관련 
+
+The Portable Operating System Interface (POSIX)
+
+Posix: IEEE Standard, API정의. 유닉스에 대한 표준은 아니지만, 99% 유닉스.
+
+현재 리눅스에서는 32비트의 경우 [[https://github.com/torvalds/linux/blob/16f73eb02d7e1765ccab3d2018e0bd98eb93d973/arch/x86/entry/syscalls/syscall_32.tbl][358]]개의 시스템콜, 64비트의 경우 [[https://github.com/torvalds/linux/blob/16f73eb02d7e1765ccab3d2018e0bd98eb93d973/arch/x86/entry/syscalls/syscall_64.tbl][322]]개의 시스템콜을 제공한다.
+*** Kernal Space And User Space
+
+[[http://i.imgur.com/eo4qp8O.png]]
+
+*** Posix System Call
+
+"foo"파일에 "hello world" 저장하기 
+
+#+BEGIN_SRC c
+#include <fcntl.h>
+
+int main()
+{
+  int fd;
+  fd = open("foo", O_WRONLY | O_CREAT, 0644);
+  write(fd, "hello world", 11);
+  close(fd);
+}
+#+END_SRC
+
+Error 핸들링
+#+BEGIN_SRC c
+// chmod 400 foo
+#include <fcntl.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+  int fd;
+  fd = open("foo", O_WRONLY | O_CREAT, 0644);
+  if (fd < 0) {
+  // if ((fd = open("foo", O_WRONLY | O_CREAT, 0644)) < 0) {
+    printf("error number %d\n", errno);
+    perror("foo");
+    exit(1);
+  }
+  write(fd, "hello world", 11);
+  close(fd);
+}
+#+END_SRC
+
+#+BEGIN_SRC sh
+man 2 open
+#+END_SRC
+
+
+** poll()
+
+파일 디스크립터(파일 번호)에서 발생하는 이벤트 기다리는 함수 
+
+uORB도 파일이다. uORB 업데이트 체크할 때 사용.
+
+#+BEGIN_SRC sh
+gcc poll.c -o poll
+./poll
+echo 'test' | ./poll
+#+END_SRC
+
+#+BEGIN_SRC c
+struct pollfd {
+  int fd;
+  short events; // 요청한 이벤트.
+  short revents; // 발생한 이벤트 값(마스크) 저장.
+}
+#+END_SRC
+
+Linux System Programming- Robert Love.pdf
+
+
+#+BEGIN_SRC c
+#include <fcntl.h>
+#include <stdlib.h>
+#define BSIZE 16384
+
+int main()
+{
+  int fin, fout;
+  char buf[BSIZE];
+  int count;
+
+  if((fin = open("foo", O_RDONLY)) < 0) {
+    perror("foo");
+    exit(1);
+  }
+  if((fout = open("bar", O_WRONLY | O_CREAT, 0644)) < 0) {
+    perror("bar");
+    exit(2);
+  }
+
+  while ((count = read(fin, buf, BSIZE)) > 0)
+    write(fout, buf, count);
+
+  close(fin);
+  close(fout);
+}
+
+// dd if=/dev/urandom of=foo bs=1000 count=1000
+// ./a.out
+// cmp foo bar
+#+END_SRC
+
+** ioctl
+I/O control device
+
+특정 파일의 동작이나 파라미터를 바꾸고 싶을 때 사용
+
+** px4_simple_app 분석
+
+```
+int sensor_sub_fd = orb_subscribe(ORB_ID(sensor_combined));
+```
+ - sensor_combined 파일을 오픈한다. sensor_sub_fd는 sensor_combined 파일
+ - sensor_combined 파일은 px4의 /obj 디렉토리에 있다.
+
+```
+orb_set_interval(sensor_sub_fd, 200);
+```
+ - sensor_combined 파일의 ORBIOCSETINTERVAL의 속성을 200ms으로 바꾼다.
+
+```
+ struct vehicle_attitude_s att;
+ memset(&att, 0, sizeof(att));
+ orb_advert_t att_pub = orb_advertise(ORB_ID(vehicle_attitude), &att);
+```
+ - vehicle_attitude_s 구조체 선언. uORB의 vehicle_attitude 메시지를 저장하는 타입.
+ - memset() 해당 메모리 주소의 값을 '0' 으로 바꾸는 함수. 메모리 세터!
+ - orb_advertise: vehicle_attitude 토픽을 발행(publish)하기 위한 초기화 
+
+```
+	px4_pollfd_struct_t fds[] = {
+		{ .fd = sensor_sub_fd,   .events = POLLIN },
+		/* there could be more file descriptors here, in the form like:
+		 * { .fd = other_sub_fd,   .events = POLLIN },
+		 */
+	};
+```
+ - poll 구조체에 sensor_sub_fd 파일 디스크립터와 POLLIN(입력) 이벤트를 정의. 이후 poll 함수 쓸 때 사용
+ - 여러개의 파일 디스크립터를 지정할 수 있음. 
+
+```
+   int poll_ret = px4_poll(fds, 1, 1000);
+```
+ - fds 구조체에 정의된 파일 디스크립터로 부터 이벤트가 발생하는지 체크. 
+ - px4_poll이 타입아웃 발생하면, 0을 리턴, 에러면 -1, 
+ - 여러개의 파일 디스크립터를 지정할 수 있음. 
+
+```
+	struct sensor_combined_s raw;
+	/* copy sensors raw data into local buffer */
+	orb_copy(ORB_ID(sensor_combined), sensor_sub_fd, &raw);
+	PX4_INFO("Accelerometer:\t%8.4f\t%8.4f\t%8.4f",
+	(double)raw.accelerometer_m_s2[0],
+	(double)raw.accelerometer_m_s2[1],
+	(double)raw.accelerometer_m_s2[2]);
+```
+ - sensor_combined 메시지를 저장 할 수 있는 구조체 선언
+ - sensor_sub_fd 로 부터 sensor_combined 토픽을 읽어, raw에 저장.
+ - accelerometer_m_s2[]: average value acceleration measured
+
+
+```
+    att.q[0] = raw.accelerometer_m_s2[0];
+    att.q[1] = raw.accelerometer_m_s2[1];
+    att.q[2] = raw.accelerometer_m_s2[2];
+
+    orb_publish(ORB_ID(vehicle_attitude), att_pub, &att);
+```
+ - vehicle_attitude 토픽에 raw(측정된 가속도 평균값)을 발행(publish0
