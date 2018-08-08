@@ -5,7 +5,11 @@
 #+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
-2018. 8. 9
+* 수업
+ - 일시: 2018. 8. 9
+ - 목표: PX4 앱를 실행하고 코드를 분석 할 수 있다
+
+* 수업 진행
 
 1. 질문(과제) 15분
  - 윤년과제 
@@ -22,10 +26,11 @@
 3. PX4 앱만들기 (토픽 구독하기) 1시간 
  - uORB
  - PX4 shell(nsh) 사용하기
+ - 부팅 읽기
  - hello-skyworld
 
 4. PX4 앱 분석 30분
- - px4_simple_app` 코드 분석
+ - `px4_simple_app` 코드 분석
 
 5. 과제
  - `px4_simple_app` 수정 (lat, lon 값 화면에 1회 출력). jmavsim 이용.
@@ -33,7 +38,10 @@
    https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_daemon_app/px4_daemon_app.c
  - code github에 올리기
 
- ----
+
+* 수업 자료
+
+hello-skyworld
 
 #+BEGIN_SRC
 
@@ -54,19 +62,27 @@ int px4_simple_app_main(int argc, char *argv[])
 
 ** nsh
 
-```
+명령어 
+
+#+BEGIN_SRC
 help
 ls
 cd
-
 uorg top
+tone_alarm
 listener sensor_accel 5
-```
+ps
+#+END_SRC
 
 uorb
 
 https://dev.px4.io/en/middleware/uorb_graph.html#instructions
 
+** 부팅 읽기 
+
+#+BEGIN_SRC
+/Firmware/ROMFS/px4fmu_common/init.d/rcS
+#+END_SRC
 
 ** Posix 관련 
 
@@ -185,45 +201,46 @@ I/O control device
 
 ** px4_simple_app 분석
 
-```
+#+BEGIN_SRC c
 int sensor_sub_fd = orb_subscribe(ORB_ID(sensor_combined));
-```
+#+END_SRC
  - sensor_combined 파일을 오픈한다. sensor_sub_fd는 sensor_combined 파일
  - sensor_combined 파일은 px4의 /obj 디렉토리에 있다.
 
-```
+#+BEGIN_SRC c
 orb_set_interval(sensor_sub_fd, 200);
-```
+#+END_SRC
  - sensor_combined 파일의 ORBIOCSETINTERVAL의 속성을 200ms으로 바꾼다.
 
-```
+#+BEGIN_SRC c
  struct vehicle_attitude_s att;
  memset(&att, 0, sizeof(att));
  orb_advert_t att_pub = orb_advertise(ORB_ID(vehicle_attitude), &att);
-```
+#+END_SRC
  - vehicle_attitude_s 구조체 선언. uORB의 vehicle_attitude 메시지를 저장하는 타입.
  - memset() 해당 메모리 주소의 값을 '0' 으로 바꾸는 함수. 메모리 세터!
  - orb_advertise: vehicle_attitude 토픽을 발행(publish)하기 위한 초기화 
 
-```
+
+#+BEGIN_SRC c
 	px4_pollfd_struct_t fds[] = {
 		{ .fd = sensor_sub_fd,   .events = POLLIN },
 		/* there could be more file descriptors here, in the form like:
 		 * { .fd = other_sub_fd,   .events = POLLIN },
 		 */
 	};
-```
+#+END_SRC
  - poll 구조체에 sensor_sub_fd 파일 디스크립터와 POLLIN(입력) 이벤트를 정의. 이후 poll 함수 쓸 때 사용
  - 여러개의 파일 디스크립터를 지정할 수 있음. 
 
-```
+#+BEGIN_SRC c
    int poll_ret = px4_poll(fds, 1, 1000);
-```
+#+END_SRC
  - fds 구조체에 정의된 파일 디스크립터로 부터 이벤트가 발생하는지 체크. 
  - px4_poll이 타입아웃 발생하면, 0을 리턴, 에러면 -1, 
  - 여러개의 파일 디스크립터를 지정할 수 있음. 
 
-```
+#+BEGIN_SRC c
 	struct sensor_combined_s raw;
 	/* copy sensors raw data into local buffer */
 	orb_copy(ORB_ID(sensor_combined), sensor_sub_fd, &raw);
@@ -231,17 +248,17 @@ orb_set_interval(sensor_sub_fd, 200);
 	(double)raw.accelerometer_m_s2[0],
 	(double)raw.accelerometer_m_s2[1],
 	(double)raw.accelerometer_m_s2[2]);
-```
+#+END_SRC
  - sensor_combined 메시지를 저장 할 수 있는 구조체 선언
  - sensor_sub_fd 로 부터 sensor_combined 토픽을 읽어, raw에 저장.
  - accelerometer_m_s2[]: average value acceleration measured
 
 
-```
+#+BEGIN_SRC c
     att.q[0] = raw.accelerometer_m_s2[0];
     att.q[1] = raw.accelerometer_m_s2[1];
     att.q[2] = raw.accelerometer_m_s2[2];
 
     orb_publish(ORB_ID(vehicle_attitude), att_pub, &att);
-```
+#+END_SRC
  - vehicle_attitude 토픽에 raw(측정된 가속도 평균값)을 발행(publish0
