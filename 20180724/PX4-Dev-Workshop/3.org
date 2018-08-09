@@ -8,6 +8,8 @@
 * 수업
  - 일시: 2018. 8. 9
  - 목표: PX4 앱를 실행하고 코드를 분석 할 수 있다
+ - 교재: https://goo.gl/sDfk3j
+ - 코치: 박동희 dongheepark@gmail.com 
 
 * 수업 진행
 
@@ -18,30 +20,46 @@
 2. C언어 기초 1시간
  - 포멧스트링
  - 조건문
- - 반복문
  - 함수
+ - 반복문
  - Pointer, Struct
  - Posix Programming: Open, Poll, ioctl, Close
 
+교재: https://dh8.kr/workshop/swworkshop/note/day1.html
+홍콩과기대: https://github.com/HKUST-Aerial-Robotics
+sublimetext.com
+
 3. PX4 앱만들기 (토픽 구독하기) 1시간 
  - uORB
+ - hello-skyworld
  - PX4 shell(nsh) 사용하기
  - 부팅 읽기
- - hello-skyworld
 
 4. PX4 앱 분석 30분
  - `px4_simple_app` 코드 분석
 
 5. 과제
+ - C언어 퀴즈: Good Morning, FizzBuzz
+ - BACK JOON: https://www.acmicpc.net
  - `px4_simple_app` 수정 (lat, lon 값 화면에 1회 출력). jmavsim 이용.
  - px4_daemon_app 코드 분석 
    https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_daemon_app/px4_daemon_app.c
  - code github에 올리기
-
+ - ROS 설치.
 
 * 수업 자료
 
 hello-skyworld
+
+Firmware/cmake/configs/nuttx_px4fmu-v4pro_default.cmake에 px4_simple_app 주석 제거.
+
+#+BEGIN_SRC
+/home/donghee/src/Firmware
+make posix jmavsim
+make px4fmu-v3_default
+make px4fmu-v4pro_default
+make px4fmu-v4pro_default upload
+#+END_SRC
 
 #+BEGIN_SRC
 
@@ -52,8 +70,7 @@ __EXPORT int px4_simple_app_main(int argc, char *argv[]);
 
 int px4_simple_app_main(int argc, char *argv[])
 {
-	printf("Hello Sky!");
-  PX4_INFO("px4_simple_app");
+    PX4_INFO("px4_simple_app");
 
 	return 0;
 }

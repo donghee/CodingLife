@@ -12,7 +12,7 @@
 
 2. 퀴즈 15분
  - C언어 기초
- - https://goo.gl/54cuuM
+ - Build 에러 메시지: https://goo.gl/54cuuM
 
 3. C언어기초
  - gcc 사용 helloworld
