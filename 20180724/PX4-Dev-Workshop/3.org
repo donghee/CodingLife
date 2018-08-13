@@ -25,9 +25,9 @@
  - Pointer, Struct
  - Posix Programming: Open, Poll, ioctl, Close
 
-교재: https://dh8.kr/workshop/swworkshop/note/day1.html
-홍콩과기대: https://github.com/HKUST-Aerial-Robotics
-sublimetext.com
+참고:
+ - C언어 교재: https://dh8.kr/workshop/swworkshop/note/day1.html
+ - 홍콩과기대: https://github.com/HKUST-Aerial-Robotics
 
 3. PX4 앱만들기 (토픽 구독하기) 1시간 
  - uORB
@@ -39,13 +39,15 @@ sublimetext.com
  - `px4_simple_app` 코드 분석
 
 5. 과제
- - C언어 퀴즈: Good Morning, FizzBuzz
- - BACK JOON: https://www.acmicpc.net
- - `px4_simple_app` 수정 (lat, lon 값 화면에 1회 출력). jmavsim 이용.
- - px4_daemon_app 코드 분석 
-   https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_daemon_app/px4_daemon_app.c
- - code github에 올리기
- - ROS 설치.
+ - FizzBuzz 풀어서 *풀이 코드 github에 업로드*
+   - https://www.acmicpc.net/problem/14761
+ -  `px4_simple_app` 코드 분석 읽고 *질문 github에 업로드* 
+   - 코드: https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_simple_app/px4_simple_app.c
+   - 분석: https://github.com/donghee/CodingLife/blob/master/20180724/PX4-Dev-Workshop/3.org#px4_simple_app-%EB%B6%84%EC%84%9D
+ -  `px4_daemon_app` 코드 분석 하고 *분석 내용 github에 업로드* 
+   - https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_daemon_app/px4_daemon_app.c
+ -  리눅스에 ROS 설치.
+   - 설치문서: https://dev.px4.io/en/ros/mavros_installation.html
 
 * 수업 자료
 
@@ -278,4 +280,4 @@ orb_set_interval(sensor_sub_fd, 200);
 
     orb_publish(ORB_ID(vehicle_attitude), att_pub, &att);
 #+END_SRC
- - vehicle_attitude 토픽에 raw(측정된 가속도 평균값)을 발행(publish0
+ - vehicle_attitude 토픽에 raw(측정된 가속도 평균값)을 발행(publish)
