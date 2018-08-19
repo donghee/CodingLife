@@ -28,7 +28,6 @@ const MISSION_CREATED = gql`
 class App extends React.Component {
   render() {
     const authToken = localStorage.getItem(AUTH_TOKEN)
-    console.log(authToken)
 
     return (
       <div>
@@ -47,7 +46,7 @@ class App extends React.Component {
           </div>
         ) }
 
-          { authToken  && <Query query={GET_MISSIONS}>
+          { authToken && <Query query={GET_MISSIONS}>
             {({ data, loading, subscribeToMore }) => {
               if (!data) {
                 return null
@@ -101,4 +100,3 @@ class Missions extends React.Component {
 }
 
 export default App
-

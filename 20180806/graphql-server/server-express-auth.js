@@ -65,8 +65,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    login(name: String!, password: String!): AuthPayload
-  }
+	login(name: String!, password: String!): AuthPayload
+}
 
   type Subscription {
     missionCreated: Mission
@@ -90,7 +90,7 @@ const resolvers = {
           throw new Error('Invalid password')
         return {
           token: jwt.sign({ userId: user.id }, APP_SECRET),
-          user,
+          user: user,
         }
     },
   },
@@ -101,7 +101,32 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+ 
+const getUser = (authorization) => {
+  if (authorization) { // Query
+    const token = authorization.replace('Bearer ', '')
+    const { userId } = jwt.verify(token, APP_SECRET)
+    const user = find(users, { id: userId })
+    return user
+  }
+
+  throw new Error('Not authenticated')
+}
+
+const server = new ApolloServer({ 
+  typeDefs, 
+  resolvers,
+  context: ({ req }) => {
+    if (req) { // Query, Mutation
+      if (req.body.operationName === 'LoginMutation')
+         return {};
+      const authorization = req.headers.authorization || ''
+      const user = getUser(authorization)
+      if (!user) throw new AuthorizationError('you must be logged in');	
+      return { user };
+    }
+  }
+});
 
 const httpServer = createServer(app);
 server.installSubscriptionHandlers(httpServer);

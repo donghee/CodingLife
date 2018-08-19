@@ -7,14 +7,19 @@ const LOGIN_MUTATION = gql`
   mutation LoginMutation($name: String!, $password: String!) {
     login(name: $name, password: $password) {
       token
+      user {
+        id
+        name
+        vehicles
+      }
     }
   }
 `
 
 class Login extends Component {
   state = {
-    name: '',
-    password: '',
+    name: 'Donghee Park',
+    password: '123',
   }
 
   render() {
@@ -46,8 +51,7 @@ class Login extends Component {
             <Mutation
               mutation={LOGIN_MUTATION}
               variables={{ name, password }}
-              onCompleted={data => this._confirm(data)}
-        >
+              onCompleted={data => this._confirm(data)} >
               {mutation => (
                 <button type="submit" onClick={mutation} >
                   Login
@@ -59,10 +63,11 @@ class Login extends Component {
   }
 
   _confirm = async data => {
-    const { token } = data.login
+    const { token, user } = data.login
     localStorage.setItem(AUTH_TOKEN, token)
-    console.log(AUTH_TOKEN)
-    console.log(token)
+    // console.log(AUTH_TOKEN)
+    // console.log(token)
+    console.log(user)
     this.props.history.push('/')
   }
 }
