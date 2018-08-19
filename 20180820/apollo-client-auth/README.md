@@ -13,8 +13,12 @@ npm install
 npm start
 ```
 
-localhost:3000/login
+Login with
+ - name: Donghee Park
+ - password: 123
 
-login with
-name: Donghee Park
-password: 123
+![Before Login](https://i.imgur.com/gZiGkVx.png)
+
+![Login](https://i.imgur.com/QlqI1FY.png)
+
+![After Login](https://i.imgur.com/hV4NUGM.png)
