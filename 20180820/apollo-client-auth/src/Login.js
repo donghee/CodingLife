@@ -63,7 +63,7 @@ class Login extends Component {
     localStorage.setItem(AUTH_TOKEN, token)
     console.log(AUTH_TOKEN)
     console.log(token)
-    this.props.history.push(`/`)
+    this.props.history.push('/')
   }
 }
 

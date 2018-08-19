@@ -39,8 +39,7 @@ class App extends React.Component {
         { authToken ? (
           <button onClick={ () => {
               localStorage.removeItem(AUTH_TOKEN)
-              window.location.href = '/'
-              this.props.history.push("/");
+              this.props.history.push('/');
           }} > Logout </button>
         ) : (
           <div>
