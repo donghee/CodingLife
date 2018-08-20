@@ -1,6 +1,7 @@
 const { find, filter } = require('lodash');
 const { ApolloServer, gql, PubSub } = require('apollo-server-express');
 const { createServer } = require('http');
+const { makeExecutableSchema } = require('graphql-tools');
 const express = require('express');
 const jwt = require('jsonwebtoken')
 
@@ -114,9 +115,28 @@ const getUser = (authorization) => {
 }
 
 const server = new ApolloServer({ 
-  typeDefs, 
-  resolvers,
+  schema: makeExecutableSchema({
+    typeDefs: typeDefs,
+    resolvers: resolvers
+  }),
+  subscriptions: {
+    path: '/graphql',
+    onConnect: (connectionParams, webSocket, context) => {
+      //console.log('connect...');
+      const authorization = connectionParams.authorization || ''
+      const user = getUser(authorization)
+      context.user = user
+    },
+    onDisconnect: (webSocket, context) => {
+      console.log('disconnect...');
+      console.log(context.user)
+    },
+  },
+
+  // typeDefs, 
+  // resolvers,
   context: ({ req }) => {
+    //console.log('context...');
     if (req) { // Query, Mutation
       if (req.body.operationName === 'LoginMutation')
          return {};
