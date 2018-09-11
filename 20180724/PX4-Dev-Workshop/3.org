@@ -6,7 +6,7 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
 * 수업
- - 일시: 2018. 8. 9
+ - 일시: 2018. 8. 10
  - 목표: PX4 앱를 실행하고 코드를 분석 할 수 있다
  - 교재: https://goo.gl/sDfk3j
  - 코치: 박동희 dongheepark@gmail.com 
@@ -38,7 +38,7 @@
 4. PX4 앱 분석 30분
  - `px4_simple_app` 코드 분석
 
-5. 과제
+* 과제
  - FizzBuzz 풀어서 *풀이 코드 github에 업로드*
    - https://www.acmicpc.net/problem/14761
  -  `px4_simple_app` 코드 분석 읽고 *질문 github에 업로드* 

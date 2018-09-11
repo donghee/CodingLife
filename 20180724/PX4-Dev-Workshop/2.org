@@ -5,7 +5,15 @@
 #+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
-2018. 8. 2
+# 2018. 8. 2
+
+* 수업
+ - 일시: 2018. 8. 9 
+ - 목표: 리눅스 환경에서 C언어 기초에 대해 실습 하고, PX4 시스템을 이해할 수 있다.
+ - 교재: https://goo.gl/sDfk3j
+ - 코치: 박동희 dongheepark@gmail.com 
+
+* 수업 진행
 
 1. 질문(과제)  dev.px4.io 1시간
  - github
@@ -27,7 +35,7 @@
  - PX4 shell(nsh) 사용하기
  - hello-skyworld
 
-과제 
+* 과제
  - 박동희 010-9437-8282, donghee@subak.io
  - 윤년과제 
  - Pixhawk Pro3 QGC 셋업. 
