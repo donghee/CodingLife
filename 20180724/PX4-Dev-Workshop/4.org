@@ -1,0 +1,276 @@
+#+STARTUP: showeverything
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+
+* 수업
+ - 일시: 2018. 8. 9
+ - 목표: ROS를 설치하고 ROS 예제를 빌드하고 수정할 수 있다.
+ - 교재: https://goo.gl/sDfk3j
+ - 코치: 박동희 dongheepark@gmail.com
+
+* 수업 진행
+ - ROS 소개,
+  - ROS미들웨어,
+  - ROS 컴포넌트 라이브러리
+  - Node, Topics, Message Passing, Services
+ - Hello ROS (catkin build)
+ - 드론 관련 패키지 소개
+
+
+* 수업 자료
+
+** ROS
+ - Robot Operating System: 로봇 빌들에 사용되는 라이브러리 어플리케이션 모음 http://www.ros.org/
+ - 목표: 로봇을 만들때 기존의 재활용 하고 공유하자. 
+ - History:
+  - 2000s: Standford Artificial intelligence
+  - 2007: Willow Garage
+  - 2013: Open Source Robotics Foundation
+ - 사용 분야: Drone, Kinematic ARMS(로봇암), Wheeled(바퀴), Bi-pedal(이족)
+
+** ROS Nodes and Topics
+
+# https://misohena.jp/article/emacs_org_textfigures/dot.html
+
+#+begin_src dot :file dot_example1.png :cmdline -Kdot -Tpng
+digraph {
+  rankdir=LR
+  graph [fontname="MS Gothic"];
+  node [shape=rect, color="#40e0d0"]
+  edge [fontname="MS Gothic"];
+  label = "Robot communication sequence 1";
+  "Perception" -> "Dicesion Making";
+  "Dicesion Making" -> "Actuation";
+  subgraph perception {
+    label = "Perception";
+    WheelEncoder--Camera;
+    WheelEncoder--PositionEstimator;
+  }
+}
+#+end_src
+
+*** ROS Master Process
+
+노드 관리
+
+#+begin_src dot :file dot_example2.png :cmdline -Kdot -Tpng
+pdigraph {
+  graph [fontname="MS Gothic"];
+  node [shape=box, color="#40e0d0"]
+  edge [fontname="MS Gothic"];
+  label = "ROS Master Process";
+
+  subgraph cluster_perception {
+    node [shape=rect, style="rounded"]
+    label = "Perception";
+    Camera;
+    "Wheel Encoder";
+    "Positon Estimator";
+  }
+
+  subgraph cluster_dicesion_making {
+    node [shape=rect, style="rounded"]
+    label = "Dicesion Making";
+    "Behavior Execution";
+  }
+
+  subgraph cluster_actuation {
+    node [shape=rect, style="rounded"]
+    label = "Actuation";
+    "Motor Control";
+  }
+}
+#+end_src
+
+*** Topics
+
+노드간 통신 인터페이스. 구독 발행의 이름
+
+#+begin_src dot :file ros_topic1.png :cmdline -Kdot -Tpng 
+digraph {
+  rankdir=LR
+  node [color="#40e0d0"]
+  edge [fontname="MS Gothic"];
+  node1 [label= ""]
+  node2 [label= ""]
+
+  node1 -> node2 [label="/topic_name"];
+}
+
+#+end_src
+
+*** Publish and Subscribe
+
+발행과 구독. 신문/잡지 발행 구독에 비유
+
+#+begin_src dot :file ros_publish_and_subscribe1.png :cmdline -Kdot -Tpng 
+digraph {
+  rankdir=LR
+  node [color="#40e0d0"]
+  edge [fontname="MS Gothic"];
+  label = "      PUBLISH           SUBSCRIBER";
+  node1 [label= ""]
+  node2 [label= ""]
+
+  node1 -> node2
+  node2 -> node1
+}
+#+end_src
+
+실제 예제 
+
+#+begin_src dot :file ros_publish_and_subscribe2.png :cmdline -Kdot -Tpng 
+digraph {
+  node [color="#40e0d0"]
+  edge [fontname="MS Gothic"];
+
+  "Wheel Encoder" -> "Positon Estimator" [label="/wheel_encoder\lrotation"]
+  "Behavior Executor" -> "Motor Controller" [label="/motor_controller\lvelocity_cmd"]
+  "Camera" -> "Behavior Executor" [label="/camera_images\limage"]
+  "Positon Estimator" -> "Behavior Executor" [label="/position_estimate\lpose"]
+}
+#+end_src
+
+** ROS Message Passing
+
+메시지: 노드간 통신할때 이동하는 실제 데이터
+ - 메시지는 텍스트로 구성. 메시지를 이해하기 쉽다.
+
+미리 정의된 메시지 타입 : 
+ - http://wiki.ros.org/common_msgs 
+ - https://github.com/ros/common_msgs
+
+** ROS Services
+
+ - Request-Response, 1:1 통신
+ - PubSub이 필요 없는 경우 사용, 요청 할때만 데이터가 제공. 네트워크 부하가 적다.
+
+*** 예시: 카메라 이미지 얻기
+
+
+
+#+begin_src dot :file ros_services1.png :cmdline -Kdot -Tpng 
+digraph {
+  rankdir=LR;
+  node [color="#40e0d0"];
+  edge [fontname="MS Gothic"];
+  label = "Publicate and Subscribe";
+
+  "Camera" -> "Behavior Executor" [label="/camera_images\limage"]
+}
+#+end_src
+
+#+begin_src dot :file ros_services2.png :cmdline -Kdot -Tpng 
+digraph {
+  rankdir=LR;
+  node [color="#40e0d0"];
+  edge [fontname="MS Gothic", style=dotted];
+  label = "Request-Response";
+
+
+  "Behavior Executor" -> "Camera" [label="/capture_image\lrequest: exposure time"]
+  "Camera" -> "Behavior Executor" [label="\nresponse: image"]
+}
+#+end_src
+
+** ROS Turtlesim
+
+Turtle
+
+#+ATTR_HTML: width="200px"
+[[https://i.imgur.com/0r46gFH.png]]
+
+*** Turtlesim 실행하기
+
+[[https://d17h27t6h515a5.cloudfront.net/topher/2017/March/58d9820b_running-turtlesim/running-turtlesim.png]]
+
+
+1. 환경 변수 설정
+
+#+begin_src sh
+$ source /opt/ros/kinetic/setup.bash
+#+end_src
+
+2. roscore 실행 
+ - roscore: Master + rosout + parameter server
+  - Master: 네임 서비스
+  - rosout: stdout/stderr 로깅
+  - parameter server: 파라미터 저장 서버 
+
+#+begin_src sh
+$ roscore
+#+end_src
+
+3. turtlesim 패키지의 turtlesim_node 실행 
+#+begin_src sh
+$ rosrun turtlesim turtlesim_node
+#+end_src
+
+4. turtlesim 패키지의 turtle_teleop_key 실행
+#+begin_src sh
+rosrun turtlesim turtle_teleop_key
+#+end_src
+
+*** Turtlesim 노드 목록
+
+#+begin_src sh
+rosnode list
+#+end_src
+
+/rosout : ROS 메시지 로깅. 
+
+*** Turtlesim 토픽 목록
+#+begin_src sh
+rostopic list
+#+end_src
+
+*** Turtlesim 토픽 정보 
+
+#+begin_src sh
+rostopic info /turtle1/cmd_vel
+
+#+end_src
+
+*** Turtlesim 메시지 정보
+
+#+begin_src sh
+$ rosmsg info geometry_msg/Twist
+geometry_msgs/Vector3 linear
+  float64 x
+  float64 y
+  float64 z
+geometry_msgs/Vector3 angular
+  float64 x
+  float64 y
+  float64 z
+#+end_src
+
+or
+
+#+begin_src sh
+rosed geometry_msgs Twist.msg
+#+end_src
+
+*** Turtlesim Echo a Topic
+
+디버깅시 편리
+
+#+begin_src sh
+rostopic echo /turtle1/cmd_vel
+#+end_src
+
+***  rqt_graph
+
+#+begin_src sh
+rgt_graph
+#+end_src
+
+[[http://wiki.ros.org/rqt_graph?action=AttachFile&do=get&target=snap_rqt_graph_moveit_demo.png]]
+
+* 참고
+ - http://wiki.ros.org/ko/ROS/Tutorials
+ - https://github.com/robotpilot/ros-seminar
+ - ROS 설치: http://wiki.ros.org/kinetic/Installation/Ubuntu
