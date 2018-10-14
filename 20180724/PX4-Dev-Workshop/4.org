@@ -3,7 +3,7 @@
 #+AUTHOR:    Donghee Park
 # Creative Commons, Share-Alike (cc)
 #+EMAIL:     dongheepark@gmail.com
-#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} .org-src-container {border: 0px; box-shadow: none;}  pre { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; } </style>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
 * 수업
@@ -47,6 +47,20 @@ digraph {
   "Dicesion Making" -> "Actuation";
 }
 #+end_src
+
+**** Perception: Sense
+    - Sensor Fusion
+    - Filtering
+    - Localization
+
+**** Dicesion Making: Decide
+    - Path Planning
+    - Prediction
+    - Behavior Planning
+
+**** Actuation: Act
+    - PID Control
+    - Model Predictive Control
 
 *** ROS Master Process
 
@@ -304,11 +318,19 @@ rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
 
 catkin build
 
-roslaunch mavros px4.launch
+
 #+end_src
 
+~mavros_node~ 실행 
+
 #+begin_src sh 
-rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557"
+rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"
+#+end_src
+
+~mavros_node~ 실행 (다른 방법)
+#+begin_src sh 
+# px4.launch 이용하여 mavros node 실행
+roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.1.36:14557" _gcs_url:"udp://@127.0.0.1"
 #+end_src
 
 ** Gazebo 실행  
@@ -326,3 +348,8 @@ $ make posix_sitl_default gazebo
  - Nvidia TX2에 ROS 설치와 MAVROS(catkin build) 설치 
  - Nvidia TX2에서 Turtlesim 노드 실행해보기 (참고: https://shiroku.net/robotics/setup-ros-on-jetson-tx2/)
  - TX2에 Pixhawk(PX4) 연결방법 알아보기 
+
+# Connect tx2 x window from mac os x
+# sudo apt-get install x11vnc
+# x11vnc -auth /var/lib/lightdm/.Xauthority -display :0 -noxrecord -noxfixes -noxdamage -forever -passwd 123456
+# ScreenSharing 192.168.8.110(Ethernet) 192.168.8.111(Wifi) tegra-ubuntu.local

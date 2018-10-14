@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-09-21 Fri 08:29 -->
+<!-- 2018-10-15 Mon 06:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&lrm;</title>
+<title>PX4 Dev Workshop</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Donghee Park" />
 <style type="text/css">
@@ -181,7 +181,7 @@
   /*]]>*/-->
 </style>
 <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
-<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} .org-src-container {border: 0px; box-shadow: none;}  pre { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; } </style>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -231,51 +231,56 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
+<h1 class="title">PX4 Dev Workshop</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga25628d">1. 수업</a></li>
-<li><a href="#org73e636a">2. 수업 진행</a></li>
-<li><a href="#orgf951298">3. 수업 자료</a>
+<li><a href="#org7b9d82e">1. 수업</a></li>
+<li><a href="#orgce5f7bc">2. 수업 진행</a></li>
+<li><a href="#org5479aba">3. 수업 자료</a>
 <ul>
-<li><a href="#orgf750a9a">3.1. ROS</a></li>
-<li><a href="#org20ab18b">3.2. ROS Nodes and Topics</a>
+<li><a href="#org6a23bfc">3.1. ROS</a></li>
+<li><a href="#org1b0c173">3.2. ROS Nodes and Topics</a>
 <ul>
-<li><a href="#org0553d24">3.2.1. ROS Master Process</a></li>
-<li><a href="#org190e635">3.2.2. Topics</a></li>
-<li><a href="#org560586e">3.2.3. Publish and Subscribe</a></li>
+<li><a href="#org09f6173">3.2.1. ROS Master Process</a></li>
+<li><a href="#org4b7c5c8">3.2.2. Topics</a></li>
+<li><a href="#org0d350ed">3.2.3. Publish and Subscribe</a></li>
 </ul>
 </li>
-<li><a href="#org10c119d">3.3. ROS Message Passing</a></li>
-<li><a href="#orgfc4666f">3.4. ROS Services</a>
+<li><a href="#orgcbd0720">3.3. ROS Message Passing</a></li>
+<li><a href="#org10f72fe">3.4. ROS Services</a>
 <ul>
-<li><a href="#orgbf9ed3b">3.4.1. 예시: 카메라 이미지 얻기</a></li>
+<li><a href="#org3d3c18a">3.4.1. 예시: 카메라 이미지 얻기</a></li>
 </ul>
 </li>
-<li><a href="#orgb02f0e6">3.5. ROS Turtlesim</a>
+<li><a href="#orgb84b43d">3.5. ROS Turtlesim</a>
 <ul>
-<li><a href="#orge82fc56">3.5.1. Turtlesim 실행하기</a></li>
-<li><a href="#org75325a9">3.5.2. Turtlesim 노드 목록</a></li>
-<li><a href="#orga5e06d1">3.5.3. Turtlesim 토픽 목록</a></li>
-<li><a href="#org6c56ede">3.5.4. Turtlesim 토픽 정보</a></li>
-<li><a href="#org62fdc8a">3.5.5. Turtlesim 메시지 정보</a></li>
-<li><a href="#org336c582">3.5.6. Turtlesim Echo a Topic</a></li>
-<li><a href="#org76c55db">3.5.7. rqt<sub>graph</sub></a></li>
+<li><a href="#orgc560e28">3.5.1. Turtlesim 실행하기</a></li>
+<li><a href="#org2ab84d0">3.5.2. Turtlesim 노드 목록</a></li>
+<li><a href="#orgcdce6c9">3.5.3. Turtlesim 토픽 목록</a></li>
+<li><a href="#org0f9d5c6">3.5.4. Turtlesim 토픽 정보</a></li>
+<li><a href="#orgaee1fbd">3.5.5. Turtlesim 메시지 정보</a></li>
+<li><a href="#orga04d723">3.5.6. Turtlesim Echo a Topic</a></li>
+<li><a href="#org416c273">3.5.7. <code>rqt_graph</code></a></li>
 </ul>
 </li>
+<li><a href="#org24f8241">3.6. Gazebo Install</a></li>
+<li><a href="#orgc3b18c9">3.7. MavROS 설치 및 실행</a></li>
+<li><a href="#org04bf12a">3.8. Gazebo 실행</a></li>
 </ul>
 </li>
-<li><a href="#org8da5002">4. 참고</a></li>
+<li><a href="#org5cd0741">4. 참고</a></li>
+<li><a href="#org99cec3f">5. 과제</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga25628d" class="outline-2">
-<h2 id="orga25628d"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-org7b9d82e" class="outline-2">
+<h2 id="org7b9d82e"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
-<li>일시: 2018. 8. 9</li>
+<li>일시: 2018.</li>
 <li>목표: ROS를 설치하고 ROS 예제를 빌드하고 수정할 수 있다.</li>
 <li>교재: <a href="https://goo.gl/sDfk3j">https://goo.gl/sDfk3j</a></li>
 <li>코치: 박동희 dongheepark@gmail.com</li>
@@ -283,8 +288,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org73e636a" class="outline-2">
-<h2 id="org73e636a"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-orgce5f7bc" class="outline-2">
+<h2 id="orgce5f7bc"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>ROS 소개,
@@ -300,12 +305,12 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-orgf951298" class="outline-2">
-<h2 id="orgf951298"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-org5479aba" class="outline-2">
+<h2 id="org5479aba"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgf750a9a" class="outline-3">
-<h3 id="orgf750a9a"><span class="section-number-3">3.1</span> ROS</h3>
+<div id="outline-container-org6a23bfc" class="outline-3">
+<h3 id="org6a23bfc"><span class="section-number-3">3.1</span> ROS</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>Robot Operating System: 로봇 빌들에 사용되는 라이브러리 어플리케이션 모음 <a href="http://www.ros.org/">http://www.ros.org/</a></li>
@@ -321,18 +326,49 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org20ab18b" class="outline-3">
-<h3 id="org20ab18b"><span class="section-number-3">3.2</span> ROS Nodes and Topics</h3>
+<div id="outline-container-org1b0c173" class="outline-3">
+<h3 id="org1b0c173"><span class="section-number-3">3.2</span> ROS Nodes and Topics</h3>
 <div class="outline-text-3" id="text-3-2">
 
 <div class="figure">
-<p><img src="dot_example1.png" alt="dot_example1.png" />
+<p><img src="ros_nodes_and_topics1.png" alt="ros_nodes_and_topics1.png" />
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0553d24" class="outline-4">
-<h4 id="org0553d24"><span class="section-number-4">3.2.1</span> ROS Master Process</h4>
+<ol class="org-ol">
+<li><a id="orgd75b6ca"></a>Perception: Sense<br />
+<div class="outline-text-5" id="text-3-2-0-1">
+<ul class="org-ul">
+<li>Sensor Fusion</li>
+<li>Filtering</li>
+<li>Localization</li>
+</ul>
+</div>
+</li>
+
+<li><a id="orgd442c1f"></a>Dicesion Making: Decide<br />
+<div class="outline-text-5" id="text-3-2-0-2">
+<ul class="org-ul">
+<li>Path Planning</li>
+<li>Prediction</li>
+<li>Behavior Planning</li>
+</ul>
+</div>
+</li>
+
+<li><a id="org64d6886"></a>Actuation: Act<br />
+<div class="outline-text-5" id="text-3-2-0-3">
+<ul class="org-ul">
+<li>PID Control</li>
+<li>Model Predictive Control</li>
+</ul>
+</div>
+</li>
+</ol>
+
+<div id="outline-container-org09f6173" class="outline-4">
+<h4 id="org09f6173"><span class="section-number-4">3.2.1</span> ROS Master Process</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 노드 관리
@@ -340,14 +376,14 @@ for the JavaScript code in this tag.
 
 
 <div class="figure">
-<p><img src="dot_example2.png" alt="dot_example2.png" />
+<p><img src="ros_master_process1.png" alt="ros_master_process1.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org190e635" class="outline-4">
-<h4 id="org190e635"><span class="section-number-4">3.2.2</span> Topics</h4>
+<div id="outline-container-org4b7c5c8" class="outline-4">
+<h4 id="org4b7c5c8"><span class="section-number-4">3.2.2</span> Topics</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <p>
 노드간 통신 인터페이스. 구독 발행의 이름
@@ -361,8 +397,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org560586e" class="outline-4">
-<h4 id="org560586e"><span class="section-number-4">3.2.3</span> Publish and Subscribe</h4>
+<div id="outline-container-org0d350ed" class="outline-4">
+<h4 id="org0d350ed"><span class="section-number-4">3.2.3</span> Publish and Subscribe</h4>
 <div class="outline-text-4" id="text-3-2-3">
 <p>
 발행과 구독. 신문/잡지 발행 구독에 비유
@@ -387,8 +423,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org10c119d" class="outline-3">
-<h3 id="org10c119d"><span class="section-number-3">3.3</span> ROS Message Passing</h3>
+<div id="outline-container-orgcbd0720" class="outline-3">
+<h3 id="orgcbd0720"><span class="section-number-3">3.3</span> ROS Message Passing</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 메시지: 노드간 통신할때 이동하는 실제 데이터
@@ -407,8 +443,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgfc4666f" class="outline-3">
-<h3 id="orgfc4666f"><span class="section-number-3">3.4</span> ROS Services</h3>
+<div id="outline-container-org10f72fe" class="outline-3">
+<h3 id="org10f72fe"><span class="section-number-3">3.4</span> ROS Services</h3>
 <div class="outline-text-3" id="text-3-4">
 <ul class="org-ul">
 <li>Request-Response, 1:1 통신</li>
@@ -416,8 +452,8 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 
-<div id="outline-container-orgbf9ed3b" class="outline-4">
-<h4 id="orgbf9ed3b"><span class="section-number-4">3.4.1</span> 예시: 카메라 이미지 얻기</h4>
+<div id="outline-container-org3d3c18a" class="outline-4">
+<h4 id="org3d3c18a"><span class="section-number-4">3.4.1</span> 예시: 카메라 이미지 얻기</h4>
 <div class="outline-text-4" id="text-3-4-1">
 
 <div class="figure">
@@ -434,8 +470,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgb02f0e6" class="outline-3">
-<h3 id="orgb02f0e6"><span class="section-number-3">3.5</span> ROS Turtlesim</h3>
+<div id="outline-container-orgb84b43d" class="outline-3">
+<h3 id="orgb84b43d"><span class="section-number-3">3.5</span> ROS Turtlesim</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Turtle
@@ -448,8 +484,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-orge82fc56" class="outline-4">
-<h4 id="orge82fc56"><span class="section-number-4">3.5.1</span> Turtlesim 실행하기</h4>
+<div id="outline-container-orgc560e28" class="outline-4">
+<h4 id="orgc560e28"><span class="section-number-4">3.5.1</span> Turtlesim 실행하기</h4>
 <div class="outline-text-4" id="text-3-5-1">
 
 <div class="figure">
@@ -502,8 +538,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-org75325a9" class="outline-4">
-<h4 id="org75325a9"><span class="section-number-4">3.5.2</span> Turtlesim 노드 목록</h4>
+<div id="outline-container-org2ab84d0" class="outline-4">
+<h4 id="org2ab84d0"><span class="section-number-4">3.5.2</span> Turtlesim 노드 목록</h4>
 <div class="outline-text-4" id="text-3-5-2">
 <div class="org-src-container">
 <pre class="src src-sh">rosnode list
@@ -516,8 +552,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-orga5e06d1" class="outline-4">
-<h4 id="orga5e06d1"><span class="section-number-4">3.5.3</span> Turtlesim 토픽 목록</h4>
+<div id="outline-container-orgcdce6c9" class="outline-4">
+<h4 id="orgcdce6c9"><span class="section-number-4">3.5.3</span> Turtlesim 토픽 목록</h4>
 <div class="outline-text-4" id="text-3-5-3">
 <div class="org-src-container">
 <pre class="src src-sh">rostopic list
@@ -526,8 +562,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-org6c56ede" class="outline-4">
-<h4 id="org6c56ede"><span class="section-number-4">3.5.4</span> Turtlesim 토픽 정보</h4>
+<div id="outline-container-org0f9d5c6" class="outline-4">
+<h4 id="org0f9d5c6"><span class="section-number-4">3.5.4</span> Turtlesim 토픽 정보</h4>
 <div class="outline-text-4" id="text-3-5-4">
 <div class="org-src-container">
 <pre class="src src-sh">rostopic info /turtle1/cmd_vel
@@ -537,8 +573,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-org62fdc8a" class="outline-4">
-<h4 id="org62fdc8a"><span class="section-number-4">3.5.5</span> Turtlesim 메시지 정보</h4>
+<div id="outline-container-orgaee1fbd" class="outline-4">
+<h4 id="orgaee1fbd"><span class="section-number-4">3.5.5</span> Turtlesim 메시지 정보</h4>
 <div class="outline-text-4" id="text-3-5-5">
 <div class="org-src-container">
 <pre class="src src-sh">$ rosmsg info geometry_msg/Twist
@@ -564,8 +600,8 @@ or
 </div>
 </div>
 
-<div id="outline-container-org336c582" class="outline-4">
-<h4 id="org336c582"><span class="section-number-4">3.5.6</span> Turtlesim Echo a Topic</h4>
+<div id="outline-container-orga04d723" class="outline-4">
+<h4 id="orga04d723"><span class="section-number-4">3.5.6</span> Turtlesim Echo a Topic</h4>
 <div class="outline-text-4" id="text-3-5-6">
 <p>
 디버깅시 편리
@@ -578,11 +614,11 @@ or
 </div>
 </div>
 
-<div id="outline-container-org76c55db" class="outline-4">
-<h4 id="org76c55db"><span class="section-number-4">3.5.7</span> rqt<sub>graph</sub></h4>
+<div id="outline-container-org416c273" class="outline-4">
+<h4 id="org416c273"><span class="section-number-4">3.5.7</span> <code>rqt_graph</code></h4>
 <div class="outline-text-4" id="text-3-5-7">
 <div class="org-src-container">
-<pre class="src src-sh">rgt_graph
+<pre class="src src-sh">rqt_graph
 </pre>
 </div>
 
@@ -594,22 +630,115 @@ or
 </div>
 </div>
 </div>
+
+
+<div id="outline-container-org24f8241" class="outline-3">
+<h3 id="org24f8241"><span class="section-number-3">3.6</span> Gazebo Install</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+<a href="https://goo.gl/fzhFYX">https://goo.gl/fzhFYX</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$ sudo apt-get remove <span style="color: #98be65;">'.*gazebo.*'</span> <span style="color: #98be65;">'.*sdformat.*'</span> <span style="color: #98be65;">'.*ignition-math.*'</span> <span style="color: #98be65;">'.*ignition-msgs.*'</span> <span style="color: #98be65;">'.*ignition-transport.*'</span>
+$ sudo apt-get install ros-kinetic-desktop-full -y
+</pre>
+</div>
+</div>
 </div>
 
-<div id="outline-container-org8da5002" class="outline-2">
-<h2 id="org8da5002"><span class="section-number-2">4</span> 참고</h2>
+<div id="outline-container-orgc3b18c9" class="outline-3">
+<h3 id="orgc3b18c9"><span class="section-number-3">3.7</span> MavROS 설치 및 실행</h3>
+<div class="outline-text-3" id="text-3-7">
+<p>
+<a href="https://goo.gl/JcPk1Q">https://goo.gl/JcPk1Q</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">
+<span style="color: #5B6268;">## </span><span style="color: #5B6268;">Create catkin workspace (ROS build system)</span>
+mkdir -p ~/catkin_ws/src
+<span style="color: #c678dd;">cd</span> ~/catkin_ws
+
+<span style="color: #5B6268;">## </span><span style="color: #5B6268;">Install dependencies</span>
+sudo apt-get install python-wstool python-rosinstall-generator python-catkin-tools -y
+
+<span style="color: #5B6268;">## </span><span style="color: #5B6268;">Initialise wstool</span>
+wstool init ~/catkin_ws/src
+
+<span style="color: #5B6268;">## </span><span style="color: #5B6268;">Build MAVROS</span>
+<span style="color: #5B6268;">### </span><span style="color: #5B6268;">Get source (upstream - released)</span>
+rosinstall_generator --upstream mavros --rosdistro kinetic | tee /tmp/mavros.rosinstall
+<span style="color: #5B6268;">### </span><span style="color: #5B6268;">Get latest released mavlink package</span>
+rosinstall_generator mavlink --rosdistro kinetic | tee -a /tmp/mavros.rosinstall
+<span style="color: #5B6268;">### </span><span style="color: #5B6268;">Setup workspace &amp; install deps</span>
+wstool merge -t src /tmp/mavros.rosinstall
+wstool update -t src
+rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
+
+catkin build
+
+
+</pre>
+</div>
+
+<p>
+<code>mavros_node</code> 실행 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">rosrun mavros mavros_node _fcu_url:=<span style="color: #98be65;">"udp://:14540@127.0.0.1:14557"</span> _gcs_url:=<span style="color: #98be65;">"udp://@127.0.0.1"</span>
+</pre>
+</div>
+
+<p>
+<code>mavros_node</code> 실행 (다른 방법)
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #5B6268;"># </span><span style="color: #5B6268;">px4.launch &#51060;&#50857;&#54616;&#50668; mavros node &#49892;&#54665;</span>
+roslaunch mavros px4.launch fcu_url:=<span style="color: #98be65;">"udp://:14540@192.168.1.36:14557"</span> _gcs_url:<span style="color: #98be65;">"udp://@127.0.0.1"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org04bf12a" class="outline-3">
+<h3 id="org04bf12a"><span class="section-number-3">3.8</span> Gazebo 실행</h3>
+<div class="outline-text-3" id="text-3-8">
+<div class="org-src-container">
+<pre class="src src-sh">$ make posix_sitl_default gazebo
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5cd0741" class="outline-2">
+<h2 id="org5cd0741"><span class="section-number-2">4</span> 참고</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li><a href="http://wiki.ros.org/ko/ROS/Tutorials">http://wiki.ros.org/ko/ROS/Tutorials</a></li>
 <li><a href="https://github.com/robotpilot/ros-seminar">https://github.com/robotpilot/ros-seminar</a></li>
 <li>ROS 설치: <a href="http://wiki.ros.org/kinetic/Installation/Ubuntu">http://wiki.ros.org/kinetic/Installation/Ubuntu</a></li>
+<li>MAVROS 설치: <a href="https://github.com/mavlink/mavros/tree/master/mavros">https://github.com/mavlink/mavros/tree/master/mavros</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org99cec3f" class="outline-2">
+<h2 id="org99cec3f"><span class="section-number-2">5</span> 과제</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>Nvidia TX2에 ROS 설치와 MAVROS(catkin build) 설치</li>
+<li>Nvidia TX2에서 Turtlesim 노드 실행해보기 (참고: <a href="https://shiroku.net/robotics/setup-ros-on-jetson-tx2/">https://shiroku.net/robotics/setup-ros-on-jetson-tx2/</a>)</li>
+<li>TX2에 Pixhawk(PX4) 연결방법 알아보기</li>
 </ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2018-09-21 Fri 08:29</p>
+<p class="date">Created: 2018-10-15 Mon 06:37</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
