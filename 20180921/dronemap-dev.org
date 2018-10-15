@@ -1,0 +1,74 @@
+#+STARTUP: showeverything
+#+TITLE:     Dronemap Development
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+#+OPTIONS:   H:3 num:t toc:nil \n:t
+
+일시: <2018-09-21 Fri>
+장소: 송도 G타워
+
+** 드론맵 개발
+
+#+begin_src dot :file dronemap_dev1.png :cmdline -Kdot -Tpng
+digraph {
+  rankdir=LR
+  graph [fontname="NanumSquare"];
+  node [shape=rect, color="#40e0d0"]
+  edge [dir="both", fontname="NanumSquare"];
+  label = "통신";
+  "PX4, Ardupilot*" -> "Onboard*" [label="mavlink"];
+  "DJI Matrice, A3, N3" -> "Onboard*" [label="dji_sdk"];
+  "DJI Phantom, Mavic" -> "DJI Bridge App" [label="mobile-sdk"];
+  "Onboard*" -> "UTM Server*" [label="udp"];
+  "DJI Bridge App" -> "UTM Server*" [label="udp"];
+  "WEB RESTful Server*" -> "UTM Server*" [label="udp"];
+  "WEB UI*" -> "WEB RESTful Server*" [label="http"];
+
+  subgraph cluster_drone {
+    label = "Drones";
+    "PX4, Ardupilot*";
+    "DJI Matrice, A3, N3";
+    "DJI Phantom, Mavic";
+    "Onboard*";
+  }
+  subgraph cluster_user {
+    label = "Users";
+    "WEB UI*";
+    "Desktop UI";
+    "Android App";
+  }
+}
+#+end_src
+
+
+** 통신
+
+Mavlink
+ - PX4: [[https://www.dronecode.org/sdk/][DRONECODE SDK]]
+ - Ardupilot: Raw Mavlink
+
+DJI
+ - DJI SDK: Mobile SDK. Onboard SDK.
+
+
+Library
+ - ROS: [[http://wiki.ros.org/mavros][MAVROS]], ~dji_sdk~ (onboard 기반), [[https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/ROS_Example/ros_dji2mav_0.2.1_package.html][DJI2MAV]]
+ - Android: mobile-sdk
+  - rosettadrone
+
+** Flight Controller
+ - PX4 on UTM
+  - Dronecode
+  - QGC from Airmap https://www.airmap.com/airmap-platform-sdk-utm-services-dronecode-qgroundcontrol-integration-developers-oems/
+  - Airmap Platform SDK https://github.com/airmap/platform-sdk
+  - Mavlink 1.0 or 2.0. UTM사용하기 위해서는 2.0필요. 보완관련 기능 추가
+
+[[https://github.com/airmap/platform-sdk/raw/master/doc/images/airmap-platform-sdk-diagrams.png]]
+
+** UI
+ - WEB: React 사용
+ - [[https://reactjs.org/][React]]: A JavaScript library for building user interfaces
+ - [[https://facebook.github.io/react-native/][React Native]]: Build native mobile apps using JavaScript and React

@@ -1,0 +1,113 @@
+#+STARTUP: showeverything
+#+TITLE:     Dronemap Development
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+#+OPTIONS:   H:3 num:t toc:nil \n:t
+
+* 드론맵 서비스
+
+여러 드론의 운영 및 관리를 사용하기 쉽게 도와줍니다.
+
+ - 드론 기체 및 페이로드 관리
+ - 사전 비행 계획
+ - 비행 운영 및 관제
+ - 비행 후 데이터 분석 및 리포팅
+
+* 드론맵 주요 기능 및 특징
+
+ - 웹기반의 무인드론 관리 및 관제서비스
+ - MAVLINK 1.0/2.0 지원, PX4 V1.8 지원
+ - LTE 또는 WIFI 통신. 기존의 433MHZ 텔레메트리 관제서버로 포워딩 해야함.
+ - Network RTK GPS(MAVLINK RTCM3 STREAM MESSAGE 제공)
+ - 드론 영상 스트리밍
+ - 데이터 분석(비행 후 데이터 시각화)
+
+** 무인 드론 관리 및 관제 서비스
+
+기본 화면
+
+[[https://i.imgur.com/whfoC78.png]]
+
+기체 및 페이로드 관리
+
+[[https://i.imgur.com/aNk0yPk.png]]
+
+** 미션 WAYPOINT 편집
+
+사전 계획
+https://i.imgur.com/vZ9XWQ8.png
+
+WAYPOINT 관리
+[[https://i.imgur.com/VFbEzNe.png]]
+
+
+** 비행 운영 및 관제
+
+드론 영상 스트리밍
+https://i.imgur.com/B76cfRD.png
+
+비행 운영
+https://i.imgur.com/Om2SOb8.png
+
+비행 관제
+[[https://i.imgur.com/S1GPGjQ.png]]
+
+** 비행 후 데이터 분석
+
+비행 로그 분석
+
+[[https://i.imgur.com/SHhLwEM.png]]
+
+** 데모
+
+실제 비행 데모
+#+BEGIN_EXPORT html
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Hm-4NEgQBLY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+#+END_EXPORT
+
+* 유사 서비스 주요 기능
+
+** Kittyhawk
+  - https://kittyhawk.io
+  - 기본 관제 기능
+  - 비행 앱 제공(In-Flight Operations)  https://play.google.com/store/apps/details?id=io.kittyhawk&hl=ko
+  - DJI 기체 지원
+  - 사전 비행 체크리스트 제공
+  - LAANC (FAA 드론 비행 인증) 지원(AIRMAP 사용)
+  - 팀 관리(프로젝트 관리)
+
+** TerraDrone
+  - https://www.terra-drone.net/en/software/utm/
+  - 기본 관제 기능 (지도 체크, 비행 계획, 비행, 지오펜스)
+  - LG U+와 제휴 https://www.terra-drone.net/en/terradrone_lgu/
+
+** Skyward
+  - https://skyward.io
+  - 데모: https://www.youtube.com/watch?v=m6s6Xy8y1ko
+  - 기본 관제 기능
+  - 비행구역 체크
+  - 비행 데이터 분석
+  - 비행 파일럿 관리
+
+** DJI FlightHUB
+  - https://www.dji.com/kr/flighthub
+  - 기본 관제 기능 (여러대 관리)
+  - 비행 데이터 관리
+  - 비행 파일럿 관리
+
+** 드론 Photo Mapping 서비스
+  - https://www.skycatch.com DJI 기반
+  - https://www.dronedeploy.com DJI 기반
+  - https://angelswing.io 한국
+  - https://event38.com/drone-data-management-system APM 기반
+
+** 드론 LTE 통신 서비스
+ -  Uavcast Pro: FlightController 와 GroundStation를 LTE 연결. https://uavmatrix.com/uavcast-pro/
+
+** 그외 주요 지상국
+ - http://qgroundcontrol.com
+ - https://www.ugcs.com
+ - http://ardupilot.org/planner
