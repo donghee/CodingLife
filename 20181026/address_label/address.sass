@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:300,400,700')
+
+$primary: #2A3239
+
+@page
+  margin: 0
+  size: landscape
+
+html
+  align-content: center
+  align-items: center
+  display: flex
+  font-family: 'KoPubDotum', sans-serif
+  height: 100%
+  justify-content: center
+
+  body
+    background: #fff
+    box-sizing: border-box
+    color: $primary
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+    margin: 0
+    width: 29.7cm
+    height: 21cm
+
+    div
+      &#informations
+        #flex: 1
+        #padding: 0
+        #position: relative
+
+    section
+      box-sizing: border-box
+
+      &#mail
+        flex: 1
+        padding: 0
+        position: relative
+        border-bottom: 1px dotted grey
+
+        h1
+          font-size: 20pt
+          font-weight: 300
+          text-transform: uppercase
+
+          &#name
+            display: inline-block
+            margin-left: 1cm
+
+          &#phone
+            display: inline-block
+            margin-left: 1cm
+
+          &#address
+            margin-left: 1cm
+            margin-top: 1cm
+            margin-bottom: 0
+
+
