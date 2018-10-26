@@ -2,7 +2,7 @@
 
 우편택배 주소목록: https://docs.google.com/spreadsheets/d/1WuFdCuVBwx1Ld2W0VkgFjNlyiBb5PTJQbF8UqXojeDM/edit#gid=0
 
-## Install 
+## Required 
 
 pip3 install weasyprint
 
