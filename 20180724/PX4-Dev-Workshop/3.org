@@ -1,8 +1,9 @@
 #+STARTUP: showeverything
+#+TITLE:     PX4 Dev Workshop 
 #+AUTHOR:    Donghee Park
 # Creative Commons, Share-Alike (cc)
 #+EMAIL:     dongheepark@gmail.com
-#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} .org-src-container {border: 0px; box-shadow: none;}  pre { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; } </style>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
 * 수업
@@ -36,15 +37,15 @@
  - 부팅 읽기
 
 4. PX4 앱 분석 30분
- - `px4_simple_app` 코드 분석
+ - ~px4_simple_app~ 코드 분석
 
 * 과제
  - FizzBuzz 풀어서 *풀이 코드 github에 업로드*
    - https://www.acmicpc.net/problem/14761
- -  `px4_simple_app` 코드 분석 읽고 *질문 github에 업로드* 
+ -  ~px4_simple_app~ 코드 분석 읽고 *질문 github에 업로드* 
    - 코드: https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_simple_app/px4_simple_app.c
    - 분석: https://github.com/donghee/CodingLife/blob/master/20180724/PX4-Dev-Workshop/3.org#px4_simple_app-%EB%B6%84%EC%84%9D
- -  `px4_daemon_app` 코드 분석 하고 *분석 내용 github에 업로드* 
+ -  ~px4_daemon_app~ 코드 분석 하고 *분석 내용 github에 업로드* 
    - https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_daemon_app/px4_daemon_app.c
  -  리눅스에 ROS 설치.
    - 설치문서: https://dev.px4.io/en/ros/mavros_installation.html

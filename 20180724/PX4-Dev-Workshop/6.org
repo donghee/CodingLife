@@ -1,0 +1,196 @@
+#+STARTUP: showeverything
+#+TITLE:     PX4 Dev Workshop
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} .org-src-container {border: 0px; box-shadow: none;}  pre { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; } </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+
+* 수업
+ - 일시: 2018. 9. 14
+ - 목표: 미세먼지센서 값을 취득하고 시각화할 수 있다.
+ - 교재: https://goo.gl/sDfk3j
+ - 코치: 박동희 dongheepark@gmail.com
+
+
+* 수업 진행
+ - 미세먼지센서 인터페이스 분석(데이터 쉬트 분석/기존의 드라이버 코드 분석
+ - 미세먼지센서 ROS메시지 만들기
+ - RViz
+ - RQT
+
+* 수업 자료
+
+** 미세먼지 센서 GP2Y1010AU0F
+#+ATTR_HTML: width="200px"
+[[https://i.imgur.com/D4fVKme.png]]
+
+데이터 쉬트: https://www.sparkfun.com/datasheets/Sensors/gp2y1010au_e.pdf
+
+AnalogOutput: Dustdensity as output voltage
+#+ATTR_HTML: width="200px"
+[[https://i.imgur.com/COUMXUF.png]]
+
+0.7v부터 3.6v 사이의 데이터가 선형. 나머지는 무시.
+
+*** 토픽 구성
+**** Subscribed Topics
+
+mg/m^3 로 출력
+
+#+begin_src
+/GP2Y1010AU0F
+#+end_src
+**** Published Topics
+
+raw voltage. not mg/m^3
+#+begin_src
+/dust_sensor
+#+end_src
+
+**** Services Called
+/GP2Y1010AU0F/setupanaloginput
+
+*** 메시지/서비스 만들기
+
+Analog.msg
+#+begin_src
+# Reading from a single analog IO pin.
+Header header
+uint16 value
+#+end_src
+
+Digital.msg
+#+begin_src
+# Reading or command to a single digital IO pin.
+Header header
+
+# value of pin
+uint8 LOW=0
+uint8 HIGH=255
+
+uint8 value
+
+# direction of pin
+uint8 INPUT=0
+uint8 OUTPUT=255
+
+uint8 direction
+#+end_src
+
+Enable.srv
+#+begin_src
+bool enable
+---
+bool state
+#+end_src
+
+SetupChannel.srv
+#+begin_src
+# message to setup an IO channel
+string topic_name
+uint8 pin
+uint8 value
+uint8 rate
+---
+#+end_src
+
+*** 센서 인터페이스
+
+#+begin_src
+import rospy
+
+from dust_msgs.msg import *
+
+class DigitalSensor:
+
+    def __init__(self, name, pin, value, rate, device):
+        self.device = device
+        self.pin = pin
+        self.device.setDigital(pin, value, 0)
+        self.pub = rospy.Publisher('~'+name, Digital, queue_size=5)
+        self.t_delta = rospy.Duration(1.0/rate)
+        self.t_next = rospy.Time.now() + self.t_delta
+    def update(self):
+        if rospy.Time.now() > self.t_next:
+            msg = Digital()
+            msg.header.stamp = rospy.Time.now()
+            msg.value = self.device.getDigital(self.pin)
+            self.pub.publish(msg)
+            self.t_next = rospy.Time.now() + self.t_delta
+
+class AnalogSensor:
+    """ Class for an analog input. """
+    def __init__(self, name, pin, value, rate, leng, device):
+        self.device = device
+        self.pin = pin
+        self.device.setDigital(pin, value, 0)
+        self.pub = rospy.Publisher('~'+name, Analog, queue_size=5)
+        self.t_delta = rospy.Duration(1.0/rate)
+        self.t_next = rospy.Time.now() + self.t_delta
+        self.leng = leng
+    def update(self):
+        if rospy.Time.now() > self.t_next:
+            msg = Analog()
+            msg.header.stamp = rospy.Time.now()
+            msg.value = self.device.getAnalog(self.pin, self.leng)
+            if msg.value >= 0:
+                self.pub.publish(msg)
+            self.t_next = rospy.Time.now() + self.t_delta
+
+#+end_src
+
+*** ADC값을 미세먼지 단위로 바꾸기
+
+전압을 mg/m^3 단위로 바꾸는 식
+
+#+begin_src
+dustDensity = 0.17*(dustVal*0.0049)-0.1;
+#+end_src
+
+
+** RViz/RQT
+
+*** RViz
+ - 시각화 도구
+ - 레이저, 카메라, IMU등의 다양한 센서데이터를 시각화 할 수 있다.
+ - 로봇과 계획을 표현할 수 있다. (URDF)
+
+
+*** RQT
+ - QT gui 툴킷.
+ - ~rqt_graph~: 노드와 노드 사이의 연결 정보를 표시
+ - ~rqt_plot~: 시간에 따라 값을 표시
+ - ~rqt_bag~: 데이터를 메시지 형태로 저장 및 재생
+
+실행
+#+begin_src
+rqt
+#+end_src
+
+#+ATTR_HTML: width="200px"
+[[http://wiki.ros.org/rqt?action=AttachFile&do=get&target=ros_gui.png]]
+
+~rqt_plot~
+#+begin_src
+rqt_plot /turtle1/pose/x:y:z
+#+end_src
+#+ATTR_HTML: width="200px"
+[[http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics?action=AttachFile&do=get&target=rqt_plot.png]]
+
+~rqt_bag~
+#+begin_src
+rosbag record /turtle/pos/x:y:z
+rqt_bag
+#+end_src
+
+실습:
+ - turtle1의 데이터를 저장하고 재생해보자.
+
+참고:http://wiki.ros.org/rosbag/Tutorials/Recording%20and%20playing%20back%20data
+
+** 실습: 미세먼지센서 데이터 어그리게이션 앱 작성 실습
+ - RViz와 RQT를 이용하여 미세먼지 센서 데이터를 시각화 해보자.
+
+* 참고
+ - https://github.com/robotpilot/ros-seminar
