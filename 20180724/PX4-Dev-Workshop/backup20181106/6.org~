@@ -1,0 +1,87 @@
+#+STARTUP: showeverything
+#+TITLE:     PX4 Dev Workshop
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} .org-src-container {border: 0px; box-shadow: none;}  pre { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; } </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+
+* 수업
+ - 일시: 2018.
+ - 목표: 미세먼지센서 값을 취득하고 시각화할 수 있다.
+ - 교재: https://goo.gl/sDfk3j
+ - 코치: 박동희 dongheepark@gmail.com
+
+
+* 수업 진행
+ - MAVROS 노드 만들기
+
+* 수업 자료
+
+<2018-11-07 Wed>
+ - 최근 버전에 precland 모드에서 MAVLINK_MSG_ID_LANDING_TARGET
+받는게 추가 되었다. handle_message_landing_target
+mavros 에서 LANDING TARGET 플러그인을 추가해야겠다.
+https://github.com/mavlink/mavros/tree/master/mavros_extras/src/plugins
+
+ - CopterExpress의 clever 프로젝트
+
+offboard mode 사용 간단하게 할 수 있는 서비스 추가 되어 있음 get_telemetry, navigate
+https://github.com/CopterExpress/clever/blob/master/clever/src/simple_offboard.py
+
+/mavros/setpoint_raw/local raw노드는 뭐지? 메시지가 다르군.
+
+세종대 마커 이용해서 정밀 랜딩
+navigation using  aruco marker
+https://github.com/CopterExpress/clever/blob/master/docs/aruco.md
+
+1. aruco 로 마커인식
+2. aruco 로 위치 인식  https://github.com/CopterExpress/clever/tree/master/aruco_pose/src
+3. aruco tf 보내기 (aruco_map)
+4. local origin, aruco_map_vision, 던지기. fcu_horiz https://github.com/CopterExpress/clever/blob/0629bd718cc549db11fae7ed2acb672333ced50b/clever/src/aruco_vpe.cpp
+5. vision_position_pub_ 던지기.
+6. simple offboard api 작성
+7. aruco tf 받아서 offboard api 작성
+8. spiral 돌기 만들기 https://youtu.be/aqBION3TVhg?t=43
+
+관련 튜토리얼
+https://clever.copterexpress.com/aruco.html
+
+
+----
+
+발표자료
+https://elinux.org/images/7/79/Flying_Penguins-_Embedded_Linux_Applications_for_Autonomous_UAVs.pdf
+
+precision landing 예시
+http://github.com/claymation/lander
+
+1. SEEKING -> LANDING
+2. LANDING -> LANDED
+3. LANDED
+
+precision landing 참고
+ - https://github.com/goodrobots/vision_landing
+ - https://github.com/claymation/lander/blob/master/src/py/lander/nodes/commander.py
+ - https://github.com/yankailab/OpenKAI/blob/master/kiss/app/apCopter_aruco.kiss
+ - https://github.com/yankailab/OpenKAI/tree/master/kiss/app
+ - https://diydrones.com/profiles/blogs/precision-landing-with-opencv-and-aruco-markers-part-1
+ - https://www.youtube.com/watch?v=IJlt8dE_s5k
+ - https://github.com/openmv/openmv/tree/master/scripts/examples/18-MAVLink
+precision landing 키는건 rc input읽어서 하면 되겟네
+
+https://github.com/PX4/Firmware/blob/master/src/modules/landing_target_estimator/KalmanFilter.cpp
+
+"mavros/rc/in"
+
+#+BEGIN_SRC python
+import rospy
+import mavros_msgs
+
+# see ROS tutorials! init required
+rospy.init_node("rcin_sub")
+
+sub = rospy.Subscriber("mavros/rc/in", mavros_msgs.RCIn, lambda msg: print(msg))
+
+rospy.spin()
+#+END_SRC
