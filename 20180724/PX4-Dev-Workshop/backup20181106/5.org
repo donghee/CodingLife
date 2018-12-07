@@ -123,7 +123,7 @@ rosservice call /mavros/cmd/arming "value: true"
 **** ~TAKEOFF~
 
 #+begin_src sh
-rosservice call /mavros/cmd/takeoff "{min_pitch: 0.0, yaw: 0.0, latitude: 0.0, longitude: 0.0, altitude: 2.5}"
+rosservice call /mavros/cmd/takeoff "{min_pitch: 0.0, yaw: 0.0, latitude: 47.3977508, longitude: 8.5456074, altitude: 2.5}"
 #+end_src
 
 *** Publish
