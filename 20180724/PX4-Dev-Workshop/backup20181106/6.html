@@ -1,0 +1,1064 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-12-14 금 13:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PX4 Dev Workshop</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Donghee Park" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} .org-src-container {border: 0px; box-shadow: none;}  pre { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; } </style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">PX4 Dev Workshop</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2e16be0">1. 수업</a></li>
+<li><a href="#orgf2ddd5f">2. 수업 진행</a></li>
+<li><a href="#org2fc53f4">3. 수업 자료</a>
+<ul>
+<li><a href="#orgb280182">3.1. OpenCV 소개</a></li>
+<li><a href="#org2e6c852">3.2. OpenCV 설치</a>
+<ul>
+<li><a href="#org4675d1c">3.2.1. C++ (OpenCV-3.4.4)</a></li>
+<li><a href="#orgc6f6399">3.2.2. 예제</a></li>
+</ul>
+</li>
+<li><a href="#org774aa46">3.3. OpenCV 소개</a>
+<ul>
+<li><a href="#orge1fddf9">3.3.1. Mat: 이미지 타입</a></li>
+<li><a href="#orgd586e86">3.3.2. Mat: 이미지 읽기</a></li>
+<li><a href="#orga1f39e8">3.3.3. Mat: 복사</a></li>
+<li><a href="#org844c4d9">3.3.4. Filter: Sharpen</a></li>
+<li><a href="#org9435c97">3.3.5. Python (OpenCV-3.4.4)</a></li>
+</ul>
+</li>
+<li><a href="#org9645237">3.4. 실습</a></li>
+</ul>
+</li>
+<li><a href="#org6a8a7f4">4. 참고</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2e16be0" class="outline-2">
+<h2 id="org2e16be0"><span class="section-number-2">1</span> 수업</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>일시: 2018.</li>
+<li>목표: 컴퓨터 비전</li>
+<li>교재: <a href="https://goo.gl/sDfk3j">https://goo.gl/sDfk3j</a></li>
+<li>코치: 박동희 dongheepark@gmail.com</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf2ddd5f" class="outline-2">
+<h2 id="orgf2ddd5f"><span class="section-number-2">2</span> 수업 진행</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>컴퓨터 비전 소개</li>
+<li>OpenCV</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2fc53f4" class="outline-2">
+<h2 id="org2fc53f4"><span class="section-number-2">3</span> 수업 자료</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgb280182" class="outline-3">
+<h3 id="orgb280182"><span class="section-number-3">3.1</span> OpenCV 소개</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>1999 Gary Bradsky 개발 시작</li>
+<li>2005 Stanley, 2005 DARPA Grand Challenge</li>
+<li>OpenCV-3.4.4 2018년 11월 20일 릴리즈</li>
+<li><a href="https://opencv.org/">https://opencv.org/</a></li>
+<li>튜토리얼: <a href="https://docs.opencv.org/3.4.4/">https://docs.opencv.org/3.4.4/</a></li>
+<li>예제: <a href="https://docs.opencv.org/3.4.4/examples.html">https://docs.opencv.org/3.4.4/examples.html</a></li>
+<li>OpenCV 프로젝트 목표</li>
+</ul>
+
+<p>
+#+BEGIN<sub>QUOTE</sub>
+Advance vision research by providing not only open but also optimized code for basic vision infrastructure. <b>No more reinventing the wheel.</b>
+</p>
+
+<p>
+Disseminate vision knowledge by providing a <b>common infrastructure that developers could build on</b>, so that code would be more readily readable and transferable.
+#+EMD<sub>QUOTE</sub>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2e6c852" class="outline-3">
+<h3 id="org2e6c852"><span class="section-number-3">3.2</span> OpenCV 설치</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="outline-container-org4675d1c" class="outline-4">
+<h4 id="org4675d1c"><span class="section-number-4">3.2.1</span> C++ (OpenCV-3.4.4)</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<ul class="org-ul">
+<li>C++11, CMake 3.5.1</li>
+<li>QR code detector</li>
+</ul>
+
+<p>
+OpenCV 설치 스크립트(20분 정도)
+</p>
+
+<p>
+<a href="https://gist.github.com/donghee/15d7272885ac3505e0f20a63678e7ba3">https://gist.github.com/donghee/15d7272885ac3505e0f20a63678e7ba3</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc6f6399" class="outline-4">
+<h4 id="orgc6f6399"><span class="section-number-4">3.2.2</span> 예제</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<ul class="org-ul">
+<li>/home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/samples</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org774aa46" class="outline-3">
+<h3 id="org774aa46"><span class="section-number-3">3.3</span> OpenCV 소개</h3>
+<div class="outline-text-3" id="text-3-3">
+</div>
+<div id="outline-container-orge1fddf9" class="outline-4">
+<h4 id="orge1fddf9"><span class="section-number-4">3.3.1</span> Mat: 이미지 타입</h4>
+<div class="outline-text-4" id="text-3-3-1">
+
+<div class="figure">
+<p><img src="https://blog.iwanhae.ga/content/images/2015/10/b6df115410caafea291ceb011f19cc4a19ae6c2c.png" alt="b6df115410caafea291ceb011f19cc4a19ae6c2c.png" />
+</p>
+</div>
+
+<p>
+BGR 순으로 저장.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">2x2 &#54665;&#47148;, 8&#48708;&#53944; &#51200;&#51109;, &#44592;&#48376;&#44050;&#51008; &#48744;&#44036;&#49353;</span>
+<span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">M</span>(2,2, CV_8UC3, Scalar(0,0,255));
+cout &lt;&lt; <span style="color: #98be65;">"M = "</span> &lt;&lt; endl &lt;&lt; <span style="color: #98be65;">" "</span> &lt;&lt; M &lt;&lt; endl &lt;&lt; endl;
+imshow(<span style="color: #98be65;">"Mat"</span>, M);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="https://blog.iwanhae.ga/content/images/2015/10/MatBasicContainerOut1.png" alt="MatBasicContainerOut1.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/vWalF0u.png" alt="vWalF0u.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd586e86" class="outline-4">
+<h4 id="orgd586e86"><span class="section-number-4">3.3.2</span> Mat: 이미지 읽기</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">image</span>;
+image = imread(<span style="color: #98be65;">"qrcode.png"</span>);
+imshow(<span style="color: #98be65;">"Read image"</span>, image);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">"opencv2/highgui/highgui.hpp"</span>
+
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">cv</span>;
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span>( <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">argc</span>, <span style="color: #ECBE7B;">char</span>** <span style="color: #dcaeea;">argv</span> ) {
+  <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">img</span> = imread( argv[1], -1 );
+  <span style="color: #6959ce;">if</span>( img.empty() ) <span style="color: #6959ce;">return</span> -1;
+<span style="color: #ECBE7B;">p</span>  <span style="color: #dcaeea;">namedWindow</span>( <span style="color: #98be65;">"Example2"</span>, WINDOW_AUTOSIZE );
+  imshow( <span style="color: #98be65;">"Example2"</span>, img );
+  waitKey(0);
+  destroyWindow( <span style="color: #98be65;">"Example2"</span> );
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga1f39e8" class="outline-4">
+<h4 id="orga1f39e8"><span class="section-number-4">3.3.3</span> Mat: 복사</h4>
+<div class="outline-text-4" id="text-3-3-3">
+<p>
+B는 A의 refernce(헤더만 복사)
+C는 A의 clone(헤더, 데이터를 복사)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">A</span>, <span style="color: #dcaeea;">C</span>;                          <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Mat&#53364;&#47000;&#49828; A&#50752; C&#47484; &#49440;&#50616;</span>
+A = imread(<span style="color: #98be65;">"qrcode.png"</span>, IMREAD_COLOR); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">imread&#54632;&#49688;&#47196; &#51060;&#48120;&#51648;"qrcode.png"&#47484; &#48520;&#47084;&#50740;</span>
+<span style="color: #ECBE7B;">Mat</span> <span style="color: #c678dd;">B</span>(A);                                 <span style="color: #5B6268;">// </span><span style="color: #5B6268;">B&#47484; &#49440;&#50616;&#54616;&#44256; A&#47484; &#48373;&#49324;&#54644;&#50740;</span>
+C = A.clone();                                    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">A&#51032; &#54756;&#45908;, &#45936;&#51060;&#53552;&#47484; &#52852;&#54588;(&#53364;&#47200;)&#54616;&#50668; C&#50640; &#51200;&#51109;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org844c4d9" class="outline-4">
+<h4 id="org844c4d9"><span class="section-number-4">3.3.4</span> Filter: Sharpen</h4>
+<div class="outline-text-4" id="text-3-3-4">
+<p>
+선명하게(Sharpen) 필터: 현재 위치(i,j)를 변형. 현재 위치 픽셀에 5배 곱하여 더하고, 주변(4방)은 1배 곱하여 뺀다. 현재 위치에 저장.
+</p>
+
+
+<div class="figure">
+<p><img src="https://blog.iwanhae.ga/content/images/2015/10/7c2c71b792e6560be979d359e8f3f3b34c7938ff.png" alt="7c2c71b792e6560be979d359e8f3f3b34c7938ff.png" />
+</p>
+</div>
+
+<p>
+좌표
+</p>
+
+
+<div class="figure">
+<p><img src="https://blog.iwanhae.ga/content/images/2015/10/mat.png" alt="mat.png" />
+</p>
+</div>
+
+<p>
+cam.cpp
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/core/core.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/highgui/highgui.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;iostream&gt;</span>
+
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">cv</span>;
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">std</span>;
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">argc</span>, <span style="color: #ECBE7B;">char</span>** <span style="color: #dcaeea;">argv</span>)
+{
+    <span style="color: #ECBE7B;">VideoCapture</span> <span style="color: #dcaeea;">vc</span>(0); <span style="color: #5B6268;">//</span><span style="color: #5B6268;">0&#48264;&#50937;&#52896; &#52488;&#44592;&#54868;</span>
+    <span style="color: #6959ce;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>vc.isOpened()) <span style="color: #6959ce;">return</span> 0; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#50672;&#44208;&#49892;&#54056;</span>
+
+    <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">img</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">img&#49440;&#50616;</span>
+    <span style="color: #6959ce;">while</span> (1) {
+        vc &gt;&gt; img; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">0&#48264;&#50937;&#52896;&#50640;&#49436; &#48155;&#51008; &#45936;&#51060;&#53552;&#47484; img&#50640; &#51200;&#51109;</span>
+        <span style="color: #6959ce;">if</span> (img.empty()) <span style="color: #6959ce;">break</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">&#48155;&#51008;&#44144; &#50630;&#51004;&#47732; &#51333;&#47308;</span>
+        imshow(<span style="color: #98be65;">"cam"</span>, img);  <span style="color: #5B6268;">//</span><span style="color: #5B6268;">&#54868;&#47732;&#50640; &#46916;&#50864;&#44592;</span>
+        <span style="color: #6959ce;">if</span> (waitKey(10) == 27) <span style="color: #6959ce;">break</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">ESC&#53412; &#45580;&#47532;&#47732; &#51333;&#47308;</span>
+    }
+    destroyAllWindows();
+    <span style="color: #6959ce;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+sharpen.cpp
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/core/core.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/highgui/highgui.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/imgproc/imgproc.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;iostream&gt;</span>
+
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">cv</span>;
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">std</span>;
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">Sharpen</span>(<span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">Mat</span>&amp; <span style="color: #dcaeea;">myImage</span>, <span style="color: #ECBE7B;">Mat</span>&amp; <span style="color: #dcaeea;">Result</span>)
+{
+  CV_Assert(myImage.depth() == CV_8U);
+
+  Result.create(myImage.size(), myImage.type());
+  <span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">nChannels</span> = myImage.channels();
+
+  <span style="color: #6959ce;">for</span> (<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">j</span> = 1; j &lt; myImage.rows - 1; ++j)
+  {
+    <span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">uchar</span>* <span style="color: #dcaeea;">previous</span> = myImage.ptr&lt;<span style="color: #ECBE7B;">uchar</span>&gt;(j - 1);
+    <span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">uchar</span>* <span style="color: #dcaeea;">current</span> = myImage.ptr&lt;<span style="color: #ECBE7B;">uchar</span>&gt;(j);
+    <span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">uchar</span>* <span style="color: #dcaeea;">next</span> = myImage.ptr&lt;<span style="color: #ECBE7B;">uchar</span>&gt;(j + 1);
+
+    <span style="color: #ECBE7B;">uchar</span>* <span style="color: #dcaeea;">output</span> = Result.ptr&lt;<span style="color: #ECBE7B;">uchar</span>&gt;(j);
+
+    <span style="color: #6959ce;">for</span> (<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = nChannels; i &lt; nChannels * (myImage.cols - 1); ++i)
+    {
+      *output++ = saturate_cast&lt;<span style="color: #ECBE7B;">uchar</span>&gt;(5 * current[i]
+          - current[i - nChannels] - current[i + nChannels] - previous[i] - next[i]);
+    }
+  }
+
+  Result.row(0).setTo(Scalar(0));
+  Result.row(Result.rows - 1).setTo(Scalar(0));
+  Result.col(0).setTo(Scalar(0));
+  Result.col(Result.cols - 1).setTo(Scalar(0));
+}
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">argc</span>, <span style="color: #ECBE7B;">char</span>** <span style="color: #dcaeea;">argv</span>)
+{
+  <span style="color: #ECBE7B;">VideoCapture</span> <span style="color: #dcaeea;">vc</span>(0);
+
+  <span style="color: #6959ce;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>vc.isOpened()) <span style="color: #6959ce;">return</span> 0; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#50672;&#44208;&#49892;&#54056;</span>
+
+  <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">img</span>;
+  <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">output</span>;
+  <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">kern</span> = (Mat_&lt;<span style="color: #ECBE7B;">char</span>&gt;(3, 3) &lt;&lt; 0, -1, 0,
+      -1, 5, -1,
+      0, -1, 0);
+
+  <span style="color: #6959ce;">while</span> (1) {
+    vc &gt;&gt; img;
+
+    <span style="color: #6959ce;">if</span> (img.empty()) <span style="color: #6959ce;">break</span>;
+    imshow(<span style="color: #98be65;">"cam"</span>, img);
+    <span style="color: #6959ce;">if</span> (waitKey(10) == 27) <span style="color: #6959ce;">break</span>; <span style="color: #5B6268;">//</span><span style="color: #5B6268;">ESC</span>
+
+    Sharpen(img, output);       <span style="color: #5B6268;">//</span><span style="color: #5B6268;">&#50948;&#51901;&#51032; &#49885;&#51012; &#51201;&#50857;&#49884;&#53416; &#53076;&#46300;</span>
+    imshow(<span style="color: #98be65;">"output"</span>, output);
+
+    filter2D(img, output, img.depth(), kern); <span style="color: #5B6268;">//</span><span style="color: #5B6268;">&#50500;&#47000;&#51901; &#49885;&#51012; &#51201;&#50857;&#49884;&#53416; &#53076;&#46300;</span>
+    imshow(<span style="color: #98be65;">"output2"</span>, output);
+  }
+
+
+  destroyAllWindows();
+  <span style="color: #6959ce;">return</span> 0;
+}
+
+</pre>
+</div>
+
+<p>
+-&#x2014;
+</p>
+</div>
+</div>
+<div id="outline-container-org9435c97" class="outline-4">
+<h4 id="org9435c97"><span class="section-number-4">3.3.5</span> Python (OpenCV-3.4.4)</h4>
+<div class="outline-text-4" id="text-3-3-5">
+<p>
+OpenCV 설치 (Python)
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">pip install opencv-python --user
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-py">import cv2
+exit()
+
+sudo apt-get install ros-kinetic-usb-cam
+sudo apt-get install ros-kinetic-image-view
+
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>camera 읽기</li>
+</ol>
+
+<p>
+cat &gt; cam.py
+</p>
+
+<div class="org-src-container">
+<pre class="src src-py">import cv2
+cap = cv2.VideoCapture(0)
+
+print 'width: {0}, height: {1}'.format(cap.get(3),cap.get(4))
+cap.set(3,320)
+cap.set(4,240)
+
+while(True):
+    ret, frame = cap.read()
+
+    if (ret):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow('frame', gray)
+        if cv2.waitKey(1) &amp; 0xFF == ord('q'):
+            break
+
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9645237" class="outline-3">
+<h3 id="org9645237"><span class="section-number-3">3.4</span> 실습</h3>
+<div class="outline-text-3" id="text-3-4">
+</div>
+<ol class="org-ol">
+<li><a id="org601842d"></a>face detect<br />
+<div class="outline-text-5" id="text-3-4-0-1">
+<pre class="example">
+#include "opencv2/objdetect.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
+#include &lt;iostream&gt;
+
+using namespace std;
+using namespace cv;
+
+// Function for Face Detection
+void detectAndDraw( Mat&amp; img, CascadeClassifier&amp; cascade,
+                CascadeClassifier&amp; nestedCascade, double scale );
+string cascadeName, nestedCascadeName;
+
+int main( int argc, const char** argv )
+{
+    // VideoCapture class for playing video for which faces to be detected
+    VideoCapture capture;
+    Mat frame, image;
+
+    // PreDefined trained XML classifiers with facial features
+    CascadeClassifier cascade, nestedCascade;
+    double scale=1;
+
+    // Load classifiers from "opencv/data/haarcascades" directory
+    nestedCascade.load( "haarcascade_eye_tree_eyeglasses.xml" ) ;
+
+    // Change path before execution
+    cascade.load( "haarcascade_frontalcatface.xml" ) ;
+
+    // Start Video..1) 0 for WebCam 2) "Path to Video" for a Local Video
+    capture.open(0);
+    if( capture.isOpened() )
+    {
+        // Capture frames from video and detect faces
+        cout &lt;&lt; "Face Detection Started...." &lt;&lt; endl;
+        while(1)
+        {
+            capture &gt;&gt; frame;
+            if( frame.empty() )
+                break;
+            Mat frame1 = frame.clone();
+            detectAndDraw( frame1, cascade, nestedCascade, scale );
+            char c = (char)waitKey(10);
+
+            // Press q to exit from window
+            if( c == 27 || c == 'q' || c == 'Q' )
+                break;
+        }
+    }
+    else
+        cout&lt;&lt;"Could not Open Camera";
+    return 0;
+}
+
+void detectAndDraw( Mat&amp; img, CascadeClassifier&amp; cascade,
+                    CascadeClassifier&amp; nestedCascade,
+                    double scale)
+{
+    vector&lt;Rect&gt; faces, faces2;
+    Mat gray, smallImg;
+
+    cvtColor( img, gray, COLOR_BGR2GRAY ); // Convert to Gray Scale
+    double fx = 1 / scale;
+
+    // Resize the Grayscale Image
+    resize( gray, smallImg, Size(), fx, fx, INTER_LINEAR );
+    equalizeHist( smallImg, smallImg );
+
+    // Detect faces of different sizes using cascade classifier
+    cascade.detectMultiScale( smallImg, faces, 1.1,
+                            2, 0|CASCADE_SCALE_IMAGE, Size(30, 30) );
+
+    // Draw circles around the faces
+    for ( size_t i = 0; i &lt; faces.size(); i++ )
+    {
+        Rect r = faces[i];
+        Mat smallImgROI;
+        vector&lt;Rect&gt; nestedObjects;
+        Point center;
+        Scalar color = Scalar(255, 0, 0); // Color for Drawing tool
+        int radius;
+
+        double aspect_ratio = (double)r.width/r.height;
+        if( 0.75 &lt; aspect_ratio &amp;&amp; aspect_ratio &lt; 1.3 )
+        {
+            center.x = cvRound((r.x + r.width*0.5)*scale);
+            center.y = cvRound((r.y + r.height*0.5)*scale);
+            radius = cvRound((r.width + r.height)*0.25*scale);
+            circle( img, center, radius, color, 3, 8, 0 );
+        }
+        else
+            rectangle( img, cvPoint(cvRound(r.x*scale), cvRound(r.y*scale)),
+                    cvPoint(cvRound((r.x + r.width-1)*scale),
+                    cvRound((r.y + r.height-1)*scale)), color, 3, 8, 0);
+        if( nestedCascade.empty() )
+            continue;
+        smallImgROI = smallImg( r );
+
+        // Detection of eyes int the input image
+        nestedCascade.detectMultiScale( smallImgROI, nestedObjects, 1.1, 2,
+                                        0|CASCADE_SCALE_IMAGE, Size(30, 30) );
+
+        // Draw circles around eyes
+        for ( size_t j = 0; j &lt; nestedObjects.size(); j++ )
+        {
+            Rect nr = nestedObjects[j];
+            center.x = cvRound((r.x + nr.x + nr.width*0.5)*scale);
+            center.y = cvRound((r.y + nr.y + nr.height*0.5)*scale);
+            radius = cvRound((nr.width + nr.height)*0.25*scale);
+            circle( img, center, radius, color, 3, 8, 0 );
+        }
+    }
+
+    // Show Processed Image with detected faces
+    imshow( "Face Detection", img );
+}
+
+</pre>
+</div>
+</li>
+<li><a id="orgca26b6d"></a>QRCode Decoder from image<br />
+<div class="outline-text-5" id="text-3-4-0-2">
+<ul class="org-ul">
+<li>오늘의 목표</li>
+<li>3개파일 필요. CMakeList.txt qrCode.cpp qrcode.png</li>
+<li>qrcode.png는 <a href="https://www.the-qrcode-generator.com/">https://www.the-qrcode-generator.com/</a> 에서 생성</li>
+</ul>
+</div>
+
+
+<ol class="org-ol">
+<li><a id="org313b977"></a>CMakeLists.txt<br />
+<div class="outline-text-6" id="text-3-4-0-2-1">
+<div class="org-src-container">
+<pre class="src src-cmake">cmake_minimum_required(VERSION 2.8.12)
+
+PROJECT(opencv_tests)
+
+#set(OpenCV_DIR &lt;specify your path to the opencv installation directory&gt;)
+set(OpenCV_DIR /home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/)
+find_package( OpenCV REQUIRED )
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+include_directories( ${OpenCV_INCLUDE_DIRS})
+
+MACRO(add_example name)
+  ADD_EXECUTABLE(${name} ${name}.cpp)
+  TARGET_LINK_LIBRARIES(${name} ${OpenCV_LIBS})
+ENDMACRO()
+
+add_example(qrcode)
+add_example(qrcode-video)
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="orgc106b55"></a>qrcode.cpp<br />
+<div class="outline-text-6" id="text-3-4-0-2-2">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">#include &lt;opencv2/opencv.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/objdetect.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/imgcodecs.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/highgui/highgui.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;opencv2/imgproc/imgproc.hpp&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;iostream&gt;</span>
+
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">cv</span>;
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">std</span>;
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">display</span>(<span style="color: #ECBE7B;">Mat</span> &amp;<span style="color: #dcaeea;">im</span>, <span style="color: #ECBE7B;">Mat</span> &amp;<span style="color: #dcaeea;">bbox</span>)
+{
+  <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">n</span> = bbox.rows;
+  <span style="color: #6959ce;">for</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = 0 ; i &lt; n ; i++)
+  {
+    line(im, Point2i(bbox.at&lt;<span style="color: #ECBE7B;">float</span>&gt;(i,0),bbox.at&lt;<span style="color: #ECBE7B;">float</span>&gt;(i,1)), Point2i(bbox.at&lt;<span style="color: #ECBE7B;">float</span>&gt;((i+1) % n,0), bbox.at&lt;<span style="color: #ECBE7B;">float</span>&gt;((i+1) % n,1)), Scalar(255,0,0), 3);
+  }
+  imshow(<span style="color: #98be65;">"Result"</span>, im);
+}
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">argc</span>, <span style="color: #ECBE7B;">char</span>* <span style="color: #dcaeea;">argv</span>[])
+{
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Read image</span>
+  <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">inputImage</span>;
+  <span style="color: #6959ce;">if</span>(argc&gt;1)
+    inputImage = imread(argv[1]);
+  <span style="color: #6959ce;">else</span>
+    inputImage = imread(<span style="color: #98be65;">"qrcode.png"</span>);
+
+  <span style="color: #ECBE7B;">QRCodeDetector</span> <span style="color: #dcaeea;">qrDecoder</span>;
+
+  <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">bbox</span>, <span style="color: #dcaeea;">rectifiedImage</span>;
+
+  <span style="color: #a9a1e1;">std</span>::<span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">data</span> = qrDecoder.detectAndDecode(inputImage, bbox, rectifiedImage);
+  <span style="color: #6959ce;">if</span>(data.length()&gt;0)
+  {
+    cout &lt;&lt; <span style="color: #98be65;">"Decoded Data : "</span> &lt;&lt; data &lt;&lt; endl;
+
+    display(inputImage, bbox);
+    rectifiedImage.convertTo(rectifiedImage, CV_8UC3);
+    imshow(<span style="color: #98be65;">"Rectified QRCode"</span>, rectifiedImage);
+
+    waitKey(0);
+  }
+  <span style="color: #6959ce;">else</span>
+    cout &lt;&lt; <span style="color: #98be65;">"QR Code not detected"</span> &lt;&lt; endl;
+}
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</li>
+
+<li><a id="orgbeb7996"></a>QRCode Decoder from WebCAM<br />
+<ol class="org-ol">
+<li><a id="orgd7e3824"></a>qrcode-video.cpp<br />
+<div class="outline-text-6" id="text-3-4-0-3-1">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">"opencv2/objdetect.hpp"</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">"opencv2/imgproc.hpp"</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">"opencv2/highgui.hpp"</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;string&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;iostream&gt;</span>
+
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">std</span>;
+<span style="color: #6959ce;">using</span> <span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">cv</span>;
+
+<span style="color: #6959ce;">static</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">drawQRCodeContour</span>(<span style="color: #ECBE7B;">Mat</span> &amp;<span style="color: #dcaeea;">color_image</span>, <span style="color: #ECBE7B;">vector</span>&lt;Point&gt; <span style="color: #dcaeea;">transform</span>);
+<span style="color: #6959ce;">static</span> <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">drawFPS</span>(<span style="color: #ECBE7B;">Mat</span> &amp;<span style="color: #dcaeea;">color_image</span>, <span style="color: #ECBE7B;">double</span> <span style="color: #dcaeea;">fps</span>);
+<span style="color: #6959ce;">static</span> <span style="color: #ECBE7B;">int</span>  <span style="color: #c678dd;">liveQRCodeDetect</span>(<span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">string</span>&amp; <span style="color: #dcaeea;">out_file</span>);
+<span style="color: #6959ce;">static</span> <span style="color: #ECBE7B;">int</span>  <span style="color: #c678dd;">imageQRCodeDetect</span>(<span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">string</span>&amp; <span style="color: #dcaeea;">in_file</span>, <span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">string</span>&amp; <span style="color: #dcaeea;">out_file</span>);
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">argc</span>, <span style="color: #ECBE7B;">char</span> *<span style="color: #dcaeea;">argv</span>[])
+{
+    <span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">keys</span> =
+        <span style="color: #98be65;">"{h help ? |        | print help messages }"</span>
+        <span style="color: #98be65;">"{i in     |        | input  path to file for detect (with parameter - show image, otherwise - camera)}"</span>
+        <span style="color: #98be65;">"{o out    |        | output path to file (save image, work with -i parameter) }"</span>;
+    <span style="color: #ECBE7B;">CommandLineParser</span> <span style="color: #dcaeea;">cmd_parser</span>(argc, argv, keys);
+
+    cmd_parser.about(<span style="color: #98be65;">"This program detects the QR-codes from camera or images using the OpenCV library."</span>);
+    <span style="color: #6959ce;">if</span> (cmd_parser.has(<span style="color: #98be65;">"help"</span>))
+    {
+        cmd_parser.printMessage();
+        <span style="color: #6959ce;">return</span> 0;
+    }
+
+    <span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">in_file_name</span>  = cmd_parser.get&lt;<span style="color: #ECBE7B;">string</span>&gt;(<span style="color: #98be65;">"in"</span>);    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">input  path to image</span>
+    <span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">out_file_name</span>;
+    <span style="color: #6959ce;">if</span> (cmd_parser.has(<span style="color: #98be65;">"out"</span>))
+        out_file_name = cmd_parser.get&lt;<span style="color: #ECBE7B;">string</span>&gt;(<span style="color: #98be65;">"out"</span>);   <span style="color: #5B6268;">// </span><span style="color: #5B6268;">output path to image</span>
+
+    <span style="color: #6959ce;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>cmd_parser.check())
+    {
+        cmd_parser.printErrors();
+        <span style="color: #6959ce;">return</span> -1;
+    }
+
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">return_code</span> = 0;
+    <span style="color: #6959ce;">if</span> (in_file_name.empty())
+    {
+        return_code = liveQRCodeDetect(out_file_name);
+    }
+    <span style="color: #6959ce;">else</span>
+    {
+        return_code = imageQRCodeDetect(<span style="color: #a9a1e1;">samples</span>::findFile(in_file_name), out_file_name);
+    }
+    <span style="color: #6959ce;">return</span> return_code;
+}
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">drawQRCodeContour</span>(<span style="color: #ECBE7B;">Mat</span> &amp;<span style="color: #dcaeea;">color_image</span>, <span style="color: #ECBE7B;">vector</span>&lt;Point&gt; <span style="color: #dcaeea;">transform</span>)
+{
+    <span style="color: #6959ce;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>transform.empty())
+    {
+        <span style="color: #ECBE7B;">double</span> <span style="color: #dcaeea;">show_radius</span> = (color_image.rows  &gt; color_image.cols)
+                   ? (2.813 * color_image.rows) / color_image.cols
+                   : (2.813 * color_image.cols) / color_image.rows;
+        <span style="color: #ECBE7B;">double</span> <span style="color: #dcaeea;">contour_radius</span> = show_radius * 0.4;
+
+        <span style="color: #ECBE7B;">vector</span>&lt; <span style="color: #ECBE7B;">vector</span>&lt;Point&gt; &gt; <span style="color: #dcaeea;">contours</span>;
+        contours.push_back(transform);
+        drawContours(color_image, contours, 0, Scalar(211, 0, 148), cvRound(contour_radius));
+
+        <span style="color: #ECBE7B;">RNG</span> <span style="color: #dcaeea;">rng</span>(1000);
+        <span style="color: #6959ce;">for</span> (<span style="color: #ECBE7B;">size_t</span> <span style="color: #dcaeea;">i</span> = 0; i &lt; 4; i++)
+        {
+            <span style="color: #ECBE7B;">Scalar</span> <span style="color: #dcaeea;">color</span> = Scalar(rng.uniform(0,255), rng.uniform(0, 255), rng.uniform(0, 255));
+            circle(color_image, transform[i], cvRound(show_radius), color, -1);
+        }
+    }
+}
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">drawFPS</span>(<span style="color: #ECBE7B;">Mat</span> &amp;<span style="color: #dcaeea;">color_image</span>, <span style="color: #ECBE7B;">double</span> <span style="color: #dcaeea;">fps</span>)
+{
+    <span style="color: #ECBE7B;">ostringstream</span> <span style="color: #dcaeea;">convert</span>;
+    convert &lt;&lt; cvRound(fps) &lt;&lt; <span style="color: #98be65;">" FPS (QR detection)"</span>;
+    putText(color_image, convert.str(), Point(25, 25), FONT_HERSHEY_DUPLEX, 1, Scalar(0, 0, 255), 2);
+}
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">liveQRCodeDetect</span>(<span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">string</span>&amp; <span style="color: #dcaeea;">out_file</span>)
+{
+    <span style="color: #ECBE7B;">VideoCapture</span> <span style="color: #dcaeea;">cap</span>(0);
+    <span style="color: #6959ce;">if</span>(<span style="color: #51afef; font-weight: bold;">!</span>cap.isOpened())
+    {
+        cout &lt;&lt; <span style="color: #98be65;">"Cannot open a camera"</span> &lt;&lt; endl;
+        <span style="color: #6959ce;">return</span> -4;
+    }
+
+    <span style="color: #ECBE7B;">QRCodeDetector</span> <span style="color: #dcaeea;">qrcode</span>;
+    <span style="color: #ECBE7B;">TickMeter</span> <span style="color: #dcaeea;">total</span>;
+    <span style="color: #6959ce;">for</span>(;;)
+    {
+        <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">frame</span>, <span style="color: #dcaeea;">src</span>, <span style="color: #dcaeea;">straight_barcode</span>;
+        <span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">decode_info</span>;
+        <span style="color: #ECBE7B;">vector</span>&lt;Point&gt; <span style="color: #dcaeea;">transform</span>;
+        cap &gt;&gt; frame;
+        <span style="color: #6959ce;">if</span> (frame.empty())
+        {
+            cout &lt;&lt; <span style="color: #98be65;">"End of video stream"</span> &lt;&lt; endl;
+            <span style="color: #6959ce;">break</span>;
+        }
+        cvtColor(frame, src, COLOR_BGR2GRAY);
+
+        total.start();
+        <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">result_detection</span> = qrcode.detect(src, transform);
+        <span style="color: #6959ce;">if</span> (result_detection)
+        {
+            decode_info = qrcode.decode(src, transform, straight_barcode);
+            <span style="color: #6959ce;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>decode_info.empty()) { cout &lt;&lt; decode_info &lt;&lt; endl; }
+        }
+        total.stop();
+        <span style="color: #ECBE7B;">double</span> <span style="color: #dcaeea;">fps</span> = 1 / total.getTimeSec();
+        total.reset();
+
+        <span style="color: #6959ce;">if</span> (result_detection) { drawQRCodeContour(frame, transform); }
+        drawFPS(frame, fps);
+
+        imshow(<span style="color: #98be65;">"Live QR code detector"</span>, frame);
+        <span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">c</span> = (<span style="color: #ECBE7B;">char</span>)waitKey(30);
+        <span style="color: #6959ce;">if</span> (c == 27)
+            <span style="color: #6959ce;">break</span>;
+        <span style="color: #6959ce;">if</span> (c == <span style="color: #98be65;">' '</span> &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>out_file.empty())
+            imwrite(out_file, frame); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">TODO write original frame too</span>
+    }
+    <span style="color: #6959ce;">return</span> 0;
+}
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">imageQRCodeDetect</span>(<span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">string</span>&amp; <span style="color: #dcaeea;">in_file</span>, <span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">string</span>&amp; <span style="color: #dcaeea;">out_file</span>)
+{
+    <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">color_src</span> = imread(in_file, IMREAD_COLOR), <span style="color: #dcaeea;">src</span>;
+    cvtColor(color_src, src, COLOR_BGR2GRAY);
+    <span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">straight_barcode</span>;
+    <span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">decoded_info</span>;
+    <span style="color: #ECBE7B;">vector</span>&lt;Point&gt; <span style="color: #dcaeea;">transform</span>;
+    <span style="color: #6959ce;">const</span> <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">count_experiments</span> = 10;
+    <span style="color: #ECBE7B;">double</span> <span style="color: #dcaeea;">transform_time</span> = 0.0;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">result_detection</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #ECBE7B;">TickMeter</span> <span style="color: #dcaeea;">total</span>;
+    <span style="color: #ECBE7B;">QRCodeDetector</span> <span style="color: #dcaeea;">qrcode</span>;
+    <span style="color: #6959ce;">for</span> (<span style="color: #ECBE7B;">size_t</span> <span style="color: #dcaeea;">i</span> = 0; i &lt; count_experiments; i++)
+    {
+        total.start();
+        transform.clear();
+        result_detection = qrcode.detect(src, transform);
+        total.stop();
+        transform_time += total.getTimeSec();
+        total.reset();
+        <span style="color: #6959ce;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>result_detection)
+            <span style="color: #6959ce;">continue</span>;
+
+        total.start();
+        decoded_info = qrcode.decode(src, transform, straight_barcode);
+        total.stop();
+        transform_time += total.getTimeSec();
+        total.reset();
+    }
+    <span style="color: #ECBE7B;">double</span> <span style="color: #dcaeea;">fps</span> = count_experiments / transform_time;
+    <span style="color: #6959ce;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>result_detection)
+        cout &lt;&lt; <span style="color: #98be65;">"QR code not found"</span> &lt;&lt; endl;
+    <span style="color: #6959ce;">if</span> (decoded_info.empty())
+        cout &lt;&lt; <span style="color: #98be65;">"QR code cannot be decoded"</span> &lt;&lt; endl;
+
+    drawQRCodeContour(color_src, transform);
+    drawFPS(color_src, fps);
+
+    cout &lt;&lt; <span style="color: #98be65;">"Input  image file path: "</span> &lt;&lt; in_file  &lt;&lt; endl;
+    cout &lt;&lt; <span style="color: #98be65;">"Output image file path: "</span> &lt;&lt; out_file &lt;&lt; endl;
+    cout &lt;&lt; <span style="color: #98be65;">"Size: "</span> &lt;&lt; color_src.size() &lt;&lt; endl;
+    cout &lt;&lt; <span style="color: #98be65;">"FPS: "</span> &lt;&lt; fps &lt;&lt; endl;
+    cout &lt;&lt; <span style="color: #98be65;">"Decoded info: "</span> &lt;&lt; decoded_info &lt;&lt; endl;
+
+    <span style="color: #6959ce;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>out_file.empty())
+    {
+        imwrite(out_file, color_src);
+    }
+
+    <span style="color: #6959ce;">for</span>(;;)
+    {
+        imshow(<span style="color: #98be65;">"Detect QR code on image"</span>, color_src);
+        <span style="color: #6959ce;">if</span> (waitKey(0) == 27)
+            <span style="color: #6959ce;">break</span>;
+    }
+    <span style="color: #6959ce;">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+
+
+
+<div id="outline-container-org6a8a7f4" class="outline-2">
+<h2 id="org6a8a7f4"><span class="section-number-2">4</span> 참고</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li><a href="https://github.com/spmallick/learnopencv">https://github.com/spmallick/learnopencv</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Donghee Park</p>
+<p class="date">Created: 2018-12-14 금 13:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
