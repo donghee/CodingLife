@@ -16,15 +16,15 @@
 * 수업 진행
  - OPENCV
  - ~cv_bridge~
- - ~rqt_image_view~
+ - Object detection
+ - Tag detection
 
 * 수업 자료
 
 ** 이미지 포멧
 
- - ROS ~sensor_msgs/Image~ http://docs.ros.org/api/sensor_msgs/html/msg/Image.html
  - OpenCV ~cv::Mat~
-
+ - ROS ~sensor_msgs/Image~ http://docs.ros.org/api/sensor_msgs/html/msg/Image.html
 #+BEGIN_SRC
 rosmsg info sensor_msgs/Image
 #+END_SRC
@@ -33,7 +33,7 @@ rosmsg info sensor_msgs/Image
 
 ROS에서의 OpenCV 인터페이스
 
-[[http://wiki.ros.org/cv_bridge?action=AttachFile&do=get&target=cvbridge.png]]
+[[http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeCppHydro?action=AttachFile&do=get&target=cvbridge4.png]]
 
 *** CvImage
 
@@ -54,7 +54,7 @@ typedef boost::shared_ptr<CvImage const> CvImageConstPtr;
 }
 #+END_SRC
 
-** 예시: image converter
+** 예시: ~image_converter~
 
 #+BEGIN_SRC
 cd ~/catkin_ws/src
@@ -63,9 +63,10 @@ catkin_create_pkg cv_test sensor_msgs cv_bridge roscpp rospy std_msgs image_tran
 
 #+BEGIN_SRC
 cd cv_test/src
+#+END_SRC
 
-cat > image_converter.cpp
-
+cat > ~image_converter.cpp~
+#+BEGIN_SRC
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
@@ -134,7 +135,7 @@ int main(int argc, char** argv)
 }
 #+END_SRC
 
-CMakeLists.txt 에 다음 내용 추가
+~~/catkin_ws/src/cv_test/CMakeLists.txt~ 에 다음 내용 추가
  - ~image_converter~ 노드 컴파일 추가
  - OpenCV 라이브러리 추가
 
@@ -159,20 +160,19 @@ cd ~/catkin_ws
 catkin build cv_test
 #+END_SRC
 
-** 예시: image converter 실행
+** 예시: ~image_converter~ 노드 실행
 
 *ros-kinetic-cv-camera 설치*
-
 #+BEGIN_SRC
 sudo apt-get install ros-kinetic-cv-camera
-+END_SRC
+#+END_SRC
 
 *ros master node 실행*
 #+BEGIN_SRC
 roscore
 #+END_SRC
 
-*cv_camera_node 실행*
+*~cv_camera_node~ 실행*
 #+BEGIN_SRC
 rosrun cv_camera cv_camera_node
 #+END_SRC
@@ -185,7 +185,7 @@ rostopic list -v
 *** 구독 ~/cv_camera/image_raw~ 이미지 보기
 image converter 에서 구독(subscribe) 하는 토픽
 
-#+BEGIN_SRC
+#+BEGIN_SRC c++
 rosrun image_view image_view image:=/cv_camera/image_raw
 // or using rqt
 rqt_image_view /cv_camera/image_raw
@@ -209,8 +209,17 @@ rviz
 
 ** 예시: object detection: ~dnn_detect~
 
+[[https://i.imgur.com/GKDEe3r.png]]
+
+MobileNet-SSD detection: 딥러닝
+
 #+BEGIN_SRC
 sudo apt install ros-kinetic-dnn-detect
+#+END_SRC
+
+#+BEGIN_SRC
+roscore
+rosrun cv_camera cv_camera_node
 roslaunch dnn_detect dnn_detect.launch camera:=/cv_camera image:=image_raw
 rostopic echo /dnn_objects
 rosrun image_view image_view image:=/dnn_images
@@ -231,31 +240,31 @@ sudo apt-get install ros-kinetic-aruco-ros
 #+END_SRC
 
 ~aruco_test.launch~ 작성
-#+BEGIN_SRC
-<launch>
+#+BEGIN_SRC xml
+  <launch>
 
-<arg name="markerId" default="701"/>
-<arg name="markerSize" default="0.05"/> <!-- in meter -->
-<arg name="eye" default="left"/>
-<arg name="marker_frame" default="marker_frame"/>
-<arg name="ref_frame" default=""/> <!-- leave empty and the pose will be published wrt param parent_name -->
-<arg name="corner_refinement" default="LINES" /> <!-- NONE, HARRIS, LINES, SUBPIX -->
+  <arg name="markerId" default="701"/>
+  <arg name="markerSize" default="0.05"/> <!-- in meter -->
+  <arg name="eye" default="left"/>
+  <arg name="marker_frame" default="marker_frame"/>
+  <arg name="ref_frame" default=""/> <!-- leave empty and the pose will be published wrt param parent_name -->
+  <arg name="corner_refinement" default="LINES" /> <!-- NONE, HARRIS, LINES, SUBPIX -->
 
 
-<node pkg="aruco_ros" type="single" name="aruco_single">
-<remap from="/camera_info" to="/cv_camera/camera_info" />
-<remap from="/image" to="/cv_camera/image_raw" />
-<param name="image_is_rectified" value="True"/>
-<param name="marker_size" value="$(arg markerSize)"/>
-<param name="marker_id" value="$(arg markerId)"/>
-<param name="reference_frame" value="$(arg ref_frame)"/> <!-- frame in which the marker pose will be refered -->
-<param name="camera_frame" value="base_link"/>
-<param name="marker_frame" value="$(arg marker_frame)" />
-<param name="corner_refinement" value="$(arg corner_refinement)" />
-//<param name="calibration_file" type="string" value="/tmp/ost.yaml"/>
-</node>
+  <node pkg="aruco_ros" type="single" name="aruco_single">
+  <remap from="/camera_info" to="/cv_camera/camera_info" />
+  <remap from="/image" to="/cv_camera/image_raw" />
+  <param name="image_is_rectified" value="True"/>
+  <param name="marker_size" value="$(arg markerSize)"/>
+  <param name="marker_id" value="$(arg markerId)"/>
+  <param name="reference_frame" value="$(arg ref_frame)"/> <!-- frame in which the marker pose will be refered -->
+  <param name="camera_frame" value="base_link"/>
+  <param name="marker_frame" value="$(arg marker_frame)" />
+  <param name="corner_refinement" value="$(arg corner_refinement)" />
+  <!-- <param name="calibration_file" type="string" value="/tmp/ost.yaml"/> -->
+  </node>
 
-</launch>
+  </launch>
 #+END_SRC
 
 *aruco 노드 실행*
@@ -291,12 +300,15 @@ rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/
 *calibration 파일 추가 ost.yaml*
 ~aruco_test.launch~ 에 다음 내용 추가.
 
-#+BEGIN_SRC
+#+BEGIN_SRC xml
 <param name="calibration_file" type="string" value="/tmp/ost.yaml"/>
 #+END_SRC
 
 * 참고
  - http://wiki.ros.org/vision_opencv
  - http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages
+  - http://wiki.ros.org/image_transport/Tutorials/PublishingImages
+  - http://wiki.ros.org/image_transport/Tutorials/SubscribingToImages
  - aruco maker generator http://chev.me/arucogen/
  - http://wiki.ros.org/dnn_detect
+  - mobilenet-ssd https://github.com/weiliu89/caffe/tree/ssd

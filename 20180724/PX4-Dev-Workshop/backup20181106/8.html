@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-12-21 금 14:43 -->
+<!-- 2018-12-21 금 16:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PX4 Dev Workshop</title>
@@ -236,39 +236,39 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge58618c">1. 수업</a></li>
-<li><a href="#org7c65e49">2. 수업 진행</a></li>
-<li><a href="#orgd177bc3">3. 수업 자료</a>
+<li><a href="#orgc60eb45">1. 수업</a></li>
+<li><a href="#org24cf2c5">2. 수업 진행</a></li>
+<li><a href="#org0fc1134">3. 수업 자료</a>
 <ul>
-<li><a href="#org2127878">3.1. 이미지 포멧</a></li>
-<li><a href="#orgc5fd859">3.2. <code>cv_bridge</code></a>
+<li><a href="#org89dedf2">3.1. 이미지 포멧</a></li>
+<li><a href="#orgae4e33a">3.2. <code>cv_bridge</code></a>
 <ul>
-<li><a href="#orgeecfad7">3.2.1. CvImage</a></li>
+<li><a href="#orgddc0b84">3.2.1. CvImage</a></li>
 </ul>
 </li>
-<li><a href="#org82cd28d">3.3. 예시: image converter</a></li>
-<li><a href="#orgcc1e0c3">3.4. 예시: image converter 실행</a>
+<li><a href="#orgae820c4">3.3. 예시: <code>image_converter</code></a></li>
+<li><a href="#org47a3cb5">3.4. 예시: <code>image_converter</code> 노드 실행</a>
 <ul>
-<li><a href="#orgb93d24a">3.4.1. 구독 <code>/cv_camera/image_raw</code> 이미지 보기</a></li>
-<li><a href="#orgbfcc584">3.4.2. 발행 <code>/image_converter/output_video</code> 이미지 보기</a></li>
+<li><a href="#org4790561">3.4.1. 구독 <code>/cv_camera/image_raw</code> 이미지 보기</a></li>
+<li><a href="#org062ce82">3.4.2. 발행 <code>/image_converter/output_video</code> 이미지 보기</a></li>
 </ul>
 </li>
-<li><a href="#org7f9cdae">3.5. 예시: object detection: <code>dnn_detect</code></a></li>
-<li><a href="#orgfd6f9ff">3.6. 예시: tag detection: aruco</a></li>
-<li><a href="#org89d3136">3.7. 예시: position estimation using aruco</a>
+<li><a href="#orgdafd4a0">3.5. 예시: object detection: <code>dnn_detect</code></a></li>
+<li><a href="#org1a53964">3.6. 예시: tag detection: aruco</a></li>
+<li><a href="#orge2938ab">3.7. 예시: position estimation using aruco</a>
 <ul>
-<li><a href="#orga7e53c4">3.7.1. Camera Calibration</a></li>
+<li><a href="#org70a5983">3.7.1. Camera Calibration</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org1ee2feb">4. 참고</a></li>
+<li><a href="#orgc4be047">4. 참고</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orge58618c" class="outline-2">
-<h2 id="orge58618c"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-orgc60eb45" class="outline-2">
+<h2 id="orgc60eb45"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>일시: 2018.</li>
@@ -279,37 +279,37 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org7c65e49" class="outline-2">
-<h2 id="org7c65e49"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-org24cf2c5" class="outline-2">
+<h2 id="org24cf2c5"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>OPENCV</li>
 <li><code>cv_bridge</code></li>
-<li><code>rqt_image_view</code></li>
+<li>Object detection</li>
+<li>Tag detection</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgd177bc3" class="outline-2">
-<h2 id="orgd177bc3"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-org0fc1134" class="outline-2">
+<h2 id="org0fc1134"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org2127878" class="outline-3">
-<h3 id="org2127878"><span class="section-number-3">3.1</span> 이미지 포멧</h3>
+<div id="outline-container-org89dedf2" class="outline-3">
+<h3 id="org89dedf2"><span class="section-number-3">3.1</span> 이미지 포멧</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
-<li>ROS <code>sensor_msgs/Image</code> <a href="http://docs.ros.org/api/sensor_msgs/html/msg/Image.html">http://docs.ros.org/api/sensor_msgs/html/msg/Image.html</a></li>
 <li>OpenCV <code>cv::Mat</code></li>
+<li>ROS <code>sensor_msgs/Image</code> <a href="http://docs.ros.org/api/sensor_msgs/html/msg/Image.html">http://docs.ros.org/api/sensor_msgs/html/msg/Image.html</a></li>
 </ul>
-
 <pre class="example">
 rosmsg info sensor_msgs/Image
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgc5fd859" class="outline-3">
-<h3 id="orgc5fd859"><span class="section-number-3">3.2</span> <code>cv_bridge</code></h3>
+<div id="outline-container-orgae4e33a" class="outline-3">
+<h3 id="orgae4e33a"><span class="section-number-3">3.2</span> <code>cv_bridge</code></h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 ROS에서의 OpenCV 인터페이스
@@ -317,13 +317,13 @@ ROS에서의 OpenCV 인터페이스
 
 
 <div class="figure">
-<p><img src="http://wiki.ros.org/cv_bridge?action=AttachFile&amp;do=get&amp;target=cvbridge.png" alt="cv_bridge?action=AttachFile&amp;do=get&amp;target=cvbridge.png" />
+<p><img src="http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeCppHydro?action=AttachFile&amp;do=get&amp;target=cvbridge4.png" alt="UsingCvBridgeCppHydro?action=AttachFile&amp;do=get&amp;target=cvbridge4.png" />
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgeecfad7" class="outline-4">
-<h4 id="orgeecfad7"><span class="section-number-4">3.2.1</span> CvImage</h4>
+<div id="outline-container-orgddc0b84" class="outline-4">
+<h4 id="orgddc0b84"><span class="section-number-4">3.2.1</span> CvImage</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <div class="org-src-container">
 <pre class="src src-c++"><span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">cv_bridge</span> {
@@ -346,8 +346,8 @@ ROS에서의 OpenCV 인터페이스
 </div>
 </div>
 
-<div id="outline-container-org82cd28d" class="outline-3">
-<h3 id="org82cd28d"><span class="section-number-3">3.3</span> 예시: image converter</h3>
+<div id="outline-container-orgae820c4" class="outline-3">
+<h3 id="orgae820c4"><span class="section-number-3">3.3</span> 예시: <code>image_converter</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <pre class="example">
 cd ~/catkin_ws/src
@@ -356,9 +356,12 @@ catkin_create_pkg cv_test sensor_msgs cv_bridge roscpp rospy std_msgs image_tran
 
 <pre class="example">
 cd cv_test/src
+</pre>
 
-cat &gt; image_converter.cpp
-
+<p>
+cat &gt; <code>image_converter.cpp</code>
+</p>
+<pre class="example">
 #include &lt;ros/ros.h&gt;
 #include &lt;image_transport/image_transport.h&gt;
 #include &lt;cv_bridge/cv_bridge.h&gt;
@@ -428,7 +431,7 @@ int main(int argc, char** argv)
 </pre>
 
 <p>
-CMakeLists.txt 에 다음 내용 추가
+<code>~/catkin_ws/src/cv_test/CMakeLists.txt</code> 에 다음 내용 추가
 </p>
 <ul class="org-ul">
 <li><code>image_converter</code> 노드 컴파일 추가</li>
@@ -458,24 +461,25 @@ catkin build cv_test
 </div>
 </div>
 
-<div id="outline-container-orgcc1e0c3" class="outline-3">
-<h3 id="orgcc1e0c3"><span class="section-number-3">3.4</span> 예시: image converter 실행</h3>
+<div id="outline-container-org47a3cb5" class="outline-3">
+<h3 id="org47a3cb5"><span class="section-number-3">3.4</span> 예시: <code>image_converter</code> 노드 실행</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 <b>ros-kinetic-cv-camera 설치</b>
 </p>
-
 <pre class="example">
 sudo apt-get install ros-kinetic-cv-camera
-+END_SRC
+</pre>
 
-*ros master node 실행*
-#+BEGIN_SRC
+<p>
+<b>ros master node 실행</b>
+</p>
+<pre class="example">
 roscore
 </pre>
 
 <p>
-<b>cv<sub>camera</sub><sub>node</sub> 실행</b>
+<b><code>cv_camera_node</code> 실행</b>
 </p>
 <pre class="example">
 rosrun cv_camera cv_camera_node
@@ -489,23 +493,24 @@ rostopic list -v
 </pre>
 </div>
 
-<div id="outline-container-orgb93d24a" class="outline-4">
-<h4 id="orgb93d24a"><span class="section-number-4">3.4.1</span> 구독 <code>/cv_camera/image_raw</code> 이미지 보기</h4>
+<div id="outline-container-org4790561" class="outline-4">
+<h4 id="org4790561"><span class="section-number-4">3.4.1</span> 구독 <code>/cv_camera/image_raw</code> 이미지 보기</h4>
 <div class="outline-text-4" id="text-3-4-1">
 <p>
 image converter 에서 구독(subscribe) 하는 토픽
 </p>
 
-<pre class="example">
-rosrun image_view image_view image:=/cv_camera/image_raw
-// or using rqt
+<div class="org-src-container">
+<pre class="src src-c++">rosrun image_view <span style="color: #ECBE7B;">image_view</span> <span style="color: #dcaeea;">image</span>:=/cv_camera/image_raw
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">or using rqt</span>
 rqt_image_view /cv_camera/image_raw
 </pre>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgbfcc584" class="outline-4">
-<h4 id="orgbfcc584"><span class="section-number-4">3.4.2</span> 발행 <code>/image_converter/output_video</code> 이미지 보기</h4>
+<div id="outline-container-org062ce82" class="outline-4">
+<h4 id="org062ce82"><span class="section-number-4">3.4.2</span> 발행 <code>/image_converter/output_video</code> 이미지 보기</h4>
 <div class="outline-text-4" id="text-3-4-2">
 <p>
 image converter 에서 publish 하는 토픽
@@ -533,11 +538,26 @@ rviz
 </div>
 </div>
 
-<div id="outline-container-org7f9cdae" class="outline-3">
-<h3 id="org7f9cdae"><span class="section-number-3">3.5</span> 예시: object detection: <code>dnn_detect</code></h3>
+<div id="outline-container-orgdafd4a0" class="outline-3">
+<h3 id="orgdafd4a0"><span class="section-number-3">3.5</span> 예시: object detection: <code>dnn_detect</code></h3>
 <div class="outline-text-3" id="text-3-5">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/GKDEe3r.png" alt="GKDEe3r.png" />
+</p>
+</div>
+
+<p>
+MobileNet-SSD detection: 딥러닝
+</p>
+
 <pre class="example">
 sudo apt install ros-kinetic-dnn-detect
+</pre>
+
+<pre class="example">
+roscore
+rosrun cv_camera cv_camera_node
 roslaunch dnn_detect dnn_detect.launch camera:=/cv_camera image:=image_raw
 rostopic echo /dnn_objects
 rosrun image_view image_view image:=/dnn_images
@@ -549,8 +569,8 @@ rostopic list -v
 </div>
 </div>
 
-<div id="outline-container-orgfd6f9ff" class="outline-3">
-<h3 id="orgfd6f9ff"><span class="section-number-3">3.6</span> 예시: tag detection: aruco</h3>
+<div id="outline-container-org1a53964" class="outline-3">
+<h3 id="org1a53964"><span class="section-number-3">3.6</span> 예시: tag detection: aruco</h3>
 <div class="outline-text-3" id="text-3-6">
 
 <div class="figure">
@@ -569,32 +589,33 @@ sudo apt-get install ros-kinetic-aruco-ros
 <p>
 <code>aruco_test.launch</code> 작성
 </p>
-<pre class="example">
-&lt;launch&gt;
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #c678dd;">launch</span>&gt;
 
-&lt;arg name="markerId" default="701"/&gt;
-&lt;arg name="markerSize" default="0.05"/&gt; &lt;!-- in meter --&gt;
-&lt;arg name="eye" default="left"/&gt;
-&lt;arg name="marker_frame" default="marker_frame"/&gt;
-&lt;arg name="ref_frame" default=""/&gt; &lt;!-- leave empty and the pose will be published wrt param parent_name --&gt;
-&lt;arg name="corner_refinement" default="LINES" /&gt; &lt;!-- NONE, HARRIS, LINES, SUBPIX --&gt;
+&lt;<span style="color: #c678dd;">arg</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"markerId"</span> <span style="color: #dcaeea;">default</span>=<span style="color: #98be65;">"701"</span>/&gt;
+&lt;<span style="color: #c678dd;">arg</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"markerSize"</span> <span style="color: #dcaeea;">default</span>=<span style="color: #98be65;">"0.05"</span>/&gt; <span style="color: #5B6268;">&lt;!-- </span><span style="color: #5B6268;">in meter </span><span style="color: #5B6268;">--&gt;</span>
+&lt;<span style="color: #c678dd;">arg</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"eye"</span> <span style="color: #dcaeea;">default</span>=<span style="color: #98be65;">"left"</span>/&gt;
+&lt;<span style="color: #c678dd;">arg</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"marker_frame"</span> <span style="color: #dcaeea;">default</span>=<span style="color: #98be65;">"marker_frame"</span>/&gt;
+&lt;<span style="color: #c678dd;">arg</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"ref_frame"</span> <span style="color: #dcaeea;">default</span>=<span style="color: #98be65;">""</span>/&gt; <span style="color: #5B6268;">&lt;!-- </span><span style="color: #5B6268;">leave empty and the pose will be published wrt param parent_name </span><span style="color: #5B6268;">--&gt;</span>
+&lt;<span style="color: #c678dd;">arg</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"corner_refinement"</span> <span style="color: #dcaeea;">default</span>=<span style="color: #98be65;">"LINES"</span> /&gt; <span style="color: #5B6268;">&lt;!-- </span><span style="color: #5B6268;">NONE, HARRIS, LINES, SUBPIX </span><span style="color: #5B6268;">--&gt;</span>
 
 
-&lt;node pkg="aruco_ros" type="single" name="aruco_single"&gt;
-&lt;remap from="/camera_info" to="/cv_camera/camera_info" /&gt;
-&lt;remap from="/image" to="/cv_camera/image_raw" /&gt;
-&lt;param name="image_is_rectified" value="True"/&gt;
-&lt;param name="marker_size" value="$(arg markerSize)"/&gt;
-&lt;param name="marker_id" value="$(arg markerId)"/&gt;
-&lt;param name="reference_frame" value="$(arg ref_frame)"/&gt; &lt;!-- frame in which the marker pose will be refered --&gt;
-&lt;param name="camera_frame" value="base_link"/&gt;
-&lt;param name="marker_frame" value="$(arg marker_frame)" /&gt;
-&lt;param name="corner_refinement" value="$(arg corner_refinement)" /&gt;
-//&lt;param name="calibration_file" type="string" value="/tmp/ost.yaml"/&gt;
-&lt;/node&gt;
+&lt;<span style="color: #c678dd;">node</span> <span style="color: #dcaeea;">pkg</span>=<span style="color: #98be65;">"aruco_ros"</span> <span style="color: #dcaeea;">type</span>=<span style="color: #98be65;">"single"</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"aruco_single"</span>&gt;
+&lt;<span style="color: #c678dd;">remap</span> <span style="color: #dcaeea;">from</span>=<span style="color: #98be65;">"/camera_info"</span> <span style="color: #dcaeea;">to</span>=<span style="color: #98be65;">"/cv_camera/camera_info"</span> /&gt;
+&lt;<span style="color: #c678dd;">remap</span> <span style="color: #dcaeea;">from</span>=<span style="color: #98be65;">"/image"</span> <span style="color: #dcaeea;">to</span>=<span style="color: #98be65;">"/cv_camera/image_raw"</span> /&gt;
+&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"image_is_rectified"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"True"</span>/&gt;
+&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"marker_size"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"$(arg markerSize)"</span>/&gt;
+&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"marker_id"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"$(arg markerId)"</span>/&gt;
+&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"reference_frame"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"$(arg ref_frame)"</span>/&gt; <span style="color: #5B6268;">&lt;!-- </span><span style="color: #5B6268;">frame in which the marker pose will be refered </span><span style="color: #5B6268;">--&gt;</span>
+&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"camera_frame"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"base_link"</span>/&gt;
+&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"marker_frame"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"$(arg marker_frame)"</span> /&gt;
+&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"corner_refinement"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"$(arg corner_refinement)"</span> /&gt;
+<span style="color: #5B6268;">&lt;!-- </span><span style="color: #5B6268;">&lt;param name="calibration_file" type="string" value="/tmp/ost.yaml"/&gt; </span><span style="color: #5B6268;">--&gt;</span>
+&lt;/<span style="color: #c678dd;">node</span>&gt;
 
-&lt;/launch&gt;
+&lt;/<span style="color: #c678dd;">launch</span>&gt;
 </pre>
+</div>
 
 <p>
 <b>aruco 노드 실행</b>
@@ -612,8 +633,8 @@ rosrun image_view image_view image:=/aruco_single/result
 </div>
 </div>
 
-<div id="outline-container-org89d3136" class="outline-3">
-<h3 id="org89d3136"><span class="section-number-3">3.7</span> 예시: position estimation using aruco</h3>
+<div id="outline-container-orge2938ab" class="outline-3">
+<h3 id="orge2938ab"><span class="section-number-3">3.7</span> 예시: position estimation using aruco</h3>
 <div class="outline-text-3" id="text-3-7">
 
 <div class="figure">
@@ -629,8 +650,8 @@ rostopic echo /aruco_single/pose
 </pre>
 </div>
 
-<div id="outline-container-orga7e53c4" class="outline-4">
-<h4 id="orga7e53c4"><span class="section-number-4">3.7.1</span> Camera Calibration</h4>
+<div id="outline-container-org70a5983" class="outline-4">
+<h4 id="org70a5983"><span class="section-number-4">3.7.1</span> Camera Calibration</h4>
 <div class="outline-text-4" id="text-3-7-1">
 <p>
 <a href="http://wiki.ros.org/camera_calibration">http://wiki.ros.org/camera_calibration</a>
@@ -650,29 +671,37 @@ rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/
 <code>aruco_test.launch</code> 에 다음 내용 추가.
 </p>
 
-<pre class="example">
-&lt;param name="calibration_file" type="string" value="/tmp/ost.yaml"/&gt;
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"calibration_file"</span> <span style="color: #dcaeea;">type</span>=<span style="color: #98be65;">"string"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"/tmp/ost.yaml"</span>/&gt;
 </pre>
 </div>
 </div>
 </div>
 </div>
+</div>
 
-<div id="outline-container-org1ee2feb" class="outline-2">
-<h2 id="org1ee2feb"><span class="section-number-2">4</span> 참고</h2>
+<div id="outline-container-orgc4be047" class="outline-2">
+<h2 id="orgc4be047"><span class="section-number-2">4</span> 참고</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li><a href="http://wiki.ros.org/vision_opencv">http://wiki.ros.org/vision_opencv</a></li>
-<li><a href="http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages">http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages</a></li>
+<li><a href="http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages">http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages</a>
+<ul class="org-ul">
+<li><a href="http://wiki.ros.org/image_transport/Tutorials/PublishingImages">http://wiki.ros.org/image_transport/Tutorials/PublishingImages</a></li>
+<li><a href="http://wiki.ros.org/image_transport/Tutorials/SubscribingToImages">http://wiki.ros.org/image_transport/Tutorials/SubscribingToImages</a></li>
+</ul></li>
 <li>aruco maker generator <a href="http://chev.me/arucogen/">http://chev.me/arucogen/</a></li>
-<li><a href="http://wiki.ros.org/dnn_detect">http://wiki.ros.org/dnn_detect</a></li>
+<li><a href="http://wiki.ros.org/dnn_detect">http://wiki.ros.org/dnn_detect</a>
+<ul class="org-ul">
+<li>mobilenet-ssd <a href="https://github.com/weiliu89/caffe/tree/ssd">https://github.com/weiliu89/caffe/tree/ssd</a></li>
+</ul></li>
 </ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2018-12-21 금 14:43</p>
+<p class="date">Created: 2018-12-21 금 16:07</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
