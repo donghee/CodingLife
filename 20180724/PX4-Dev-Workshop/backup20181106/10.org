@@ -8,7 +8,7 @@
 
 * 수업
  - 일시: 2019. 1. 10
- - 목표: pixy camera
+ - 목표: pixy camera를 사용하고 ROS TF에 대해 이해할 수 있다.
  - 교재: https://goo.gl/sDfk3j
  - 코치: 박동희 dongheepark@gmail.com
 
