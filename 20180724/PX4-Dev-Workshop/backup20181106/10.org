@@ -114,8 +114,10 @@ http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF?action=AttachFile&do=get&
 
 터틀심의 /turtle1을 따라다니는 turtle2를 만들어 보자
 
-http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF
+http://wiki.ros.org/tf/Tutorials
 
+따라하기
+https://www.youtube.com/watch?v=aCH259ggKb0
 
 참고
  - http://wiki.ros.org/tf
