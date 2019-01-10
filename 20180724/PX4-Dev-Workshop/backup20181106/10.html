@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-01-10 목 12:50 -->
+<!-- 2019-01-11 Fri 04:30 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PX4 Dev Workshop</title>
@@ -249,21 +249,25 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org3f302e8">1. 수업</a></li>
-<li><a href="#org0e653e9">2. 수업 진행</a></li>
-<li><a href="#org33797aa">3. 수업 자료</a>
+<li><a href="#orga766fa3">1. 수업</a></li>
+<li><a href="#org25a7a0a">2. 수업 진행</a></li>
+<li><a href="#orgd0509bb">3. 수업 자료</a>
 <ul>
-<li><a href="#org74afa39">3.1. Pixy Camera</a>
+<li><a href="#orgba9cf30">3.1. Pixy Camera</a>
 <ul>
-<li><a href="#org107926b">3.1.1. <code>erle_pixy</code></a></li>
-<li><a href="#orgfe4355d">3.1.2. <code>pixy_ros</code></a></li>
+<li><a href="#org4881a8e">3.1.1. <code>erle_pixy</code></a></li>
+<li><a href="#orgba94577">3.1.2. <code>pixy_ros</code></a></li>
 </ul>
 </li>
-<li><a href="#orgd74a298">3.2. TF</a>
+<li><a href="#org5ca8e05">3.2. TF</a>
 <ul>
-<li><a href="#org320d01b">3.2.1. TF?</a></li>
-<li><a href="#org938940d">3.2.2. TF의 xyz ?</a></li>
-<li><a href="#orge613dd4">3.2.3. TF 실습</a></li>
+<li><a href="#orga8658bd">3.2.1. TF?</a></li>
+<li><a href="#orge1149d0">3.2.2. TF의 xyz ?</a></li>
+</ul>
+</li>
+<li><a href="#org66dc4d4">3.3. TF의 lookupTransform</a>
+<ul>
+<li><a href="#org605afa7">3.3.1. TF 실습</a></li>
 </ul>
 </li>
 </ul>
@@ -272,8 +276,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org3f302e8" class="outline-2">
-<h2 id="org3f302e8"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-orga766fa3" class="outline-2">
+<h2 id="orga766fa3"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>일시: 2019. 1. 10</li>
@@ -284,8 +288,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org0e653e9" class="outline-2">
-<h2 id="org0e653e9"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-org25a7a0a" class="outline-2">
+<h2 id="org25a7a0a"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>pixy camera 설정. 노드 실행. 그리고 TF</li>
@@ -293,12 +297,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org33797aa" class="outline-2">
-<h2 id="org33797aa"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-orgd0509bb" class="outline-2">
+<h2 id="orgd0509bb"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org74afa39" class="outline-3">
-<h3 id="org74afa39"><span class="section-number-3">3.1</span> Pixy Camera</h3>
+<div id="outline-container-orgba9cf30" class="outline-3">
+<h3 id="orgba9cf30"><span class="section-number-3">3.1</span> Pixy Camera</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 물체를 학습 시켜서 물체 블록을 인식하는 카메라. 물체의 색을 통해서 블록을 인식
@@ -325,8 +329,8 @@ for the JavaScript code in this tag.
 </p>
 </div>
 
-<div id="outline-container-org107926b" class="outline-4">
-<h4 id="org107926b"><span class="section-number-4">3.1.1</span> <code>erle_pixy</code></h4>
+<div id="outline-container-org4881a8e" class="outline-4">
+<h4 id="org4881a8e"><span class="section-number-4">3.1.1</span> <code>erle_pixy</code></h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 카메라 이미지 가져오는 노드
@@ -338,8 +342,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgfe4355d" class="outline-4">
-<h4 id="orgfe4355d"><span class="section-number-4">3.1.2</span> <code>pixy_ros</code></h4>
+<div id="outline-container-orgba94577" class="outline-4">
+<h4 id="orgba94577"><span class="section-number-4">3.1.2</span> <code>pixy_ros</code></h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 블록데이터 가져오는 노드
@@ -351,7 +355,7 @@ for the JavaScript code in this tag.
 </div>
 
 <ol class="org-ol">
-<li><a id="org5231219"></a>설치<br />
+<li><a id="orgee9da0c"></a>설치<br />
 <div class="outline-text-5" id="text-3-1-2-1">
 <p>
 노드 다운로드
@@ -392,7 +396,7 @@ catkin build pixy_ros
 </div>
 </li>
 
-<li><a id="org259882a"></a>노드 실행<br />
+<li><a id="org5e48731"></a>노드 실행<br />
 <div class="outline-text-5" id="text-3-1-2-2">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #c678dd;">cd</span> ~/catkin_ws
@@ -404,7 +408,7 @@ roslaunch pixy_node pixy_usb.launch
 </div>
 </li>
 
-<li><a id="org5787713"></a>토픽 확인<br />
+<li><a id="org6f9f270"></a>토픽 확인<br />
 <div class="outline-text-5" id="text-3-1-2-3">
 <div class="org-src-container">
 <pre class="src src-sh">rostopic list
@@ -420,8 +424,8 @@ rostopic echo /my_pixy/block_data
 </div>
 </div>
 
-<div id="outline-container-orgd74a298" class="outline-3">
-<h3 id="orgd74a298"><span class="section-number-3">3.2</span> TF</h3>
+<div id="outline-container-org5ca8e05" class="outline-3">
+<h3 id="org5ca8e05"><span class="section-number-3">3.2</span> TF</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 TF(TransForm 프레임 변환)
@@ -432,19 +436,24 @@ TF(TransForm 프레임 변환)
 </p>
 </div>
 
-<div id="outline-container-org320d01b" class="outline-4">
-<h4 id="org320d01b"><span class="section-number-4">3.2.1</span> TF?</h4>
+<div id="outline-container-orga8658bd" class="outline-4">
+<h4 id="orga8658bd"><span class="section-number-4">3.2.1</span> TF?</h4>
 <div class="outline-text-4" id="text-3-2-1">
 
 <div class="figure">
 <p><img src="http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF?action=AttachFile&amp;do=get&amp;target=simple_robot.png" alt="TF?action=AttachFile&amp;do=get&amp;target=simple_robot.png" />
 </p>
 </div>
+
+<p>
+Listener: /tf 토픽을 읽음
+Publisher: 좌표간의 <b>변환</b> 을 /tf에 방송(publish)
+</p>
 </div>
 </div>
 
-<div id="outline-container-org938940d" class="outline-4">
-<h4 id="org938940d"><span class="section-number-4">3.2.2</span> TF의 xyz ?</h4>
+<div id="outline-container-orge1149d0" class="outline-4">
+<h4 id="orge1149d0"><span class="section-number-4">3.2.2</span> TF의 xyz ?</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <p>
 x - forward
@@ -461,20 +470,35 @@ z - pointing up
 </p>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orge613dd4" class="outline-4">
-<h4 id="orge613dd4"><span class="section-number-4">3.2.3</span> TF 실습</h4>
-<div class="outline-text-4" id="text-3-2-3">
+<div id="outline-container-org66dc4d4" class="outline-3">
+<h3 id="org66dc4d4"><span class="section-number-3">3.3</span> TF의 lookupTransform</h3>
+<div class="outline-text-3" id="text-3-3">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/gsHe8gx.png" alt="gsHe8gx.png" />
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org605afa7" class="outline-4">
+<h4 id="org605afa7"><span class="section-number-4">3.3.1</span> TF 실습</h4>
+<div class="outline-text-4" id="text-3-3-1">
 <p>
 터틀심의 /turtle1을 따라다니는 turtle2를 만들어 보자
 </p>
 
 <p>
-<a href="http://wiki.ros.org/tf/Tutorials">http://wiki.ros.org/tf/Tutorials</a>
+<a href="http://wiki.ros.org/tf2/Tutorials">http://wiki.ros.org/tf2/Tutorials</a>
 </p>
 
 <p>
 따라하기
+</p>
+
+<p>
 <a href="https://www.youtube.com/watch?v=aCH259ggKb0">https://www.youtube.com/watch?v=aCH259ggKb0</a>
 </p>
 
@@ -486,6 +510,7 @@ z - pointing up
 <li><a href="http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF">http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF</a></li>
 <li><a href="https://github.com/claymation/lander/">https://github.com/claymation/lander/</a></li>
 <li><a href="http://web.ics.purdue.edu/~rvoyles/Classes/ROSprogramming/Lectures/TF%20(transform)">http://web.ics.purdue.edu/~rvoyles/Classes/ROSprogramming/Lectures/TF (transform)</a>%20in%20ROS.pdf</li>
+<li><a href="https://www.ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2017/lecture3.pdf">https://www.ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2017/lecture3.pdf</a></li>
 </ul>
 </div>
 </div>
@@ -494,7 +519,7 @@ z - pointing up
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2019-01-10 목 12:50</p>
+<p class="date">Created: 2019-01-11 Fri 04:30</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

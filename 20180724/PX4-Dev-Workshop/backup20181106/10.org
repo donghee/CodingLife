@@ -100,6 +100,9 @@ TF(TransForm 프레임 변환)
 
 http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF?action=AttachFile&do=get&target=simple_robot.png
 
+Listener: /tf 토픽을 읽음
+Publisher: 좌표간의 *변환* 을 /tf에 방송(publish)
+
 *** TF의 xyz ?
 
  x - forward
@@ -110,13 +113,19 @@ http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF?action=AttachFile&do=get&
 
 *PX4 local position은 NED*
 
+** TF의 lookupTransform
+
+[[https://i.imgur.com/gsHe8gx.png]]
+
+
 *** TF 실습
 
 터틀심의 /turtle1을 따라다니는 turtle2를 만들어 보자
 
-http://wiki.ros.org/tf/Tutorials
+http://wiki.ros.org/tf2/Tutorials
 
 따라하기
+
 https://www.youtube.com/watch?v=aCH259ggKb0
 
 참고
@@ -124,3 +133,4 @@ https://www.youtube.com/watch?v=aCH259ggKb0
  - http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF
  - https://github.com/claymation/lander/
  - http://web.ics.purdue.edu/~rvoyles/Classes/ROSprogramming/Lectures/TF%20(transform)%20in%20ROS.pdf
+ - https://www.ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2017/lecture3.pdf
