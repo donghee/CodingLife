@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-01-11 금 05:42 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PX4 Dev Workshop</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Donghee Park" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} .org-src-container {border: 0px; box-shadow: none;}  pre { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; } </style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">PX4 Dev Workshop</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc04dcf6">1. 수업</a></li>
+<li><a href="#orgafd7fff">2. 수업 진행</a></li>
+<li><a href="#org5fc08a9">3. 수업 자료</a>
+<ul>
+<li><a href="#org133dbda">3.1. PX4 + Gazebo + MavROS 실행</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc04dcf6" class="outline-2">
+<h2 id="orgc04dcf6"><span class="section-number-2">1</span> 수업</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>일시: 2019. 1. 11</li>
+<li>목표: pixy + mavros 응용</li>
+<li>교재: <a href="https://goo.gl/sDfk3j">https://goo.gl/sDfk3j</a></li>
+<li>코치: 박동희 dongheepark@gmail.com</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgafd7fff" class="outline-2">
+<h2 id="orgafd7fff"><span class="section-number-2">2</span> 수업 진행</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>pixy + tf + MavROS</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5fc08a9" class="outline-2">
+<h2 id="org5fc08a9"><span class="section-number-2">3</span> 수업 자료</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org133dbda" class="outline-3">
+<h3 id="org133dbda"><span class="section-number-3">3.1</span> PX4 + Gazebo + MavROS 실행</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>Gazebo 실행: <code>cd ~/src/Firmware; make px4_sitl_default gazebo</code></li>
+<li>MavROS 실행: <code>rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"</code></li>
+<li>QGroundControl 실행</li>
+<li>circle node 실행: <code>rosrun drone_command circle</code> 6번째 수업자료</li>
+</ul>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/bjUwLqr.png" alt="bjUwLqr.png" />
+</p>
+</div>
+
+<p>
+-&#x2014;
+</p>
+
+
+<p>
+vision landing 예시
+</p>
+<ul class="org-ul">
+<li><a href="https://github.com/szebedy/autonomous-drone/">https://github.com/szebedy/autonomous-drone/</a></li>
+<li><a href="https://github.com/goodrobots/vision_landing/">https://github.com/goodrobots/vision_landing/</a></li>
+<li><a href="https://github.com/claymation/lander/">https://github.com/claymation/lander/</a></li>
+</ul>
+
+<p>
+ROS와 비콘으로 crazyflies 여러대 날리는 문서
+</p>
+<ul class="org-ul">
+<li><a href="http://act.usc.edu/publications/Hoenig_Springer_ROS2017.pdf">http://act.usc.edu/publications/Hoenig_Springer_ROS2017.pdf</a></li>
+<li><a href="http://act.usc.edu/publications/Preiss_ICRA2017.pdf">http://act.usc.edu/publications/Preiss_ICRA2017.pdf</a></li>
+<li><a href="https://github.com/USC-ACTLab/crazyswarm">https://github.com/USC-ACTLab/crazyswarm</a></li>
+<li><a href="https://www.youtube.com/watch?v=D0CrjoYDt9w">https://www.youtube.com/watch?v=D0CrjoYDt9w</a></li>
+<li><a href="https://crazyswarm.readthedocs.io/en/latest/hardware.html#large-quadrotor">https://crazyswarm.readthedocs.io/en/latest/hardware.html#large-quadrotor</a></li>
+<li><a href="https://github.com/whoenig/libMultiRobotPlanning">https://github.com/whoenig/libMultiRobotPlanning</a></li>
+</ul>
+
+<p>
+ros blob detection <a href="https://www.youtube.com/watch?v=a6XvL7NVeTk">https://www.youtube.com/watch?v=a6XvL7NVeTk</a>
+<a href="https://www.robotigniteacademy.com/en/course/ros-perception-in-5-days_5_0/">https://www.robotigniteacademy.com/en/course/ros-perception-in-5-days_5_0/</a>
+-&#x2014;
+</p>
+
+<ol class="org-ol">
+<li>aruco</li>
+</ol>
+
+<p>
+aruco: library for detect marker
+</p>
+
+<p>
+뭘할수 있나?
+</p>
+<ol class="org-ol">
+<li>detect marker</li>
+<li>calibrate camera  (위치 estimation할때 필수)</li>
+</ol>
+
+<p>
+marker
+</p>
+<ul class="org-ul">
+<li>binary code (dictionary)</li>
+<li>위치. 방향을 알 수 있다.</li>
+</ul>
+
+<p>
+download
+</p>
+<ul class="org-ul">
+<li><a href="https://sourceforge.net/projects/aruco/">https://sourceforge.net/projects/aruco/</a></li>
+</ul>
+
+<p>
+mkdir build
+cd build
+cmake ..
+make
+make install
+</p>
+
+<p>
+위치 /home/donghee/Dropbox/dev/CodingLife/20180724/PX4-Dev-Workshop/opencv/aruco/aruco<sub>testproject</sub>
+</p>
+
+<p>
+mkdir aruco<sub>testproject</sub>
+</p>
+
+<p>
+cat CMakeLists.txt
+</p>
+
+<p>
+cmake<sub>minimum</sub><sub>required</sub>(VERSION 2.8)
+project(aruco<sub>testproject</sub>)
+find<sub>package</sub>(aruco REQUIRED )
+add<sub>executable</sub>(aruco<sub>simple</sub> aruco<sub>simple.cpp</sub>)
+target<sub>link</sub><sub>libraries</sub>(aruco<sub>simple</sub>  aruco)
+</p>
+
+<p>
+cat aruco<sub>simple.cpp</sub>
+</p>
+
+<p>
+#include &lt;iostream&gt;
+#include &lt;aruco/aruco.h&gt;
+#include &lt;opencv2/highgui.hpp&gt;
+int main(int argc,char **argv)
+{
+  try
+  {
+      if (argc!=2) throw std::runtime<sub>error</sub>("Usage: inimage");
+      aruco::MarkerDetector MDetector;
+      //read the input image
+      cv::Mat InImage=cv::imread(argv[1]);
+    //Ok, let's detect
+      MDetector.setDictionary("ARUCO<sub>MIP</sub><sub>36h12</sub>");
+      //detect markers and for each one, draw info and its boundaries in the image
+      for(auto m:MDetector.detect(InImage)){
+          std::cout&lt;&lt;m&lt;&lt;std::endl;
+          m.draw(InImage);
+      }
+      cv::imshow("in",InImage);
+      cv::waitKey(0);//wait for key to be pressed
+  } catch (std::exception &amp;ex)
+  {
+      std::cout&lt;&lt;"Exception :"&lt;&lt;ex.what()&lt;&lt;std::endl;
+  }
+}
+</p>
+
+
+<p>
+mkdir build
+cd build
+cmake .. -Daruco<sub>DIR</sub>=../../aruco-3.0.12 -DOpenCV<sub>DIR</sub>=&lt;path2OpenCVConfig.cmake&gt;
+make
+./aruco<sub>simple</sub> image<sub>withmarkers.jpg</sub>
+</p>
+
+
+<p>
+1 read the input image
+</p>
+<ol class="org-ol">
+<li>marker dector</li>
+<li>detect! and return vector</li>
+<li>print vector (id)</li>
+<li>draw marked image</li>
+<li>create window</li>
+<li>show image</li>
+</ol>
+
+<p>
+참고:
+</p>
+<ul class="org-ul">
+<li>ArUco Library Documentation <a href="https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/edit">https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/edit</a></li>
+<li><a href="https://bitbucket.org/NiklasGeorg/markerdetection">https://bitbucket.org/NiklasGeorg/markerdetection</a></li>
+</ul>
+
+
+
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2018-11-07 수&gt;</span></span>
+</p>
+<ul class="org-ul">
+<li>최근 버전에 precland 모드에서 MAVLINK<sub>MSG</sub><sub>ID</sub><sub>LANDING</sub><sub>TARGET</sub></li>
+</ul>
+<p>
+받는게 추가 되었다. handle<sub>message</sub><sub>landing</sub><sub>target</sub>
+mavros 에서 LANDING TARGET 플러그인을 추가해야겠다.
+<a href="https://github.com/mavlink/mavros/tree/master/mavros_extras/src/plugins">https://github.com/mavlink/mavros/tree/master/mavros_extras/src/plugins</a>
+</p>
+
+<ul class="org-ul">
+<li>CopterExpress의 clever 프로젝트</li>
+</ul>
+
+<p>
+offboard mode 사용 간단하게 할 수 있는 서비스 추가 되어 있음 get<sub>telemetry</sub>, navigate
+<a href="https://github.com/CopterExpress/clever/blob/master/clever/src/simple_offboard.py">https://github.com/CopterExpress/clever/blob/master/clever/src/simple_offboard.py</a>
+</p>
+
+<p>
+/mavros/setpoint<sub>raw</sub>/local raw노드는 뭐지? 메시지가 다르군.
+</p>
+
+<p>
+세종대 마커 이용해서 정밀 랜딩
+navigation using  aruco marker
+<a href="https://github.com/CopterExpress/clever/blob/master/docs/aruco.md">https://github.com/CopterExpress/clever/blob/master/docs/aruco.md</a>
+</p>
+
+<ol class="org-ol">
+<li>aruco 로 마커인식</li>
+<li>aruco 로 위치 인식  <a href="https://github.com/CopterExpress/clever/tree/master/aruco_pose/src">https://github.com/CopterExpress/clever/tree/master/aruco_pose/src</a></li>
+<li>aruco tf 보내기 (aruco<sub>map</sub>)</li>
+<li>local origin, aruco<sub>map</sub><sub>vision</sub>, 던지기. fcu<sub>horiz</sub> <a href="https://github.com/CopterExpress/clever/blob/0629bd718cc549db11fae7ed2acb672333ced50b/clever/src/aruco_vpe.cpp">https://github.com/CopterExpress/clever/blob/0629bd718cc549db11fae7ed2acb672333ced50b/clever/src/aruco_vpe.cpp</a></li>
+<li>vision<sub>position</sub><sub>pub</sub>_ 던지기.</li>
+<li>simple offboard api 작성</li>
+<li>aruco tf 받아서 offboard api 작성</li>
+<li>spiral 돌기 만들기 <a href="https://youtu.be/aqBION3TVhg?t=43">https://youtu.be/aqBION3TVhg?t=43</a></li>
+</ol>
+
+<p>
+관련 튜토리얼
+<a href="https://clever.copterexpress.com/aruco.html">https://clever.copterexpress.com/aruco.html</a>
+</p>
+
+
+<p>
+-&#x2014;
+</p>
+
+<p>
+발표자료
+<a href="https://elinux.org/images/7/79/Flying_Penguins-_Embedded_Linux_Applications_for_Autonomous_UAVs.pdf">https://elinux.org/images/7/79/Flying_Penguins-_Embedded_Linux_Applications_for_Autonomous_UAVs.pdf</a>
+</p>
+
+<p>
+precision landing 예시
+<a href="http://github.com/claymation/lander">http://github.com/claymation/lander</a>
+</p>
+
+<ol class="org-ol">
+<li>SEEKING -&gt; LANDING</li>
+<li>LANDING -&gt; LANDED</li>
+<li>LANDED</li>
+</ol>
+
+<p>
+precision landing 참고
+</p>
+<ul class="org-ul">
+<li><a href="https://github.com/goodrobots/vision_landing">https://github.com/goodrobots/vision_landing</a></li>
+<li><a href="https://github.com/claymation/lander/blob/master/src/py/lander/nodes/commander.py">https://github.com/claymation/lander/blob/master/src/py/lander/nodes/commander.py</a></li>
+<li><a href="https://github.com/yankailab/OpenKAI/blob/master/kiss/app/apCopter_aruco.kiss">https://github.com/yankailab/OpenKAI/blob/master/kiss/app/apCopter_aruco.kiss</a></li>
+<li><a href="https://github.com/yankailab/OpenKAI/tree/master/kiss/app">https://github.com/yankailab/OpenKAI/tree/master/kiss/app</a></li>
+<li><a href="https://diydrones.com/profiles/blogs/precision-landing-with-opencv-and-aruco-markers-part-1">https://diydrones.com/profiles/blogs/precision-landing-with-opencv-and-aruco-markers-part-1</a></li>
+<li><a href="https://www.youtube.com/watch?v=IJlt8dE_s5k">https://www.youtube.com/watch?v=IJlt8dE_s5k</a></li>
+<li><a href="https://github.com/openmv/openmv/tree/master/scripts/examples/18-MAVLink">https://github.com/openmv/openmv/tree/master/scripts/examples/18-MAVLink</a></li>
+</ul>
+<p>
+precision landing 키는건 rc input읽어서 하면 되겟네
+</p>
+
+<p>
+<a href="https://github.com/PX4/Firmware/blob/master/src/modules/landing_target_estimator/KalmanFilter.cpp">https://github.com/PX4/Firmware/blob/master/src/modules/landing_target_estimator/KalmanFilter.cpp</a>
+</p>
+
+<p>
+"mavros/rc/in"
+</p>
+
+<pre class="example">
+import rospy
+import mavros_msgs
+
+# see ROS tutorials! init required
+rospy.init_node("rcin_sub")
+
+sub = rospy.Subscriber("mavros/rc/in", mavros_msgs.RCIn, lambda msg: print(msg))
+
+rospy.spin()
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Donghee Park</p>
+<p class="date">Created: 2019-01-11 금 05:42</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
