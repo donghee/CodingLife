@@ -1,0 +1,116 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+body { margin: 0; }
+canvas { width: 100%; height: 100%}
+</style>
+</head>
+<body>
+<script src="https://threejs.org/build/three.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
+<script src=”https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+
+<script>
+
+//https://slides.com/mgmerino/nodejs-socketio-threejs
+
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+//var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0xEEEEEE);
+document.body.appendChild( renderer.domElement );
+
+// axis
+var axis = new THREE.AxisHelper(10);
+scene.add(axis);
+
+// tags
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var material = new THREE.MeshBasicMaterial({color: 0xFE98A0});
+var cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+// loader
+//var loader = new THREE.GLTFLoader();
+//loader.load( 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/409445/bus_body_green.glb', 
+//function ( gltf ) {
+//  scene.add( gltf.scene );
+//  gltf.animations;
+//  gltf.scene;
+//}, undefined, function ( e ) {
+//  console.error( e );
+//} );
+
+// grid
+var size = 1000;
+var divisions = 1000;
+
+var gridHelper = new THREE.GridHelper( size, divisions, 0x0000ff, 0x808080 );
+gridHelper.position.y = 0;
+gridHelper.position.x = 0;
+
+scene.add( gridHelper );
+
+// Camera	
+//camera.lookAt(new THREE.Vector3(0, 0, 0));
+camera.position.x = 0;
+camera.position.y = 0;
+camera.position.z = 50;
+
+// Lighting
+var ambient = new THREE.AmbientLight(0x808080);
+scene.add(ambient);
+
+var spotLight = new THREE.SpotLight(0xffffff);
+spotLight.position.set(10, 20, 20);
+spotLight.shadowCameraNear = 20;
+spotLight.shadowCameraFar = 50;
+spotLight.castShadow = true;
+scene.add(spotLight);
+
+// controls
+var controls;
+controls = new THREE.OrbitControls( camera, renderer.domElement );
+////controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+controls.dampingFactor = 0.25;
+controls.screenSpacePanning = false;
+controls.minDistance = 20;
+controls.maxDistance = 400;
+controls.maxPolarAngle = Math.PI / 2;
+
+var animate = function() {
+	requestAnimationFrame( animate );
+	//cube.rotation.x += 0.01;
+	//cube.rotation.y += 0.01;
+	//controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+
+	//var time = - performance.now() * 0.0003;
+	//camera.position.x = 10 * Math.cos( time );
+	//camera.position.z = 10 * Math.sin( time );
+	//camera.lookAt( scene.position );
+
+	renderer.render( scene, camera )
+}
+
+animate();
+
+var socket = io.connect();
+socket.on('pozyx_pos', function (data) {
+  //console.log(data);
+  cube.position.x = data['26478'].coordinates.x / 1000
+  cube.position.z = data['26478'].coordinates.y / 1000
+  cube.position.y = data['26478'].coordinates.z / 1000
+  cube.rotation.x = data['26478'].orientation.yaw / 1000
+  cube.rotation.y = data['26478'].orientation.roll / 1000
+  cube.rotation.z = data['26478'].orientation.pitch / 1000
+});
+
+</script>
+</body>
+</html>
