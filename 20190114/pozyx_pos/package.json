@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.16.4",
     "mqtt": "^2.18.8",
     "socket.io": "^2.2.0"
   }

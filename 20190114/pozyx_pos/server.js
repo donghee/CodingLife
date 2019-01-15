@@ -1,26 +1,21 @@
 console.log("Server Started....");
 
-var server = require('http').createServer(handler)
-  , io = require('socket.io')(server)
-  , fs = require('fs')
-
-var tags = {};
+var express = require('express');
+var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var fs = require('fs')
 
 server.listen(8080);
+// WARNING: app.listen(80) will NOT work here!
 
-function handler (req, res) {
-  fs.readFile(__dirname + '/index.html',
-  function (err, data) {
-    if (err) {
-      res.writeHead(500);
-      return res.end('Error loading HTML');
-    }
-    res.writeHead(200);
-    res.end(data);
-  });
-} 
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
 
+app.use(express.static('public'));
 
+var tags = {};
 var wsclients = {};
 var wsclientid = 0;
 
