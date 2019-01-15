@@ -12,7 +12,10 @@
     <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
     <script>
-     //https://slides.com/mgmerino/nodejs-socketio-threejs
+     // https://slides.com/mgmerino/nodejs-socketio-threejs
+     // http://davidscottlyons.com/threejs-intro/#slide-0
+     // http://davidscottlyons.com/sketches/2017/03tree/
+     // https://www.udacity.com/course/interactive-3d-graphics--cs291
 
      var scene = new THREE.Scene();
      var camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -28,30 +31,30 @@
      scene.add(axes);
 
      // station
-     var geometry = new THREE.BoxGeometry(0.5, 2, 0.5);
+     var geometry = new THREE.CylinderBufferGeometry(0.1, 0.1, 2, 32);
      var material = new THREE.MeshBasicMaterial({color: 0xFE98A0});
      var cube = new THREE.Mesh(geometry, material);
      scene.add(cube);
+     cube.position.y = 1
 
      var cube1 = new THREE.Mesh(geometry, material);
      scene.add(cube1);
      cube1.position.x = 10
-     cube1.position.y = 0
-     cube1.position.z = 0     
+     cube1.position.y = 1
+     cube1.position.z = 0
 
      var cube2 = new THREE.Mesh(geometry, material);
      scene.add(cube2);
      cube2.position.x = 10
-     cube2.position.y = 0
-     cube2.position.z = -6     
-     
+     cube2.position.y = 1
+     cube2.position.z = -6
+
      var cube3 = new THREE.Mesh(geometry, material);
      scene.add(cube3);
      cube3.position.x = 0
-     cube3.position.y = 0
-     cube3.position.z = -6     
+     cube3.position.y = 1
+     cube3.position.z = -6
 
-     
      // loader
      var loader = new THREE.GLTFLoader();
 
@@ -157,8 +160,8 @@
      controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
      controls.dampingFactor = 0.25;
      controls.screenSpacePanning = false;
-     controls.minDistance = 20;
-     controls.maxDistance = 400;
+     controls.minDistance = 10;
+     controls.maxDistance = 50;
      controls.maxPolarAngle = Math.PI / 2;
 
 
