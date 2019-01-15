@@ -1,185 +1,245 @@
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<style>
-body { margin: 0; }
-canvas { width: 100%; height: 100%}
-</style>
-</head>
-<body>
-<script src="https://threejs.org/build/three.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+     body { margin: 0; }
+     canvas { width: 100%; height: 100%}
+    </style>
+  </head>
+  <body>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+    <script>
+     //https://slides.com/mgmerino/nodejs-socketio-threejs
 
-<script>
+     var scene = new THREE.Scene();
+     var camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 0.1, 100);
+     //var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
 
-//https://slides.com/mgmerino/nodejs-socketio-threejs
+     var renderer = new THREE.WebGLRenderer();
+     renderer.setSize(window.innerWidth, window.innerHeight);
+     renderer.setClearColor(0xEEEEEE);
+     document.body.appendChild( renderer.domElement );
 
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-//var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+     // axis
+     var axes = new THREE.AxesHelper(10);
+     scene.add(axes);
 
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0xEEEEEE);
-document.body.appendChild( renderer.domElement );
+     // station
+     var geometry = new THREE.BoxGeometry(0.5, 2, 0.5);
+     var material = new THREE.MeshBasicMaterial({color: 0xFE98A0});
+     var cube = new THREE.Mesh(geometry, material);
+     scene.add(cube);
 
-// axis
-var axes = new THREE.AxesHelper(10);
-scene.add(axes);
+     var cube1 = new THREE.Mesh(geometry, material);
+     scene.add(cube1);
+     cube1.position.x = 10
+     cube1.position.y = 0
+     cube1.position.z = 0     
 
-// tags
-var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshBasicMaterial({color: 0xFE98A0});
-var cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+     var cube2 = new THREE.Mesh(geometry, material);
+     scene.add(cube2);
+     cube2.position.x = 10
+     cube2.position.y = 0
+     cube2.position.z = -6     
+     
+     var cube3 = new THREE.Mesh(geometry, material);
+     scene.add(cube3);
+     cube3.position.x = 0
+     cube3.position.y = 0
+     cube3.position.z = -6     
 
-// loader
-var loader = new THREE.GLTFLoader();
+     
+     // loader
+     var loader = new THREE.GLTFLoader();
 
-var duck;
+     var duck, chicken;
 
-// Load a glTF resource
-loader.load(
-	// resource URL
-	'/Duck.glb',
-	// called when the resource is loaded
-	function ( gltf ) {
-                duck = gltf.scene;
-		scene.add( duck );
+     // Load a glTF resource
+     loader.load(
+	   // resource URL
+//	   '/Duck.glb',
+       '/3dr_arducopter_quad_x.glb',
+	   // called when the resource is loaded
+	   function ( gltf ) {
+         duck = gltf.scene;
+         /* Math.PI / 2 */
+         duck.rotation.x = Math.PI/2;
+		 scene.add( duck );
 
-		gltf.animations; // Array<THREE.AnimationClip>
-		gltf.scene; // THREE.Scene
-		gltf.scenes; // Array<THREE.Scene>
-		gltf.cameras; // Array<THREE.Camera>
-		gltf.asset; // Object
+		 gltf.animations; // Array<THREE.AnimationClip>
+		 gltf.scene; // THREE.Scene
+		 gltf.scenes; // Array<THREE.Scene>
+		 gltf.cameras; // Array<THREE.Camera>
+		 gltf.asset; // Object
+	   },
+	   // called while loading is progressing
+	   function ( xhr ) {
 
-	},
-	// called while loading is progressing
-	function ( xhr ) {
+		 console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
-		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+	   },
+	   // called when loading has errors
+	   function ( error ) {
 
-	},
-	// called when loading has errors
-	function ( error ) {
+		 console.log( 'An error happened' );
 
-		console.log( 'An error happened' );
+	   }
+     );
 
-	}
-);
+     // Load a glTF resource
+     loader.load(
+	   // resource URL
+	   '/Duck.glb',
+	   // called when the resource is loaded
+	   function ( gltf ) {
+         chicken = gltf.scene;
+         chicken.scale.x = 0.5;
+         chicken.scale.y = 0.5;
+         chicken.scale.z = 0.5;
 
-// grid
-var size = 1000;
-var divisions = 1000;
+		 scene.add( chicken );
 
-var gridHelper = new THREE.GridHelper( size, divisions, 0x0000ff, 0x808080 );
-gridHelper.position.y = 0;
-gridHelper.position.x = 0;
+		 gltf.animations; // Array<THREE.AnimationClip>
+		 gltf.scene; // THREE.Scene
+		 gltf.scenes; // Array<THREE.Scene>
+		 gltf.cameras; // Array<THREE.Camera>
+		 gltf.asset; // Object
+	   },
+	   // called while loading is progressing
+	   function ( xhr ) {
 
-scene.add( gridHelper );
+		 console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
-// Camera	
-//camera.lookAt(new THREE.Vector3(0, 0, 0));
-camera.position.x = 0;
-camera.position.y = 0;
-camera.position.z = 50;
+	   },
+	   // called when loading has errors
+	   function ( error ) {
 
-// Lighting
-var ambient = new THREE.AmbientLight(0x808080);
-scene.add(ambient);
+		 console.log( 'An error happened' );
 
-var spotLight = new THREE.SpotLight(0xffffff);
-spotLight.position.set(10, 20, 20);
-spotLight.shadow.camera.near = 20;
-spotLight.shadow.camera.far = 50;
-spotLight.castShadow = true;
-scene.add(spotLight);
+	   }
+     );
+     
 
-// controls
-var controls;
-controls = new THREE.OrbitControls( camera, renderer.domElement );
-////controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
-controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-controls.dampingFactor = 0.25;
-controls.screenSpacePanning = false;
-controls.minDistance = 20;
-controls.maxDistance = 400;
-controls.maxPolarAngle = Math.PI / 2;
+     // grid
+     var size = 1000;
+     var divisions = 1000;
 
+     var gridHelper = new THREE.GridHelper( size, divisions, 0x0000ff, 0x808080 );
+     gridHelper.position.y = 0;
+     gridHelper.position.x = 0;
 
-// lines
+     scene.add( gridHelper );
 
-// geometry
-var geometry = new THREE.BufferGeometry();
-var MAX_POINTS = 1000;
-var positions = new Float32Array(MAX_POINTS * 3);
-geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+     // Camera	
+     //camera.lookAt(new THREE.Vector3(0, 0, 0));
+     camera.position.x = 0;
+     camera.position.y = 0;
+     camera.position.z = 50;
 
-// material
-var material = new THREE.LineBasicMaterial({
-  color: 0xFE98A0,
-  linewidth: 3
-});
+     // Lighting
+     var ambient = new THREE.AmbientLight(0x808080);
+     scene.add(ambient);
 
-// line
-var count = 0;
-var line = new THREE.Line(geometry, material);
-scene.add(line);
+     var spotLight = new THREE.SpotLight(0xffffff);
+     spotLight.position.set(10, 20, 20);
+     spotLight.shadow.camera.near = 10;
+     spotLight.shadow.camera.far = 40;
+     spotLight.castShadow = true;
+     scene.add(spotLight);
 
-function updateLine(x,y,z) {
-  //positions[count * 3 - 3] = x;
-  //positions[count * 3 - 2] = y;
-  //positions[count * 3 - 1] = z;
-  line.geometry.attributes.position.needsUpdate = true;
-}
-
-// add point
-function addPoint(x,y,z){
-  console.log("point nr " + count + ": " + x + " " + y + " " + z);
-  positions[count * 3 + 0] = x;
-  positions[count * 3 + 1] = y;
-  positions[count * 3 + 2] = z;
-  count++;
-  line.geometry.setDrawRange(0, count);
-  updateLine(x,y,z);
-  console.log(positions)
-}
+     // controls
+     var controls;
+     controls = new THREE.OrbitControls( camera, renderer.domElement );
+     ////controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+     controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+     controls.dampingFactor = 0.25;
+     controls.screenSpacePanning = false;
+     controls.minDistance = 20;
+     controls.maxDistance = 400;
+     controls.maxPolarAngle = Math.PI / 2;
 
 
-var animate = function() {
-	requestAnimationFrame( animate );
-	//controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+     // lines
 
-	//var time = - performance.now() * 0.0003;
-	//camera.position.x = 10 * Math.cos( time );
-	//camera.position.z = 10 * Math.sin( time );
-	//camera.lookAt( scene.position );
+     // geometry
+     var geometry = new THREE.BufferGeometry();
+     var MAX_POINTS = 10000;
+     var positions = new Float32Array(MAX_POINTS * 3);
+     geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-	renderer.render( scene, camera )
-}
+     // material
+     var material = new THREE.LineBasicMaterial({
+       color: 0xFE98A0,
+       linewidth: 3
+     });
 
-animate();
+     // line
+     var count = 0;
+     var line = new THREE.Line(geometry, material);
+     scene.add(line);
 
-var socket = io.connect();
-socket.on('pozyx_pos', function (data) {
-  //console.log(data);
-  //cube.position.x = data['26478'].coordinates.x / 1000
-  //cube.position.z = data['26478'].coordinates.y / 1000
-  //cube.position.y = data['26478'].coordinates.z / 1000
-  //cube.rotation.x = data['26478'].orientation.yaw / 1000
-  //cube.rotation.y = data['26478'].orientation.roll / 1000
-  //cube.rotation.z = data['26478'].orientation.pitch / 1000
+     function updateLine(x,y,z) {
+       //positions[count * 3 - 3] = x;
+       //positions[count * 3 - 2] = y;
+       //positions[count * 3 - 1] = z;
+       line.geometry.attributes.position.needsUpdate = true;
+     }
 
-  if (duck){
-   duck.position.x  = data['26478'].coordinates.x / 1000 *2
-   duck.position.z  = data['26478'].coordinates.y / 1000 *2
-   duck.position.y  = data['26478'].coordinates.z / 1000 / 10
-   addPoint(duck.position.x, duck.position.y, duck.position.z);
-  }
-});
+     // add point
+     function addPoint(x,y,z){
+       /* console.log("point nr " + count + ": " + x + " " + y + " " + z); */
+       positions[count * 3 + 0] = x;
+       positions[count * 3 + 1] = y;
+       positions[count * 3 + 2] = z;
+       count++;
+       line.geometry.setDrawRange(0, count);
+       updateLine(x,y,z);
+       /* console.log(positions) */
+     }
 
-</script>
-</body>
+
+     var animate = function() {
+	   requestAnimationFrame( animate );
+	   //controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+
+	   //var time = - performance.now() * 0.0003;
+	   //camera.position.x = 10 * Math.cos( time );
+	   //camera.position.z = 10 * Math.sin( time );
+	   //camera.lookAt( scene.position );
+
+	   renderer.render( scene, camera )
+     }
+
+     animate();
+
+     var socket = io.connect();
+     socket.on('pozyx_pos', function (data) {
+       //console.log(data);
+       //cube.position.x = data['26478'].coordinates.x / 1000
+       //cube.position.z = data['26478'].coordinates.y / 1000
+       //cube.position.y = data['26478'].coordinates.z / 1000
+       //cube.rotation.x = data['26478'].orientation.yaw / 1000
+       //cube.rotation.y = data['26478'].orientation.roll / 1000
+       //cube.rotation.z = data['26478'].orientation.pitch / 1000
+
+       if (duck){
+         duck.position.x  = data['26478'].coordinates.x / 1000 *2
+         duck.position.z  = data['26478'].coordinates.y / 1000 *2
+         duck.position.y  = data['26478'].coordinates.z / 1000 / 10
+         addPoint(duck.position.x, duck.position.y, duck.position.z);
+       }
+
+       if (chicken){
+         chicken.position.x  = data['26394'].coordinates.x / 1000 *2
+         chicken.position.z  = data['26394'].coordinates.y / 1000 *2
+         chicken.position.y  = data['26394'].coordinates.z / 1000 / 10
+       }
+
+     });
+
+    </script>
+  </body>
 </html>

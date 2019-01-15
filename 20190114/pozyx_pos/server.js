@@ -30,18 +30,27 @@ client.on('message', (topic, message) => {
   const _message = JSON.parse(message.toString());
   if (_message[0].tagId === '26478') {
     if(_message[0].data === undefined) return;
-    console.log(_message[0]);
+    // console.log(_message[0]);
     if(typeof _message[0].data.coordinates !== "undefined") {
       tags[_message[0].tagId] = _message[0].data;
       if (wsclients['26478'])
         wsclients['26478'].emit('pozyx_pos',tags);
     }
   }
-});
 
+  if (_message[0].tagId === '26394') {
+    if(_message[0].data === undefined) return;
+    // console.log(_message[0]);
+    if(typeof _message[0].data.coordinates !== "undefined") {
+      tags[_message[0].tagId] = _message[0].data;
+      if (wsclients['26478'])
+        wsclients['26478'].emit('pozyx_pos',tags);
+    }
+  }  
+});
 
 io.on('connection', function (client) {
   //console.log(client);
   client.on('disconnect', function() {});
   wsclients['26478'] = client;
-}); 
+});
