@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-01-11 금 05:42 -->
+<!-- 2019-01-24 Thu 22:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PX4 Dev Workshop</title>
@@ -200,7 +200,7 @@
 @licstart  The following is the entire license notice for the
 JavaScript code in this tag.
 
-Copyright (C) 2012-2018 Free Software Foundation, Inc.
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
 
 The JavaScript code in this tag is free software: you can
 redistribute it and/or modify it under the terms of the GNU
@@ -249,19 +249,27 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc04dcf6">1. 수업</a></li>
-<li><a href="#orgafd7fff">2. 수업 진행</a></li>
-<li><a href="#org5fc08a9">3. 수업 자료</a>
+<li><a href="#org02a0e90">1. 수업</a></li>
+<li><a href="#org627d3c9">2. 수업 진행</a></li>
+<li><a href="#org428747b">3. 수업 자료</a>
 <ul>
-<li><a href="#org133dbda">3.1. PX4 + Gazebo + MavROS 실행</a></li>
+<li><a href="#org41b74a3">3.1. PX4 + Gazebo + MAVROS 실행</a></li>
+<li><a href="#org52f0a2b">3.2. <code>drone_command</code> 패키지에 <code>setpoints_from_pixy</code> 노드 추가</a>
+<ul>
+<li><a href="#org4015469">3.2.1. <code>/block_data</code> 토픽 구독</a></li>
+</ul>
+</li>
+<li><a href="#org3c4a245">3.3. 실습 키보드 입력 받아서 x,y,z축 이동</a></li>
+<li><a href="#org1dfd82c">3.4. gazebo에 카메라 추가</a></li>
+<li><a href="#org6c58173">3.5. TF 이용해서 드론 제어를 해보자.</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc04dcf6" class="outline-2">
-<h2 id="orgc04dcf6"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-org02a0e90" class="outline-2">
+<h2 id="org02a0e90"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>일시: 2019. 1. 11</li>
@@ -272,26 +280,28 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgafd7fff" class="outline-2">
-<h2 id="orgafd7fff"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-org627d3c9" class="outline-2">
+<h2 id="org627d3c9"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
-<li>pixy + tf + MavROS</li>
+<li>pixy + MavROS 연결</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org5fc08a9" class="outline-2">
-<h2 id="org5fc08a9"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-org428747b" class="outline-2">
+<h2 id="org428747b"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org133dbda" class="outline-3">
-<h3 id="org133dbda"><span class="section-number-3">3.1</span> PX4 + Gazebo + MavROS 실행</h3>
+<div id="outline-container-org41b74a3" class="outline-3">
+<h3 id="org41b74a3"><span class="section-number-3">3.1</span> PX4 + Gazebo + MAVROS 실행</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
+<li>ROS 마스터 노드 실행: <code>roscore</code></li>
 <li>Gazebo 실행: <code>cd ~/src/Firmware; make px4_sitl_default gazebo</code></li>
-<li>MavROS 실행: <code>rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"</code></li>
+<li>MAVROS 실행: <code>rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"</code></li>
 <li>QGroundControl 실행</li>
+<li>QGroundControl 실행: PX4 Parameter <code>COM_OF_LOSS_T</code> 파라미터 10초로 바꾸기. Failsafe timeout을 10초로 바꾸어야 시뮬레이터에서 코딩 편하다.</li>
 <li>circle node 실행: <code>rosrun drone_command circle</code> 6번째 수업자료</li>
 </ul>
 
@@ -300,7 +310,205 @@ for the JavaScript code in this tag.
 <p><img src="https://i.imgur.com/bjUwLqr.png" alt="bjUwLqr.png" />
 </p>
 </div>
+</div>
+</div>
 
+<div id="outline-container-org52f0a2b" class="outline-3">
+<h3 id="org52f0a2b"><span class="section-number-3">3.2</span> <code>drone_command</code> 패키지에 <code>setpoints_from_pixy</code> 노드 추가</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="outline-container-org4015469" class="outline-4">
+<h4 id="org4015469"><span class="section-number-4">3.2.1</span> <code>/block_data</code> 토픽 구독</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+구독할 토픽 확인: <code>rostopic info /block_data</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;ros/ros.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;geometry_msgs/PoseStamped.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;mavros_msgs/CommandBool.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;mavros_msgs/SetMode.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;mavros_msgs/State.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">"math.h"</span>
+
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;pixy_msgs/PixyData.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;pixy_msgs/PixyBlock.h&gt;</span>
+
+<span style="color: #a9a1e1;">mavros_msgs</span>::<span style="color: #ECBE7B;">State</span> <span style="color: #dcaeea;">current_state</span>;
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">state_cb</span>(<span style="color: #51afef;">const</span> <span style="color: #a9a1e1;">mavros_msgs</span>::<span style="color: #a9a1e1;">State</span>::<span style="color: #ECBE7B;">ConstPtr</span>&amp; <span style="color: #dcaeea;">msg</span>){
+  current_state = *msg;
+}
+
+<span style="color: #a9a1e1;">pixy_msgs</span>::<span style="color: #ECBE7B;">PixyData</span> <span style="color: #dcaeea;">current_pixy_data</span>;
+<span style="color: #ECBE7B;">double</span> <span style="color: #dcaeea;">x</span>=0.0, <span style="color: #dcaeea;">y</span>=0.0, <span style="color: #dcaeea;">z</span>=0.0;
+
+<span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">block_data_cb</span>(<span style="color: #51afef;">const</span> <span style="color: #a9a1e1;">pixy_msgs</span>::<span style="color: #a9a1e1;">PixyData</span>::<span style="color: #ECBE7B;">ConstPtr</span>&amp; <span style="color: #dcaeea;">msg</span>){
+  current_pixy_data = *msg;
+  <span style="color: #a9a1e1;">std</span>::<span style="color: #ECBE7B;">vector</span>&lt;<span style="color: #a9a1e1;">pixy_msgs</span>::PixyBlock&gt; <span style="color: #dcaeea;">pixy_blocks</span>;
+  pixy_blocks  = msg-&gt;blocks;
+
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">x_offset range is 0~319</span>
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">y_offset range is 0~199</span>
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">width range is 1~320</span>
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">height range is 1~200</span>
+
+  <span style="color: #51afef;">if</span>( pixy_blocks.size() &gt; 0 ){
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">ignore block size(width) less than 20</span>
+    <span style="color: #51afef;">if</span>( pixy_blocks[0].roi.width &lt; 20 ){
+      <span style="color: #51afef;">return</span>;
+    }
+
+    ROS_INFO(<span style="color: #98be65;">"Found Pixy Block"</span>);
+    ROS_INFO(<span style="color: #98be65;">"signiture: %d, x: %d, y:%d, width: %d, height: %d"</span>,
+        pixy_blocks[0].signature,
+        pixy_blocks[0].roi.x_offset,
+        pixy_blocks[0].roi.y_offset,
+        pixy_blocks[0].roi.width,
+        pixy_blocks[0].roi.height
+        );
+
+    <span style="color: #51afef;">if</span>( pixy_blocks[0].roi.x_offset &lt; 100 ){
+      printf(<span style="color: #98be65;">"forward\n"</span>);
+      x -= 0.1;
+    }
+    <span style="color: #51afef;">if</span>( pixy_blocks[0].roi.x_offset &gt; 200 ){
+      printf(<span style="color: #98be65;">"backward\n"</span>);
+      x += 0.1;
+    }
+    <span style="color: #51afef;">if</span> ( pixy_blocks[0].roi.y_offset &lt; 30 ){
+      printf(<span style="color: #98be65;">"up\n"</span>);
+      z += 0.1;
+    }
+    <span style="color: #51afef;">if</span> ( pixy_blocks[0].roi.y_offset &gt; 160 ){
+      printf(<span style="color: #98be65;">"down\n"</span>);
+      z -= 0.1;
+      <span style="color: #51afef;">if</span> (z &lt; 0.1) z = 0.0;
+    }
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">left</span>
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">right</span>
+
+  } <span style="color: #51afef;">else</span> {
+    <span style="color: #5B6268;">//</span><span style="color: #5B6268;">ROS_INFO("Notfound Pixy Block");</span>
+  }
+}
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">argc</span>, <span style="color: #ECBE7B;">char</span> **<span style="color: #dcaeea;">argv</span>)
+{
+  <span style="color: #a9a1e1;">ros</span>::init(argc, argv, <span style="color: #98be65;">"setpoints_from_pixy"</span>);
+  <span style="color: #a9a1e1;">ros</span>::<span style="color: #ECBE7B;">NodeHandle</span> <span style="color: #dcaeea;">nh</span>;
+
+  <span style="color: #a9a1e1;">ros</span>::<span style="color: #ECBE7B;">Subscriber</span> <span style="color: #dcaeea;">state_sub</span> = nh.subscribe&lt;<span style="color: #a9a1e1;">mavros_msgs</span>::<span style="color: #ECBE7B;">State</span>&gt;
+    (<span style="color: #98be65;">"mavros/state"</span>, 10, state_cb);
+  <span style="color: #a9a1e1;">ros</span>::<span style="color: #ECBE7B;">Publisher</span> <span style="color: #dcaeea;">local_pos_pub</span> = nh.advertise&lt;<span style="color: #a9a1e1;">geometry_msgs</span>::PoseStamped&gt;
+    (<span style="color: #98be65;">"mavros/setpoint_position/local"</span>, 10);
+  <span style="color: #a9a1e1;">ros</span>::<span style="color: #ECBE7B;">ServiceClient</span> <span style="color: #dcaeea;">arming_client</span> = nh.serviceClient&lt;<span style="color: #a9a1e1;">mavros_msgs</span>::CommandBool&gt;
+    (<span style="color: #98be65;">"mavros/cmd/arming"</span>);
+  <span style="color: #a9a1e1;">ros</span>::<span style="color: #ECBE7B;">ServiceClient</span> <span style="color: #dcaeea;">set_mode_client</span> = nh.serviceClient&lt;<span style="color: #a9a1e1;">mavros_msgs</span>::SetMode&gt;
+    (<span style="color: #98be65;">"mavros/set_mode"</span>);
+
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">subscribe pixy block data</span>
+  <span style="color: #a9a1e1;">ros</span>::<span style="color: #ECBE7B;">Subscriber</span> <span style="color: #dcaeea;">block_data_sub</span> = nh.subscribe&lt;<span style="color: #a9a1e1;">pixy_msgs</span>::<span style="color: #ECBE7B;">PixyData</span>&gt;
+    (<span style="color: #98be65;">"block_data"</span>, 50, block_data_cb);
+
+  <span style="color: #5B6268;">//</span><span style="color: #5B6268;">the setpoint publishing rate MUST be faster than 2Hz</span>
+  <span style="color: #a9a1e1;">ros</span>::<span style="color: #ECBE7B;">Rate</span> <span style="color: #dcaeea;">rate</span>(20.0);
+
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">wait for FCU connection</span>
+  <span style="color: #51afef;">while</span>(<span style="color: #a9a1e1;">ros</span>::ok() &amp;&amp; current_state.connected){
+    <span style="color: #a9a1e1;">ros</span>::spinOnce();
+    rate.sleep();
+  }
+
+  <span style="color: #a9a1e1;">geometry_msgs</span>::<span style="color: #ECBE7B;">PoseStamped</span> <span style="color: #dcaeea;">pose</span>;
+  pose.pose.position.x = 0;
+  pose.pose.position.y = 0;
+  pose.pose.position.z = 2;
+
+  <span style="color: #5B6268;">//</span><span style="color: #5B6268;">send a few setpoints before starting</span>
+  <span style="color: #51afef;">for</span>(<span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">i</span> = 100; <span style="color: #a9a1e1;">ros</span>::ok() &amp;&amp; i &gt; 0; --i){
+    local_pos_pub.publish(pose);
+    <span style="color: #a9a1e1;">ros</span>::spinOnce();
+    rate.sleep();
+  }
+
+  <span style="color: #a9a1e1;">mavros_msgs</span>::<span style="color: #ECBE7B;">SetMode</span> <span style="color: #dcaeea;">offb_set_mode</span>;
+  offb_set_mode.request.custom_mode = <span style="color: #98be65;">"OFFBOARD"</span>;
+
+  <span style="color: #a9a1e1;">mavros_msgs</span>::<span style="color: #ECBE7B;">CommandBool</span> <span style="color: #dcaeea;">arm_cmd</span>;
+  arm_cmd.request.value = <span style="color: #a9a1e1;">true</span>;
+
+  <span style="color: #a9a1e1;">ros</span>::<span style="color: #ECBE7B;">Time</span> <span style="color: #dcaeea;">last_request</span> = <span style="color: #a9a1e1;">ros</span>::<span style="color: #a9a1e1;">Time</span>::now();
+
+  <span style="color: #51afef;">while</span>(<span style="color: #a9a1e1;">ros</span>::ok()){
+    <span style="color: #51afef;">if</span>( current_state.mode != <span style="color: #98be65;">"OFFBOARD"</span> &amp;&amp;
+        (<span style="color: #a9a1e1;">ros</span>::<span style="color: #a9a1e1;">Time</span>::now() - last_request &gt; <span style="color: #a9a1e1;">ros</span>::Duration(5.0))){
+      <span style="color: #51afef;">if</span>( set_mode_client.call(offb_set_mode) &amp;&amp;
+          offb_set_mode.response.mode_sent){
+        ROS_INFO(<span style="color: #98be65;">"Offboard enabled"</span>);
+      }
+      last_request = <span style="color: #a9a1e1;">ros</span>::<span style="color: #a9a1e1;">Time</span>::now();
+    } <span style="color: #51afef;">else</span> {
+      <span style="color: #51afef;">if</span>( <span style="color: #51afef; font-weight: bold;">!</span>current_state.armed &amp;&amp;
+          (<span style="color: #a9a1e1;">ros</span>::<span style="color: #a9a1e1;">Time</span>::now() - last_request &gt; <span style="color: #a9a1e1;">ros</span>::Duration(5.0))){
+        <span style="color: #51afef;">if</span>( arming_client.call(arm_cmd) &amp;&amp;
+            arm_cmd.response.success){
+          ROS_INFO(<span style="color: #98be65;">"Vehicle armed"</span>);
+        }
+        last_request = <span style="color: #a9a1e1;">ros</span>::<span style="color: #a9a1e1;">Time</span>::now();
+      }
+    }
+
+    pose.pose.position.x = x;
+    pose.pose.position.y = y;
+    pose.pose.position.z = z;
+
+    local_pos_pub.publish(pose);
+    <span style="color: #a9a1e1;">ros</span>::spinOnce();
+    rate.sleep();
+  }
+
+  <span style="color: #51afef;">return</span> 0;
+}
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3c4a245" class="outline-3">
+<h3 id="org3c4a245"><span class="section-number-3">3.3</span> 실습 키보드 입력 받아서 x,y,z축 이동</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+<code>teleop_twist_keyboard</code> 노드 이용
+</p>
+
+<p>
+<a href="https://github.com/ros-teleop/teleop_twist_keyboard">https://github.com/ros-teleop/teleop_twist_keyboard</a>
+</p>
+
+<p>
+a 를 누루면 left, d를 누루면 right 이동하기
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org1dfd82c" class="outline-3">
+<h3 id="org1dfd82c"><span class="section-number-3">3.4</span> gazebo에 카메라 추가</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+<a href="http://discuss.px4.io/t/how-to-add-a-ros-camera-to-iris-for-gazebo-simulation/5118/11">http://discuss.px4.io/t/how-to-add-a-ros-camera-to-iris-for-gazebo-simulation/5118/11</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6c58173" class="outline-3">
+<h3 id="org6c58173"><span class="section-number-3">3.5</span> TF 이용해서 드론 제어를 해보자.</h3>
+<div class="outline-text-3" id="text-3-5">
 <p>
 -&#x2014;
 </p>
@@ -457,7 +665,7 @@ make
 
 
 <p>
-<span class="timestamp-wrapper"><span class="timestamp">&lt;2018-11-07 수&gt;</span></span>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2018-11-07 Wed&gt;</span></span>
 </p>
 <ul class="org-ul">
 <li>최근 버전에 precland 모드에서 MAVLINK<sub>MSG</sub><sub>ID</sub><sub>LANDING</sub><sub>TARGET</sub></li>
@@ -559,13 +767,44 @@ sub = rospy.Subscriber("mavros/rc/in", mavros_msgs.RCIn, lambda msg: print(msg))
 
 rospy.spin()
 </pre>
+
+<p>
+keyboard 입력
+</p>
+
+<pre class="example">
+#include &lt;termios.h&gt;
+
+int getch()
+{
+  static struct termios oldt, newt;
+  tcgetattr( STDIN_FILENO, &amp;oldt);           // save old settings
+  newt = oldt;
+  newt.c_lflag &amp;= ~(ICANON);                 // disable buffering
+  tcsetattr( STDIN_FILENO, TCSANOW, &amp;newt);  // apply new settings
+
+  int c = getchar();  // read character (non-blocking)
+
+  tcsetattr( STDIN_FILENO, TCSANOW, &amp;oldt);  // restore old settings
+  return c;
+}
+
+while (ros::ok())
+{
+  int c = getch();   // call your non-blocking input function
+  if (c == 'a')
+      printf("forward\n");
+  else if (c == 'd')
+      printf("backward\n");
+}
+</pre>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2019-01-11 금 05:42</p>
+<p class="date">Created: 2019-01-24 Thu 22:46</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

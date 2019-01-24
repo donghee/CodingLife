@@ -18,11 +18,11 @@
 * 수업 자료
 
 ** PX4 + Gazebo + MAVROS 실행
-
+ - ROS 마스터 노드 실행: ~roscore~
  - Gazebo 실행: ~cd ~/src/Firmware; make px4_sitl_default gazebo~
  - MAVROS 실행: ~rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"~
  - QGroundControl 실행
- - QGroundControl 실행: PX4 Parameter ~COM_OF_LOSS_T~ 파라미터 10초로 바꾸기. Failsafe timeout을 10초로 바꾸어야  시뮬레이터에서 코딩 편하다.
+ - QGroundControl 실행: PX4 Parameter ~COM_OF_LOSS_T~ 파라미터 10초로 바꾸기. Failsafe timeout을 10초로 바꾸어야 시뮬레이터에서 코딩 편하다.
  - circle node 실행: ~rosrun drone_command circle~ 6번째 수업자료
 
 [[https://i.imgur.com/bjUwLqr.png]]
@@ -95,8 +95,10 @@ void block_data_cb(const pixy_msgs::PixyData::ConstPtr& msg){
       z -= 0.1;
       if (z < 0.1) z = 0.0;
     }
-    // forward
-    // backward
+    // left
+
+    // right
+
   } else {
     //ROS_INFO("Notfound Pixy Block");
   }
