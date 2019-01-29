@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-12-14 금 13:55 -->
+<!-- 2018-12-21 금 11:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PX4 Dev Workshop</title>
@@ -236,36 +236,36 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2e16be0">1. 수업</a></li>
-<li><a href="#orgf2ddd5f">2. 수업 진행</a></li>
-<li><a href="#org2fc53f4">3. 수업 자료</a>
+<li><a href="#org581b850">1. 수업</a></li>
+<li><a href="#org3af8f9d">2. 수업 진행</a></li>
+<li><a href="#orge44d2e9">3. 수업 자료</a>
 <ul>
-<li><a href="#orgb280182">3.1. OpenCV 소개</a></li>
-<li><a href="#org2e6c852">3.2. OpenCV 설치</a>
+<li><a href="#orgffae2b1">3.1. OpenCV 소개</a></li>
+<li><a href="#orgbfb41c0">3.2. OpenCV 설치</a>
 <ul>
-<li><a href="#org4675d1c">3.2.1. C++ (OpenCV-3.4.4)</a></li>
-<li><a href="#orgc6f6399">3.2.2. 예제</a></li>
+<li><a href="#org73b89a8">3.2.1. C++ (OpenCV-3.4.4)</a></li>
+<li><a href="#orge4dc923">3.2.2. 예제</a></li>
 </ul>
 </li>
-<li><a href="#org774aa46">3.3. OpenCV 소개</a>
+<li><a href="#orgc2b76d2">3.3. OpenCV 소개</a>
 <ul>
-<li><a href="#orge1fddf9">3.3.1. Mat: 이미지 타입</a></li>
-<li><a href="#orgd586e86">3.3.2. Mat: 이미지 읽기</a></li>
-<li><a href="#orga1f39e8">3.3.3. Mat: 복사</a></li>
-<li><a href="#org844c4d9">3.3.4. Filter: Sharpen</a></li>
-<li><a href="#org9435c97">3.3.5. Python (OpenCV-3.4.4)</a></li>
+<li><a href="#org3b64b24">3.3.1. Mat: 이미지 타입</a></li>
+<li><a href="#orgf668d25">3.3.2. Mat: 이미지 읽기</a></li>
+<li><a href="#org38de634">3.3.3. Mat: 복사</a></li>
+<li><a href="#orgb1b1d69">3.3.4. Filter: Sharpen</a></li>
+<li><a href="#org645a019">3.3.5. Python (OpenCV-3.4.4)</a></li>
 </ul>
 </li>
-<li><a href="#org9645237">3.4. 실습</a></li>
+<li><a href="#org5ea30a6">3.4. 실습</a></li>
 </ul>
 </li>
-<li><a href="#org6a8a7f4">4. 참고</a></li>
+<li><a href="#org8bddae6">4. 참고</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2e16be0" class="outline-2">
-<h2 id="org2e16be0"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-org581b850" class="outline-2">
+<h2 id="org581b850"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>일시: 2018.</li>
@@ -276,8 +276,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgf2ddd5f" class="outline-2">
-<h2 id="orgf2ddd5f"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-org3af8f9d" class="outline-2">
+<h2 id="org3af8f9d"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>컴퓨터 비전 소개</li>
@@ -286,12 +286,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org2fc53f4" class="outline-2">
-<h2 id="org2fc53f4"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-orge44d2e9" class="outline-2">
+<h2 id="orge44d2e9"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgb280182" class="outline-3">
-<h3 id="orgb280182"><span class="section-number-3">3.1</span> OpenCV 소개</h3>
+<div id="outline-container-orgffae2b1" class="outline-3">
+<h3 id="orgffae2b1"><span class="section-number-3">3.1</span> OpenCV 소개</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>1999 Gary Bradsky 개발 시작</li>
@@ -303,24 +303,20 @@ for the JavaScript code in this tag.
 <li>OpenCV 프로젝트 목표</li>
 </ul>
 
-<p>
-#+BEGIN<sub>QUOTE</sub>
-Advance vision research by providing not only open but also optimized code for basic vision infrastructure. <b>No more reinventing the wheel.</b>
-</p>
+<pre class="example">
+Advance vision research by providing not only open but also optimized code for basic vision infrastructure. *No more reinventing the wheel.*
 
-<p>
-Disseminate vision knowledge by providing a <b>common infrastructure that developers could build on</b>, so that code would be more readily readable and transferable.
-#+EMD<sub>QUOTE</sub>
-</p>
+Disseminate vision knowledge by providing a *common infrastructure that developers could build on*, so that code would be more readily readable and transferable.
+</pre>
 </div>
 </div>
 
-<div id="outline-container-org2e6c852" class="outline-3">
-<h3 id="org2e6c852"><span class="section-number-3">3.2</span> OpenCV 설치</h3>
+<div id="outline-container-orgbfb41c0" class="outline-3">
+<h3 id="orgbfb41c0"><span class="section-number-3">3.2</span> OpenCV 설치</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org4675d1c" class="outline-4">
-<h4 id="org4675d1c"><span class="section-number-4">3.2.1</span> C++ (OpenCV-3.4.4)</h4>
+<div id="outline-container-org73b89a8" class="outline-4">
+<h4 id="org73b89a8"><span class="section-number-4">3.2.1</span> C++ (OpenCV-3.4.4)</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <ul class="org-ul">
 <li>C++11, CMake 3.5.1</li>
@@ -337,8 +333,8 @@ OpenCV 설치 스크립트(20분 정도)
 </div>
 </div>
 
-<div id="outline-container-orgc6f6399" class="outline-4">
-<h4 id="orgc6f6399"><span class="section-number-4">3.2.2</span> 예제</h4>
+<div id="outline-container-orge4dc923" class="outline-4">
+<h4 id="orge4dc923"><span class="section-number-4">3.2.2</span> 예제</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <ul class="org-ul">
 <li>/home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/samples</li>
@@ -348,12 +344,12 @@ OpenCV 설치 스크립트(20분 정도)
 </div>
 
 
-<div id="outline-container-org774aa46" class="outline-3">
-<h3 id="org774aa46"><span class="section-number-3">3.3</span> OpenCV 소개</h3>
+<div id="outline-container-orgc2b76d2" class="outline-3">
+<h3 id="orgc2b76d2"><span class="section-number-3">3.3</span> OpenCV 소개</h3>
 <div class="outline-text-3" id="text-3-3">
 </div>
-<div id="outline-container-orge1fddf9" class="outline-4">
-<h4 id="orge1fddf9"><span class="section-number-4">3.3.1</span> Mat: 이미지 타입</h4>
+<div id="outline-container-org3b64b24" class="outline-4">
+<h4 id="org3b64b24"><span class="section-number-4">3.3.1</span> Mat: 이미지 타입</h4>
 <div class="outline-text-4" id="text-3-3-1">
 
 <div class="figure">
@@ -387,8 +383,8 @@ imshow(<span style="color: #98be65;">"Mat"</span>, M);
 </div>
 </div>
 
-<div id="outline-container-orgd586e86" class="outline-4">
-<h4 id="orgd586e86"><span class="section-number-4">3.3.2</span> Mat: 이미지 읽기</h4>
+<div id="outline-container-orgf668d25" class="outline-4">
+<h4 id="orgf668d25"><span class="section-number-4">3.3.2</span> Mat: 이미지 읽기</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">image</span>;
@@ -415,8 +411,8 @@ imshow(<span style="color: #98be65;">"Read image"</span>, image);
 </div>
 </div>
 
-<div id="outline-container-orga1f39e8" class="outline-4">
-<h4 id="orga1f39e8"><span class="section-number-4">3.3.3</span> Mat: 복사</h4>
+<div id="outline-container-org38de634" class="outline-4">
+<h4 id="org38de634"><span class="section-number-4">3.3.3</span> Mat: 복사</h4>
 <div class="outline-text-4" id="text-3-3-3">
 <p>
 B는 A의 refernce(헤더만 복사)
@@ -433,8 +429,8 @@ C = A.clone();                                    <span style="color: #5B6268;">
 </div>
 </div>
 
-<div id="outline-container-org844c4d9" class="outline-4">
-<h4 id="org844c4d9"><span class="section-number-4">3.3.4</span> Filter: Sharpen</h4>
+<div id="outline-container-orgb1b1d69" class="outline-4">
+<h4 id="orgb1b1d69"><span class="section-number-4">3.3.4</span> Filter: Sharpen</h4>
 <div class="outline-text-4" id="text-3-3-4">
 <p>
 선명하게(Sharpen) 필터: 현재 위치(i,j)를 변형. 현재 위치 픽셀에 5배 곱하여 더하고, 주변(4방)은 1배 곱하여 뺀다. 현재 위치에 저장.
@@ -564,8 +560,8 @@ sharpen.cpp
 </p>
 </div>
 </div>
-<div id="outline-container-org9435c97" class="outline-4">
-<h4 id="org9435c97"><span class="section-number-4">3.3.5</span> Python (OpenCV-3.4.4)</h4>
+<div id="outline-container-org645a019" class="outline-4">
+<h4 id="org645a019"><span class="section-number-4">3.3.5</span> Python (OpenCV-3.4.4)</h4>
 <div class="outline-text-4" id="text-3-3-5">
 <p>
 OpenCV 설치 (Python)
@@ -619,12 +615,12 @@ cv2.destroyAllWindows()
 </div>
 </div>
 
-<div id="outline-container-org9645237" class="outline-3">
-<h3 id="org9645237"><span class="section-number-3">3.4</span> 실습</h3>
+<div id="outline-container-org5ea30a6" class="outline-3">
+<h3 id="org5ea30a6"><span class="section-number-3">3.4</span> 실습</h3>
 <div class="outline-text-3" id="text-3-4">
 </div>
 <ol class="org-ol">
-<li><a id="org601842d"></a>face detect<br />
+<li><a id="orgba0e637"></a>face detect<br />
 <div class="outline-text-5" id="text-3-4-0-1">
 <pre class="example">
 #include "opencv2/objdetect.hpp"
@@ -747,7 +743,7 @@ void detectAndDraw( Mat&amp; img, CascadeClassifier&amp; cascade,
 </pre>
 </div>
 </li>
-<li><a id="orgca26b6d"></a>QRCode Decoder from image<br />
+<li><a id="orgd8ba043"></a>QRCode Decoder from image<br />
 <div class="outline-text-5" id="text-3-4-0-2">
 <ul class="org-ul">
 <li>오늘의 목표</li>
@@ -758,7 +754,7 @@ void detectAndDraw( Mat&amp; img, CascadeClassifier&amp; cascade,
 
 
 <ol class="org-ol">
-<li><a id="org313b977"></a>CMakeLists.txt<br />
+<li><a id="orgce90b30"></a>CMakeLists.txt<br />
 <div class="outline-text-6" id="text-3-4-0-2-1">
 <div class="org-src-container">
 <pre class="src src-cmake">cmake_minimum_required(VERSION 2.8.12)
@@ -786,7 +782,7 @@ add_example(qrcode-video)
 </div>
 </li>
 
-<li><a id="orgc106b55"></a>qrcode.cpp<br />
+<li><a id="orga4ab488"></a>qrcode.cpp<br />
 <div class="outline-text-6" id="text-3-4-0-2-2">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">#include &lt;opencv2/opencv.hpp&gt;</span>
@@ -843,9 +839,9 @@ add_example(qrcode-video)
 </ol>
 </li>
 
-<li><a id="orgbeb7996"></a>QRCode Decoder from WebCAM<br />
+<li><a id="org4c1482f"></a>QRCode Decoder from WebCAM<br />
 <ol class="org-ol">
-<li><a id="orgd7e3824"></a>qrcode-video.cpp<br />
+<li><a id="org8079dfa"></a>qrcode-video.cpp<br />
 <div class="outline-text-6" id="text-3-4-0-3-1">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">"opencv2/objdetect.hpp"</span>
@@ -1046,8 +1042,8 @@ add_example(qrcode-video)
 
 
 
-<div id="outline-container-org6a8a7f4" class="outline-2">
-<h2 id="org6a8a7f4"><span class="section-number-2">4</span> 참고</h2>
+<div id="outline-container-org8bddae6" class="outline-2">
+<h2 id="org8bddae6"><span class="section-number-2">4</span> 참고</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li><a href="https://github.com/spmallick/learnopencv">https://github.com/spmallick/learnopencv</a></li>
@@ -1057,7 +1053,7 @@ add_example(qrcode-video)
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2018-12-14 금 13:55</p>
+<p class="date">Created: 2018-12-21 금 11:58</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

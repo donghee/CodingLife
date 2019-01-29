@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-01-24 Thu 22:46 -->
+<!-- 2019-01-29 Tue 09:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PX4 Dev Workshop</title>
@@ -249,27 +249,27 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org02a0e90">1. 수업</a></li>
-<li><a href="#org627d3c9">2. 수업 진행</a></li>
-<li><a href="#org428747b">3. 수업 자료</a>
+<li><a href="#org3629540">1. 수업</a></li>
+<li><a href="#org3b5b20d">2. 수업 진행</a></li>
+<li><a href="#orgf59c561">3. 수업 자료</a>
 <ul>
-<li><a href="#org41b74a3">3.1. PX4 + Gazebo + MAVROS 실행</a></li>
-<li><a href="#org52f0a2b">3.2. <code>drone_command</code> 패키지에 <code>setpoints_from_pixy</code> 노드 추가</a>
+<li><a href="#org0daf48a">3.1. PX4 + Gazebo + MAVROS 실행</a></li>
+<li><a href="#orgfac0df5">3.2. <code>drone_command</code> 패키지에 <code>setpoints_from_pixy</code> 노드 추가</a>
 <ul>
-<li><a href="#org4015469">3.2.1. <code>/block_data</code> 토픽 구독</a></li>
+<li><a href="#orgdac0a2d">3.2.1. <code>/block_data</code> 토픽 구독</a></li>
 </ul>
 </li>
-<li><a href="#org3c4a245">3.3. 실습 키보드 입력 받아서 x,y,z축 이동</a></li>
-<li><a href="#org1dfd82c">3.4. gazebo에 카메라 추가</a></li>
-<li><a href="#org6c58173">3.5. TF 이용해서 드론 제어를 해보자.</a></li>
+<li><a href="#orgceeaf0b">3.3. 실습 키보드 입력 받아서 x,y,z축 이동</a></li>
+<li><a href="#org38135a0">3.4. gazebo에 드론 모델 추가</a></li>
+<li><a href="#orgbd7afdc">3.5. TF 이용해서 드론 제어를 해보자.</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org02a0e90" class="outline-2">
-<h2 id="org02a0e90"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-org3629540" class="outline-2">
+<h2 id="org3629540"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>일시: 2019. 1. 11</li>
@@ -280,8 +280,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org627d3c9" class="outline-2">
-<h2 id="org627d3c9"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-org3b5b20d" class="outline-2">
+<h2 id="org3b5b20d"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>pixy + MavROS 연결</li>
@@ -289,12 +289,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org428747b" class="outline-2">
-<h2 id="org428747b"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-orgf59c561" class="outline-2">
+<h2 id="orgf59c561"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org41b74a3" class="outline-3">
-<h3 id="org41b74a3"><span class="section-number-3">3.1</span> PX4 + Gazebo + MAVROS 실행</h3>
+<div id="outline-container-org0daf48a" class="outline-3">
+<h3 id="org0daf48a"><span class="section-number-3">3.1</span> PX4 + Gazebo + MAVROS 실행</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>ROS 마스터 노드 실행: <code>roscore</code></li>
@@ -313,12 +313,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org52f0a2b" class="outline-3">
-<h3 id="org52f0a2b"><span class="section-number-3">3.2</span> <code>drone_command</code> 패키지에 <code>setpoints_from_pixy</code> 노드 추가</h3>
+<div id="outline-container-orgfac0df5" class="outline-3">
+<h3 id="orgfac0df5"><span class="section-number-3">3.2</span> <code>drone_command</code> 패키지에 <code>setpoints_from_pixy</code> 노드 추가</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org4015469" class="outline-4">
-<h4 id="org4015469"><span class="section-number-4">3.2.1</span> <code>/block_data</code> 토픽 구독</h4>
+<div id="outline-container-orgdac0a2d" class="outline-4">
+<h4 id="orgdac0a2d"><span class="section-number-4">3.2.1</span> <code>/block_data</code> 토픽 구독</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 구독할 토픽 확인: <code>rostopic info /block_data</code>
@@ -479,8 +479,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org3c4a245" class="outline-3">
-<h3 id="org3c4a245"><span class="section-number-3">3.3</span> 실습 키보드 입력 받아서 x,y,z축 이동</h3>
+<div id="outline-container-orgceeaf0b" class="outline-3">
+<h3 id="orgceeaf0b"><span class="section-number-3">3.3</span> 실습 키보드 입력 받아서 x,y,z축 이동</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 <code>teleop_twist_keyboard</code> 노드 이용
@@ -496,315 +496,27 @@ a 를 누루면 left, d를 누루면 right 이동하기
 </div>
 </div>
 
-
-<div id="outline-container-org1dfd82c" class="outline-3">
-<h3 id="org1dfd82c"><span class="section-number-3">3.4</span> gazebo에 카메라 추가</h3>
+<div id="outline-container-org38135a0" class="outline-3">
+<h3 id="org38135a0"><span class="section-number-3">3.4</span> gazebo에 드론 모델 추가</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-<a href="http://discuss.px4.io/t/how-to-add-a-ros-camera-to-iris-for-gazebo-simulation/5118/11">http://discuss.px4.io/t/how-to-add-a-ros-camera-to-iris-for-gazebo-simulation/5118/11</a>
+해보기: gazebo에 드론 모델을 추가하여 시뮬레이션해보자. <code>Firmware/Tools/sitl_gazebo/models/iris_irlock</code> 폴더 참고
 </p>
+
+<ul class="org-ul">
+<li>카메라 추가 <a href="http://discuss.px4.io/t/how-to-add-a-ros-camera-to-iris-for-gazebo-simulation/5118/11">http://discuss.px4.io/t/how-to-add-a-ros-camera-to-iris-for-gazebo-simulation/5118/11</a></li>
+</ul>
 </div>
 </div>
 
-<div id="outline-container-org6c58173" class="outline-3">
-<h3 id="org6c58173"><span class="section-number-3">3.5</span> TF 이용해서 드론 제어를 해보자.</h3>
-<div class="outline-text-3" id="text-3-5">
-<p>
--&#x2014;
-</p>
-
-
-<p>
-vision landing 예시
-</p>
-<ul class="org-ul">
-<li><a href="https://github.com/szebedy/autonomous-drone/">https://github.com/szebedy/autonomous-drone/</a></li>
-<li><a href="https://github.com/goodrobots/vision_landing/">https://github.com/goodrobots/vision_landing/</a></li>
-<li><a href="https://github.com/claymation/lander/">https://github.com/claymation/lander/</a></li>
-</ul>
-
-<p>
-ROS와 비콘으로 crazyflies 여러대 날리는 문서
-</p>
-<ul class="org-ul">
-<li><a href="http://act.usc.edu/publications/Hoenig_Springer_ROS2017.pdf">http://act.usc.edu/publications/Hoenig_Springer_ROS2017.pdf</a></li>
-<li><a href="http://act.usc.edu/publications/Preiss_ICRA2017.pdf">http://act.usc.edu/publications/Preiss_ICRA2017.pdf</a></li>
-<li><a href="https://github.com/USC-ACTLab/crazyswarm">https://github.com/USC-ACTLab/crazyswarm</a></li>
-<li><a href="https://www.youtube.com/watch?v=D0CrjoYDt9w">https://www.youtube.com/watch?v=D0CrjoYDt9w</a></li>
-<li><a href="https://crazyswarm.readthedocs.io/en/latest/hardware.html#large-quadrotor">https://crazyswarm.readthedocs.io/en/latest/hardware.html#large-quadrotor</a></li>
-<li><a href="https://github.com/whoenig/libMultiRobotPlanning">https://github.com/whoenig/libMultiRobotPlanning</a></li>
-</ul>
-
-<p>
-ros blob detection <a href="https://www.youtube.com/watch?v=a6XvL7NVeTk">https://www.youtube.com/watch?v=a6XvL7NVeTk</a>
-<a href="https://www.robotigniteacademy.com/en/course/ros-perception-in-5-days_5_0/">https://www.robotigniteacademy.com/en/course/ros-perception-in-5-days_5_0/</a>
--&#x2014;
-</p>
-
-<ol class="org-ol">
-<li>aruco</li>
-</ol>
-
-<p>
-aruco: library for detect marker
-</p>
-
-<p>
-뭘할수 있나?
-</p>
-<ol class="org-ol">
-<li>detect marker</li>
-<li>calibrate camera  (위치 estimation할때 필수)</li>
-</ol>
-
-<p>
-marker
-</p>
-<ul class="org-ul">
-<li>binary code (dictionary)</li>
-<li>위치. 방향을 알 수 있다.</li>
-</ul>
-
-<p>
-download
-</p>
-<ul class="org-ul">
-<li><a href="https://sourceforge.net/projects/aruco/">https://sourceforge.net/projects/aruco/</a></li>
-</ul>
-
-<p>
-mkdir build
-cd build
-cmake ..
-make
-make install
-</p>
-
-<p>
-위치 /home/donghee/Dropbox/dev/CodingLife/20180724/PX4-Dev-Workshop/opencv/aruco/aruco<sub>testproject</sub>
-</p>
-
-<p>
-mkdir aruco<sub>testproject</sub>
-</p>
-
-<p>
-cat CMakeLists.txt
-</p>
-
-<p>
-cmake<sub>minimum</sub><sub>required</sub>(VERSION 2.8)
-project(aruco<sub>testproject</sub>)
-find<sub>package</sub>(aruco REQUIRED )
-add<sub>executable</sub>(aruco<sub>simple</sub> aruco<sub>simple.cpp</sub>)
-target<sub>link</sub><sub>libraries</sub>(aruco<sub>simple</sub>  aruco)
-</p>
-
-<p>
-cat aruco<sub>simple.cpp</sub>
-</p>
-
-<p>
-#include &lt;iostream&gt;
-#include &lt;aruco/aruco.h&gt;
-#include &lt;opencv2/highgui.hpp&gt;
-int main(int argc,char **argv)
-{
-  try
-  {
-      if (argc!=2) throw std::runtime<sub>error</sub>("Usage: inimage");
-      aruco::MarkerDetector MDetector;
-      //read the input image
-      cv::Mat InImage=cv::imread(argv[1]);
-    //Ok, let's detect
-      MDetector.setDictionary("ARUCO<sub>MIP</sub><sub>36h12</sub>");
-      //detect markers and for each one, draw info and its boundaries in the image
-      for(auto m:MDetector.detect(InImage)){
-          std::cout&lt;&lt;m&lt;&lt;std::endl;
-          m.draw(InImage);
-      }
-      cv::imshow("in",InImage);
-      cv::waitKey(0);//wait for key to be pressed
-  } catch (std::exception &amp;ex)
-  {
-      std::cout&lt;&lt;"Exception :"&lt;&lt;ex.what()&lt;&lt;std::endl;
-  }
-}
-</p>
-
-
-<p>
-mkdir build
-cd build
-cmake .. -Daruco<sub>DIR</sub>=../../aruco-3.0.12 -DOpenCV<sub>DIR</sub>=&lt;path2OpenCVConfig.cmake&gt;
-make
-./aruco<sub>simple</sub> image<sub>withmarkers.jpg</sub>
-</p>
-
-
-<p>
-1 read the input image
-</p>
-<ol class="org-ol">
-<li>marker dector</li>
-<li>detect! and return vector</li>
-<li>print vector (id)</li>
-<li>draw marked image</li>
-<li>create window</li>
-<li>show image</li>
-</ol>
-
-<p>
-참고:
-</p>
-<ul class="org-ul">
-<li>ArUco Library Documentation <a href="https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/edit">https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/edit</a></li>
-<li><a href="https://bitbucket.org/NiklasGeorg/markerdetection">https://bitbucket.org/NiklasGeorg/markerdetection</a></li>
-</ul>
-
-
-
-<p>
-<span class="timestamp-wrapper"><span class="timestamp">&lt;2018-11-07 Wed&gt;</span></span>
-</p>
-<ul class="org-ul">
-<li>최근 버전에 precland 모드에서 MAVLINK<sub>MSG</sub><sub>ID</sub><sub>LANDING</sub><sub>TARGET</sub></li>
-</ul>
-<p>
-받는게 추가 되었다. handle<sub>message</sub><sub>landing</sub><sub>target</sub>
-mavros 에서 LANDING TARGET 플러그인을 추가해야겠다.
-<a href="https://github.com/mavlink/mavros/tree/master/mavros_extras/src/plugins">https://github.com/mavlink/mavros/tree/master/mavros_extras/src/plugins</a>
-</p>
-
-<ul class="org-ul">
-<li>CopterExpress의 clever 프로젝트</li>
-</ul>
-
-<p>
-offboard mode 사용 간단하게 할 수 있는 서비스 추가 되어 있음 get<sub>telemetry</sub>, navigate
-<a href="https://github.com/CopterExpress/clever/blob/master/clever/src/simple_offboard.py">https://github.com/CopterExpress/clever/blob/master/clever/src/simple_offboard.py</a>
-</p>
-
-<p>
-/mavros/setpoint<sub>raw</sub>/local raw노드는 뭐지? 메시지가 다르군.
-</p>
-
-<p>
-세종대 마커 이용해서 정밀 랜딩
-navigation using  aruco marker
-<a href="https://github.com/CopterExpress/clever/blob/master/docs/aruco.md">https://github.com/CopterExpress/clever/blob/master/docs/aruco.md</a>
-</p>
-
-<ol class="org-ol">
-<li>aruco 로 마커인식</li>
-<li>aruco 로 위치 인식  <a href="https://github.com/CopterExpress/clever/tree/master/aruco_pose/src">https://github.com/CopterExpress/clever/tree/master/aruco_pose/src</a></li>
-<li>aruco tf 보내기 (aruco<sub>map</sub>)</li>
-<li>local origin, aruco<sub>map</sub><sub>vision</sub>, 던지기. fcu<sub>horiz</sub> <a href="https://github.com/CopterExpress/clever/blob/0629bd718cc549db11fae7ed2acb672333ced50b/clever/src/aruco_vpe.cpp">https://github.com/CopterExpress/clever/blob/0629bd718cc549db11fae7ed2acb672333ced50b/clever/src/aruco_vpe.cpp</a></li>
-<li>vision<sub>position</sub><sub>pub</sub>_ 던지기.</li>
-<li>simple offboard api 작성</li>
-<li>aruco tf 받아서 offboard api 작성</li>
-<li>spiral 돌기 만들기 <a href="https://youtu.be/aqBION3TVhg?t=43">https://youtu.be/aqBION3TVhg?t=43</a></li>
-</ol>
-
-<p>
-관련 튜토리얼
-<a href="https://clever.copterexpress.com/aruco.html">https://clever.copterexpress.com/aruco.html</a>
-</p>
-
-
-<p>
--&#x2014;
-</p>
-
-<p>
-발표자료
-<a href="https://elinux.org/images/7/79/Flying_Penguins-_Embedded_Linux_Applications_for_Autonomous_UAVs.pdf">https://elinux.org/images/7/79/Flying_Penguins-_Embedded_Linux_Applications_for_Autonomous_UAVs.pdf</a>
-</p>
-
-<p>
-precision landing 예시
-<a href="http://github.com/claymation/lander">http://github.com/claymation/lander</a>
-</p>
-
-<ol class="org-ol">
-<li>SEEKING -&gt; LANDING</li>
-<li>LANDING -&gt; LANDED</li>
-<li>LANDED</li>
-</ol>
-
-<p>
-precision landing 참고
-</p>
-<ul class="org-ul">
-<li><a href="https://github.com/goodrobots/vision_landing">https://github.com/goodrobots/vision_landing</a></li>
-<li><a href="https://github.com/claymation/lander/blob/master/src/py/lander/nodes/commander.py">https://github.com/claymation/lander/blob/master/src/py/lander/nodes/commander.py</a></li>
-<li><a href="https://github.com/yankailab/OpenKAI/blob/master/kiss/app/apCopter_aruco.kiss">https://github.com/yankailab/OpenKAI/blob/master/kiss/app/apCopter_aruco.kiss</a></li>
-<li><a href="https://github.com/yankailab/OpenKAI/tree/master/kiss/app">https://github.com/yankailab/OpenKAI/tree/master/kiss/app</a></li>
-<li><a href="https://diydrones.com/profiles/blogs/precision-landing-with-opencv-and-aruco-markers-part-1">https://diydrones.com/profiles/blogs/precision-landing-with-opencv-and-aruco-markers-part-1</a></li>
-<li><a href="https://www.youtube.com/watch?v=IJlt8dE_s5k">https://www.youtube.com/watch?v=IJlt8dE_s5k</a></li>
-<li><a href="https://github.com/openmv/openmv/tree/master/scripts/examples/18-MAVLink">https://github.com/openmv/openmv/tree/master/scripts/examples/18-MAVLink</a></li>
-</ul>
-<p>
-precision landing 키는건 rc input읽어서 하면 되겟네
-</p>
-
-<p>
-<a href="https://github.com/PX4/Firmware/blob/master/src/modules/landing_target_estimator/KalmanFilter.cpp">https://github.com/PX4/Firmware/blob/master/src/modules/landing_target_estimator/KalmanFilter.cpp</a>
-</p>
-
-<p>
-"mavros/rc/in"
-</p>
-
-<pre class="example">
-import rospy
-import mavros_msgs
-
-# see ROS tutorials! init required
-rospy.init_node("rcin_sub")
-
-sub = rospy.Subscriber("mavros/rc/in", mavros_msgs.RCIn, lambda msg: print(msg))
-
-rospy.spin()
-</pre>
-
-<p>
-keyboard 입력
-</p>
-
-<pre class="example">
-#include &lt;termios.h&gt;
-
-int getch()
-{
-  static struct termios oldt, newt;
-  tcgetattr( STDIN_FILENO, &amp;oldt);           // save old settings
-  newt = oldt;
-  newt.c_lflag &amp;= ~(ICANON);                 // disable buffering
-  tcsetattr( STDIN_FILENO, TCSANOW, &amp;newt);  // apply new settings
-
-  int c = getchar();  // read character (non-blocking)
-
-  tcsetattr( STDIN_FILENO, TCSANOW, &amp;oldt);  // restore old settings
-  return c;
-}
-
-while (ros::ok())
-{
-  int c = getch();   // call your non-blocking input function
-  if (c == 'a')
-      printf("forward\n");
-  else if (c == 'd')
-      printf("backward\n");
-}
-</pre>
-</div>
+<div id="outline-container-orgbd7afdc" class="outline-3">
+<h3 id="orgbd7afdc"><span class="section-number-3">3.5</span> TF 이용해서 드론 제어를 해보자.</h3>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2019-01-24 Thu 22:46</p>
+<p class="date">Created: 2019-01-29 Tue 09:00</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

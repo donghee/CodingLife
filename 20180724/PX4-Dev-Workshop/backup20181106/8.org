@@ -231,12 +231,15 @@ rostopic list -v
 
 ** 예시: tag detection: aruco
 
+aruco: library for detect marker https://sourceforge.net/projects/aruco/
+ 1. detect marker
+ 2. position estimation
+
 [[https://i.imgur.com/pa6a5HY.png]]
 
 *ros-kinetic-aruco-ros 설치*
 #+BEGIN_SRC
 sudo apt-get install ros-kinetic-aruco-ros
-
 #+END_SRC
 
 ~aruco_test.launch~ 작성
@@ -291,18 +294,14 @@ rostopic echo /aruco_single/pose
 http://wiki.ros.org/camera_calibration
 http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
 
-
 *camera calibration 실행*
 #+BEGIN_SRC
 rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/cv_camera/image_raw camera:=/cv_camera
 #+END_SRC
 
-*calibration 파일 추가 ost.yaml*
-~aruco_test.launch~ 에 다음 내용 추가.
+calibration 후 commit 버튼 클릭
 
-#+BEGIN_SRC xml
-<param name="calibration_file" type="string" value="/tmp/ost.yaml"/>
-#+END_SRC
+~cv_camera_node~ 다시 실행하여 camera calibration 데이터 적용
 
 * 참고
  - http://wiki.ros.org/vision_opencv
