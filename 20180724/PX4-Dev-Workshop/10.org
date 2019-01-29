@@ -1,0 +1,136 @@
+#+STARTUP: showeverything
+#+TITLE:     PX4 Dev Workshop
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} .org-src-container {border: 0px; box-shadow: none;}  pre { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; } </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+
+* 수업
+ - 일시: 2019. 1. 10
+ - 목표: pixy camera를 사용하고 ROS TF에 대해 이해할 수 있다.
+ - 교재: https://goo.gl/sDfk3j
+ - 코치: 박동희 dongheepark@gmail.com
+
+* 수업 진행
+ - pixy camera 설정. 노드 실행. 그리고 TF
+
+* 수업 자료
+** Pixy Camera
+물체를 학습 시켜서 물체 블록을 인식하는 카메라. 물체의 색을 통해서 블록을 인식
+
+https://pixycam.com
+
+ - PixyMon 설치
+
+https://docs.pixycam.com/wiki/doku.php?id=wiki:v1:installing_pixymon_on_linux
+
+ - Pixy camera teaching object
+
+https://docs.pixycam.com/wiki/doku.php?id=wiki:v1:teach_pixy_an_object_2
+
+*** ~erle_pixy~
+카메라 이미지 가져오는 노드
+
+https://github.com/erlerobot/erle_pixy
+
+*** ~pixy_ros~
+블록데이터 가져오는 노드
+
+https://github.com/jeskesen/pixy_ros
+
+**** 설치
+
+노드 다운로드
+#+BEGIN_SRC sh
+cd ~/catkin_ws/src/
+git clone https://github.com/jeskesen/pixy_ros
+#+END_SRC
+
+CMakeLists.txt 수정
+#+BEGIN_SRC
+~/catkin_ws/src/pixy_ros/pixy_node/CMakeLists.txt 수정
+
+ 1. find_package 에 pixy_msgs 추가
+
+find_package(catkin REQUIRED COMPONENTS
+    sensor_msgs
+    message_generation
+    roscpp
+    tf
+    pixy_msgs
+)
+
+ 2. include_directories에 ${catkin_INCLUDE_DIRS} 추가
+    include_directories(include libpixyusb/include libpixyusb/common  ${LIBUSB_1_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
+#+END_SRC
+
+노드 빌드
+#+BEGIN_SRC
+cd ~/catkin_ws
+catkin build pixy_ros
+#+END_SRC
+
+**** 노드 실행
+
+#+BEGIN_SRC sh
+cd ~/catkin_ws
+rosrun pixy_node pixy_node
+또는
+roslaunch pixy_node pixy_usb.launch
+#+END_SRC
+
+**** 토픽 확인
+
+#+BEGIN_SRC sh
+rostopic list
+
+rostopic echo /block_data
+또는
+rostopic echo /my_pixy/block_data
+#+END_SRC
+
+** TF
+
+TF(TransForm 프레임 변환)
+
+왜? 카메라에서 나오는 x_offset, y_offset 좌표를 드론의 BODY(local position) 좌표계로 변경 필요
+
+*** TF?
+
+http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF?action=AttachFile&do=get&target=simple_robot.png
+
+Listener: /tf 토픽을 읽음
+Publisher: 좌표간의 *변환* 을 /tf에 방송(publish)
+
+*** TF의 xyz ?
+
+ x - forward
+ y - left
+ z - pointing up
+
+출처: http://www.ros.org/reps/rep-0103.html
+
+*PX4 local position은 NED*
+
+** TF의 lookupTransform
+
+[[https://i.imgur.com/gsHe8gx.png]]
+
+
+*** TF 실습
+
+터틀심의 /turtle1을 따라다니는 turtle2를 만들어 보자
+
+http://wiki.ros.org/tf2/Tutorials
+
+따라하기
+
+https://www.youtube.com/watch?v=aCH259ggKb0
+
+참고
+ - http://wiki.ros.org/tf
+ - http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF
+ - https://github.com/claymation/lander/
+ - http://web.ics.purdue.edu/~rvoyles/Classes/ROSprogramming/Lectures/TF%20(transform)%20in%20ROS.pdf
+ - https://www.ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2017/lecture3.pdf

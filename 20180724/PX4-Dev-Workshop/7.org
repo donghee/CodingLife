@@ -7,233 +7,643 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
 * 수업
- - 일시: 2018. 9. 27
- - 목표: MAVROS 노드를 만들 수 있다.
+ - 일시: 2018.
+ - 목표: 컴퓨터 비전
  - 교재: https://goo.gl/sDfk3j
  - 코치: 박동희 dongheepark@gmail.com
 
 * 수업 진행
- - MAVROS 사용하기
-  - MAVROS 노드 실행
-  - MAVROS 주요 메시지
-  - 시뮬레이터 사용
-
+ - 컴퓨터 비전 소개
+ - OpenCV
 
 * 수업 자료
-** MAVROS 노드 실행 및 관리
 
-**** ROS Core 노드 실행
-#+begin_src sh
-$ roscore
-#+end_src
+** OpenCV 소개
+ - 1999 Gary Bradsky 개발 시작
+ - 2005 Stanley, 2005 DARPA Grand Challenge
+ - OpenCV-3.4.4 2018년 11월 20일 릴리즈
+ - https://opencv.org/
+ - 튜토리얼: https://docs.opencv.org/3.4.4/
+ - 예제: https://docs.opencv.org/3.4.4/examples.html
+ - OpenCV 프로젝트 목표
 
-**** MAVROS 노드 실행
-#+begin_src sh
-$ roslaunch mavros px4.launch
+#+BEGIN_QUOTE
+Advance vision research by providing not only open but also optimized code for basic vision infrastructure. *No more reinventing the wheel.*
 
-# roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.88.53:14557" gcs_url:="udp://@192.168.88.53"
-# roslaunch mavros px4.launch fcu_url:="/dev/ttyTHS1:921600" gcs_url:="udp://@192.168.88.53"
-#+end_src
+Disseminate vision knowledge by providing a *common infrastructure that developers could build on*, so that code would be more readily readable and transferable.
+#+EMD_QUOTE
 
-# J120 UART2에 PX4 telemetry 2 연결
-# roslaunch mavros px4.launch fcu_url:="/dev/ttyTHS1:921600" gcs_url:="udp://@192.168.88.53"
+** OpenCV 설치
 
-**** 토픽 목록
-#+begin_src sh
-$ rostopic list
-#+end_src
+*** C++ (OpenCV-3.4.4)
+ - C++11, CMake 3.5.1
+ - QR code detector
 
-**** 토픽 내용 보기
+OpenCV 설치 스크립트(20분 정도)
 
-***** 메시지 타입 보기
-#+begin_src sh
-$ rostopic info /mavros/state
-#+end_src
+https://gist.github.com/donghee/15d7272885ac3505e0f20a63678e7ba3
 
-타입 내부 보기
-#+begin_src sh
-rostopic type /mavros/state | rosmsg show
-#+end_src
+*** 예제
+ - /home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/samples
 
-***** 메시지 내용
-#+begin_src sh
-$ rostopic echo /mavros/state
-#+end_src
+** OpenCV 소개
 
-***** 토픽 publish 주기 보기
-#+begin_src sh
-$ rostopic hz /mavros/state
-#+end_src
+*** Mat: 이미지 타입
 
-***** 실행 노드 확인
-#+begin_src sh
-$ rqt_graph
-#+end_src
+[[https://blog.iwanhae.ga/content/images/2015/10/b6df115410caafea291ceb011f19cc4a19ae6c2c.png]]
 
-** ROS 노드 토픽 명령 실행하기. (MAVROS 위주)
+BGR 순으로 저장.
 
-http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics
+#+BEGIN_SRC cpp
+ // 2x2 행렬, 8비트 저장, 기본값은 빨간색
+ Mat M(2,2, CV_8UC3, Scalar(0,0,255));
+ cout << "M = " << endl << " " << M << endl << endl;
+ imshow("Mat", M);
+#+END_SRC
 
-*** Subscribe
+[[https://blog.iwanhae.ga/content/images/2015/10/MatBasicContainerOut1.png]]
 
-#+begin_src sh
-rostopic echo [topic]
-#+end_src
+[[https://i.imgur.com/vWalF0u.png]]
 
-**** ~STATE~
-#+begin_src sh
-$ rostopic echo /mavros/state
-#+end_src
+*** Mat: 이미지 읽기
+#+BEGIN_SRC cpp
+  Mat image;
+  image = imread("qrcode.png");
+  imshow("Read image", image);
+#+END_SRC
 
-**** ~LOCAL_POSITION~ 확인
+#+BEGIN_SRC cpp
+#include "opencv2/highgui/highgui.hpp"
 
-#+begin_src sh
-$ rostopic echo /mavros/local_position/pose
-#+end_src
+using namespace cv;
 
-*** Services
+int main( int argc, char** argv ) {
+  Mat img = imread( argv[1], -1 );
+  if( img.empty() ) return -1;
+p  namedWindow( "Example2", WINDOW_AUTOSIZE );
+  imshow( "Example2", img );
+  waitKey(0);
+  destroyWindow( "Example2" );
+}
+#+END_SRC
 
-#+begin_src sh
-rosservice call [topic] [msg_type] [args]
-#+end_src
+*** Mat: 복사
+B는 A의 refernce(헤더만 복사)
+C는 A의 clone(헤더, 데이터를 복사)
 
-**** ~SET_MODE~
+#+BEGIN_SRC cpp
+    Mat A, C;                          // Mat클래스 A와 C를 선언
+    A = imread("qrcode.png", IMREAD_COLOR); // imread함수로 이미지"qrcode.png"를 불러옴
+    Mat B(A);                                 // B를 선언하고 A를 복사해옴
+    C = A.clone();                                    // A의 헤더, 데이터를 카피(클론)하여 C에 저장
+#+END_SRC
 
-#+begin_src sh
-# https://github.com/mavlink/mavros/blob/master/mavros_msgs/srv/SetMode.srv
-# http://wiki.ros.org/mavros/CustomModes
-# Manual Mode
-rosservice call /mavros/set_mode "base_mode: 64
-custom_mode: ''"
+*** Filter: Sharpen
 
-rosservice call /mavros/set_mode "base_mode: 0
-custom_mode: 'MANUAL'"
+선명하게(Sharpen) 필터: 현재 위치(i,j)를 변형. 현재 위치 픽셀에 5배 곱하여 더하고, 주변(4방)은 1배 곱하여 뺀다. 현재 위치에 저장.
 
-rosservice call /mavros/set_mode "base_mode: 0
-custom_mode: 'POSCTL'"
+[[https://blog.iwanhae.ga/content/images/2015/10/7c2c71b792e6560be979d359e8f3f3b34c7938ff.png]]
 
-rosservice call /mavros/set_mode "base_mode: 0
-custom_mode: 'OFFBOARD'"
+좌표
 
-rosservice call /mavros/set_mode "base_mode: 0
-custom_mode: 'AUTO.LAND'"
-#+end_src
+[[https://blog.iwanhae.ga/content/images/2015/10/mat.png]]
 
-**** ~ARMING~
-#+begin_src sh
-rosservice call /mavros/cmd/arming "value: true"
-#+end_src
+cam.cpp
+#+BEGIN_SRC cpp
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <iostream>
 
-**** ~TAKEOFF~
+using namespace cv;
+using namespace std;
 
-#+begin_src sh
-rosservice call /mavros/cmd/takeoff "{min_pitch: 0.0, yaw: 0.0, latitude: 0.0, longitude: 0.0, altitude: 2.5}"
-#+end_src
+int main(int argc, char** argv)
+{
+    VideoCapture vc(0); //0번웹캠 초기화
+    if (!vc.isOpened()) return 0; // 연결실패
 
-*** Publish
+    Mat img; //img선언
+    while (1) {
+        vc >> img; //0번웹캠에서 받은 데이터를 img에 저장
+        if (img.empty()) break; //받은거 없으면 종료
+        imshow("cam", img);  //화면에 띄우기
+        if (waitKey(10) == 27) break; //ESC키 눌리면 종료
+    }
+    destroyAllWindows();
+    return 0;
+}
+#+END_SRC
 
-#+begin_src sh
-rostopic pub [topic] [msg_type] [args]
-#+end_src
+sharpen.cpp
 
-**** ~SETPOINT_POSITION~
+#+BEGIN_SRC cpp
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <iostream>
 
-OFFBOARD 모드에서 동작
+using namespace cv;
+using namespace std;
 
-#+begin_src sh
-rostopic pub -r 10 /mavros/setpoint_position/local geometry_msgs/PoseStamped "header:
-  auto
-pose:
-  position:
-    x: 5.0
-    y: 0.0
-    z: 0.0
-  orientation:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0"
-#+end_src
+void Sharpen(const Mat& myImage, Mat& Result)
+{
+  CV_Assert(myImage.depth() == CV_8U);
 
-**** ~SETPOINT_VELOCITY~
+  Result.create(myImage.size(), myImage.type());
+  const int nChannels = myImage.channels();
 
-OFFBOARD 모드에서 동작
+  for (int j = 1; j < myImage.rows - 1; ++j)
+  {
+    const uchar* previous = myImage.ptr<uchar>(j - 1);
+    const uchar* current = myImage.ptr<uchar>(j);
+    const uchar* next = myImage.ptr<uchar>(j + 1);
 
-#+begin_src sh
-$ rostopic pub -r 10 /mavros/setpoint_velocity/cmd_vel geometry_msgs/TwistStamped "{header: auto, twist: {linear: {x: 10.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}}"
-#+end_src
+    uchar* output = Result.ptr<uchar>(j);
 
-*** 실습
+    for (int i = nChannels; i < nChannels * (myImage.cols - 1); ++i)
+    {
+      *output++ = saturate_cast<uchar>(5 * current[i]
+          - current[i - nChannels] - current[i + nChannels] - previous[i] - next[i]);
+    }
+  }
 
-준비: 순서대로 실행
-  - Gazebo 실행: ~cd ~/src/Firmware; make posix_sitl_default gazebo~
-  - TX2의 MAVROS를 PC(192.168.88.53)의 Gazebo와 연결 ~roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.88.53:14557" gcs_url:="udp://@192.168.88.53"~ \\
-    또는 PC의 MAVROS를 PC(127.0.0.1)의 Gazebo와 연결 ~rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"~
-  - QGroundControl 실행: PX4 Parameter ~COM_OF_LOSS_T~ 파라미터 10초로 바꾸기. Failsafe timeout을 10초로 바꾸어야 커맨드라인에서 드론을 조정하기 편하다.
+  Result.row(0).setTo(Scalar(0));
+  Result.row(Result.rows - 1).setTo(Scalar(0));
+  Result.col(0).setTo(Scalar(0));
+  Result.col(Result.cols - 1).setTo(Scalar(0));
+}
+int main(int argc, char** argv)
+{
+  VideoCapture vc(0);
 
-\\
+  if (!vc.isOpened()) return 0; // 연결실패
 
-해보기: 커맨드 라인에서 다음 명령을 수행하여, QGroundControl에 아래와 같은 자취를 남겨보자.
-  - 1. ARM
-  - 2. TAKEOFF 하고. (옵션)
-  - 3. 현재 위치를 지정한다.  ~/mavros/setpoint_position~ 이용하여, (0,0,0) 위치를 10hz로 지정
-  - 3-1. MODE 변환. OFFBOARD
-  - 4. 20m 간격으로 정사각형을 따라 움직인다. ~/mavros/setpoint_position~ 이용
-  - 5. HOME 자리에 오면 LAND 한다.
-  - 6. DISARM
+  Mat img;
+  Mat output;
+  Mat kern = (Mat_<char>(3, 3) << 0, -1, 0,
+      -1, 5, -1,
+      0, -1, 0);
 
-[[https://i.imgur.com/4IjvTca.png]]
+  while (1) {
+    vc >> img;
 
-더해보기: 드론의 머리방향이 진행 방향을 향하도록 하자.
+    if (img.empty()) break;
+    imshow("cam", img);
+    if (waitKey(10) == 27) break; //ESC
 
- - Body 3-2-1 순서 오일러->쿼터니언 변환
+    Sharpen(img, output);       //위쪽의 식을 적용시킨 코드
+    imshow("output", output);
 
-#+HTML_MATHJAX: align: left indent: 5em tagside: left font: Neo-Euler
-\begin{align}
-\begin{bmatrix}
-x \\
-y \\
-z \\
-w \\
-\end{bmatrix}
-& =
-\begin{bmatrix}
-\cos (\phi /2) \cos (\theta /2) \cos (\psi /2) +  \sin (\phi /2) \sin (\theta /2) \sin (\psi /2) \\
-\sin (\phi /2) \cos (\theta /2) \cos (\psi /2) -  \cos (\phi /2) \sin (\theta /2) \sin (\psi /2) \\
-\cos (\phi /2) \sin (\theta /2) \cos (\psi /2) +  \sin (\phi /2) \cos (\theta /2) \sin (\psi /2) \\
-\cos (\phi /2) \cos (\theta /2) \sin (\psi /2) -  \sin (\phi /2) \sin (\theta /2) \cos (\psi /2) \\
-\end{bmatrix} \\
-\end{align}
+    filter2D(img, output, img.depth(), kern); //아래쪽 식을 적용시킨 코드
+    imshow("output2", output);
+  }
 
-변환 코드(python): https://gist.github.com/donghee/e3b4fa8ec789cec0e287bf3b91ddb79e
 
-euler_to_quaternion.py
-
-#+BEGIN_SRC python
-import math
-
-def to_quaternion(pitch, roll, yaw):
-
-    cy = math.cos(yaw * 0.5)
-    sy = math.sin(yaw * 0.5)
-    cr = math.cos(roll * 0.5)
-    sr = math.sin(roll * 0.5)
-    cp = math.cos(pitch * 0.5)
-    sp = math.sin(pitch * 0.5)
-
-    w = cy * cr * cp + sy * sr * sp
-    x = cy * sr * cp - sy * cr * sp
-    y = cy * cr * sp + sy * sr * cp
-    z = sy * cr * cp - cy * sr * sp
-    return (x, y, z, w)
-
-r = to_quaternion(0.0, 0.0, math.pi/2)
-
-print(r)
+  destroyAllWindows();
+  return 0;
+}
 
 #+END_SRC
-# https://www.andre-gaschler.com/rotationconverter/
 
-** 참고
- - https://github.com/mavlink/mavros/tree/master/mavros
- - https://github.com/Jaeyoung-Lim/modudculab_ros/blob/master/src/pub_setpoints_traj.cpp
+----
+*** Python (OpenCV-3.4.4)
+
+OpenCV 설치 (Python)
+#+BEGIN_SRC sh
+pip install opencv-python --user
+#+END_SRC
+
+#+BEGIN_SRC py
+import cv2
+exit()
+
+sudo apt-get install ros-kinetic-usb-cam
+sudo apt-get install ros-kinetic-image-view
+
+#+END_SRC
+
+3. camera 읽기
+
+cat > cam.py
+
+#+BEGIN_SRC py
+import cv2
+cap = cv2.VideoCapture(0)
+
+print 'width: {0}, height: {1}'.format(cap.get(3),cap.get(4))
+cap.set(3,320)
+cap.set(4,240)
+
+while(True):
+    ret, frame = cap.read()
+
+    if (ret):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow('frame', gray)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+cap.release()
+cv2.destroyAllWindows()
+#+END_SRC
+
+** 실습
+**** face detect
+
+#+BEGIN_SRC
+#include "opencv2/objdetect.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
+#include <iostream>
+
+using namespace std;
+using namespace cv;
+
+// Function for Face Detection
+void detectAndDraw( Mat& img, CascadeClassifier& cascade,
+                CascadeClassifier& nestedCascade, double scale );
+string cascadeName, nestedCascadeName;
+
+int main( int argc, const char** argv )
+{
+    // VideoCapture class for playing video for which faces to be detected
+    VideoCapture capture;
+    Mat frame, image;
+
+    // PreDefined trained XML classifiers with facial features
+    CascadeClassifier cascade, nestedCascade;
+    double scale=1;
+
+    // Load classifiers from "opencv/data/haarcascades" directory
+    nestedCascade.load( "haarcascade_eye_tree_eyeglasses.xml" ) ;
+
+    // Change path before execution
+    cascade.load( "haarcascade_frontalcatface.xml" ) ;
+
+    // Start Video..1) 0 for WebCam 2) "Path to Video" for a Local Video
+    capture.open(0);
+    if( capture.isOpened() )
+    {
+        // Capture frames from video and detect faces
+        cout << "Face Detection Started...." << endl;
+        while(1)
+        {
+            capture >> frame;
+            if( frame.empty() )
+                break;
+            Mat frame1 = frame.clone();
+            detectAndDraw( frame1, cascade, nestedCascade, scale );
+            char c = (char)waitKey(10);
+
+            // Press q to exit from window
+            if( c == 27 || c == 'q' || c == 'Q' )
+                break;
+        }
+    }
+    else
+        cout<<"Could not Open Camera";
+    return 0;
+}
+
+void detectAndDraw( Mat& img, CascadeClassifier& cascade,
+                    CascadeClassifier& nestedCascade,
+                    double scale)
+{
+    vector<Rect> faces, faces2;
+    Mat gray, smallImg;
+
+    cvtColor( img, gray, COLOR_BGR2GRAY ); // Convert to Gray Scale
+    double fx = 1 / scale;
+
+    // Resize the Grayscale Image
+    resize( gray, smallImg, Size(), fx, fx, INTER_LINEAR );
+    equalizeHist( smallImg, smallImg );
+
+    // Detect faces of different sizes using cascade classifier
+    cascade.detectMultiScale( smallImg, faces, 1.1,
+                            2, 0|CASCADE_SCALE_IMAGE, Size(30, 30) );
+
+    // Draw circles around the faces
+    for ( size_t i = 0; i < faces.size(); i++ )
+    {
+        Rect r = faces[i];
+        Mat smallImgROI;
+        vector<Rect> nestedObjects;
+        Point center;
+        Scalar color = Scalar(255, 0, 0); // Color for Drawing tool
+        int radius;
+
+        double aspect_ratio = (double)r.width/r.height;
+        if( 0.75 < aspect_ratio && aspect_ratio < 1.3 )
+        {
+            center.x = cvRound((r.x + r.width*0.5)*scale);
+            center.y = cvRound((r.y + r.height*0.5)*scale);
+            radius = cvRound((r.width + r.height)*0.25*scale);
+            circle( img, center, radius, color, 3, 8, 0 );
+        }
+        else
+            rectangle( img, cvPoint(cvRound(r.x*scale), cvRound(r.y*scale)),
+                    cvPoint(cvRound((r.x + r.width-1)*scale),
+                    cvRound((r.y + r.height-1)*scale)), color, 3, 8, 0);
+        if( nestedCascade.empty() )
+            continue;
+        smallImgROI = smallImg( r );
+
+        // Detection of eyes int the input image
+        nestedCascade.detectMultiScale( smallImgROI, nestedObjects, 1.1, 2,
+                                        0|CASCADE_SCALE_IMAGE, Size(30, 30) );
+
+        // Draw circles around eyes
+        for ( size_t j = 0; j < nestedObjects.size(); j++ )
+        {
+            Rect nr = nestedObjects[j];
+            center.x = cvRound((r.x + nr.x + nr.width*0.5)*scale);
+            center.y = cvRound((r.y + nr.y + nr.height*0.5)*scale);
+            radius = cvRound((nr.width + nr.height)*0.25*scale);
+            circle( img, center, radius, color, 3, 8, 0 );
+        }
+    }
+
+    // Show Processed Image with detected faces
+    imshow( "Face Detection", img );
+}
+
+#+END_SRC
+**** QRCode Decoder from image
+ - 오늘의 목표
+ - 3개파일 필요. CMakeList.txt qrCode.cpp qrcode.png
+ - qrcode.png는 https://www.the-qrcode-generator.com/ 에서 생성
+
+
+***** CMakeLists.txt
+#+BEGIN_SRC cmake
+cmake_minimum_required(VERSION 2.8.12)
+
+PROJECT(opencv_tests)
+
+#set(OpenCV_DIR <specify your path to the opencv installation directory>)
+set(OpenCV_DIR /home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/)
+find_package( OpenCV REQUIRED )
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+include_directories( ${OpenCV_INCLUDE_DIRS})
+
+MACRO(add_example name)
+  ADD_EXECUTABLE(${name} ${name}.cpp)
+  TARGET_LINK_LIBRARIES(${name} ${OpenCV_LIBS})
+ENDMACRO()
+
+add_example(qrcode)
+add_example(qrcode-video)
+#+END_SRC
+
+***** qrcode.cpp
+
+#+BEGIN_SRC cpp
+// #include <opencv2/opencv.hpp>
+#include <opencv2/objdetect.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <iostream>
+
+using namespace cv;
+using namespace std;
+
+void display(Mat &im, Mat &bbox)
+{
+  int n = bbox.rows;
+  for(int i = 0 ; i < n ; i++)
+  {
+    line(im, Point2i(bbox.at<float>(i,0),bbox.at<float>(i,1)), Point2i(bbox.at<float>((i+1) % n,0), bbox.at<float>((i+1) % n,1)), Scalar(255,0,0), 3);
+  }
+  imshow("Result", im);
+}
+
+int main(int argc, char* argv[])
+{
+  // Read image
+  Mat inputImage;
+  if(argc>1)
+    inputImage = imread(argv[1]);
+  else
+    inputImage = imread("qrcode.png");
+
+  QRCodeDetector qrDecoder;
+
+  Mat bbox, rectifiedImage;
+
+  std::string data = qrDecoder.detectAndDecode(inputImage, bbox, rectifiedImage);
+  if(data.length()>0)
+  {
+    cout << "Decoded Data : " << data << endl;
+
+    display(inputImage, bbox);
+    rectifiedImage.convertTo(rectifiedImage, CV_8UC3);
+    imshow("Rectified QRCode", rectifiedImage);
+
+    waitKey(0);
+  }
+  else
+    cout << "QR Code not detected" << endl;
+}
+#+END_SRC
+
+**** QRCode Decoder from WebCAM
+
+***** qrcode-video.cpp
+
+#+BEGIN_SRC cpp
+#include "opencv2/objdetect.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/highgui.hpp"
+#include <string>
+#include <iostream>
+
+using namespace std;
+using namespace cv;
+
+static void drawQRCodeContour(Mat &color_image, vector<Point> transform);
+static void drawFPS(Mat &color_image, double fps);
+static int  liveQRCodeDetect(const string& out_file);
+static int  imageQRCodeDetect(const string& in_file, const string& out_file);
+
+int main(int argc, char *argv[])
+{
+    const string keys =
+        "{h help ? |        | print help messages }"
+        "{i in     |        | input  path to file for detect (with parameter - show image, otherwise - camera)}"
+        "{o out    |        | output path to file (save image, work with -i parameter) }";
+    CommandLineParser cmd_parser(argc, argv, keys);
+
+    cmd_parser.about("This program detects the QR-codes from camera or images using the OpenCV library.");
+    if (cmd_parser.has("help"))
+    {
+        cmd_parser.printMessage();
+        return 0;
+    }
+
+    string in_file_name  = cmd_parser.get<string>("in");    // input  path to image
+    string out_file_name;
+    if (cmd_parser.has("out"))
+        out_file_name = cmd_parser.get<string>("out");   // output path to image
+
+    if (!cmd_parser.check())
+    {
+        cmd_parser.printErrors();
+        return -1;
+    }
+
+    int return_code = 0;
+    if (in_file_name.empty())
+    {
+        return_code = liveQRCodeDetect(out_file_name);
+    }
+    else
+    {
+        return_code = imageQRCodeDetect(samples::findFile(in_file_name), out_file_name);
+    }
+    return return_code;
+}
+
+void drawQRCodeContour(Mat &color_image, vector<Point> transform)
+{
+    if (!transform.empty())
+    {
+        double show_radius = (color_image.rows  > color_image.cols)
+                   ? (2.813 * color_image.rows) / color_image.cols
+                   : (2.813 * color_image.cols) / color_image.rows;
+        double contour_radius = show_radius * 0.4;
+
+        vector< vector<Point> > contours;
+        contours.push_back(transform);
+        drawContours(color_image, contours, 0, Scalar(211, 0, 148), cvRound(contour_radius));
+
+        RNG rng(1000);
+        for (size_t i = 0; i < 4; i++)
+        {
+            Scalar color = Scalar(rng.uniform(0,255), rng.uniform(0, 255), rng.uniform(0, 255));
+            circle(color_image, transform[i], cvRound(show_radius), color, -1);
+        }
+    }
+}
+
+void drawFPS(Mat &color_image, double fps)
+{
+    ostringstream convert;
+    convert << cvRound(fps) << " FPS (QR detection)";
+    putText(color_image, convert.str(), Point(25, 25), FONT_HERSHEY_DUPLEX, 1, Scalar(0, 0, 255), 2);
+}
+
+int liveQRCodeDetect(const string& out_file)
+{
+    VideoCapture cap(0);
+    if(!cap.isOpened())
+    {
+        cout << "Cannot open a camera" << endl;
+        return -4;
+    }
+
+    QRCodeDetector qrcode;
+    TickMeter total;
+    for(;;)
+    {
+        Mat frame, src, straight_barcode;
+        string decode_info;
+        vector<Point> transform;
+        cap >> frame;
+        if (frame.empty())
+        {
+            cout << "End of video stream" << endl;
+            break;
+        }
+        cvtColor(frame, src, COLOR_BGR2GRAY);
+
+        total.start();
+        bool result_detection = qrcode.detect(src, transform);
+        if (result_detection)
+        {
+            decode_info = qrcode.decode(src, transform, straight_barcode);
+            if (!decode_info.empty()) { cout << decode_info << endl; }
+        }
+        total.stop();
+        double fps = 1 / total.getTimeSec();
+        total.reset();
+
+        if (result_detection) { drawQRCodeContour(frame, transform); }
+        drawFPS(frame, fps);
+
+        imshow("Live QR code detector", frame);
+        char c = (char)waitKey(30);
+        if (c == 27)
+            break;
+        if (c == ' ' && !out_file.empty())
+            imwrite(out_file, frame); // TODO write original frame too
+    }
+    return 0;
+}
+
+int imageQRCodeDetect(const string& in_file, const string& out_file)
+{
+    Mat color_src = imread(in_file, IMREAD_COLOR), src;
+    cvtColor(color_src, src, COLOR_BGR2GRAY);
+    Mat straight_barcode;
+    string decoded_info;
+    vector<Point> transform;
+    const int count_experiments = 10;
+    double transform_time = 0.0;
+    bool result_detection = false;
+    TickMeter total;
+    QRCodeDetector qrcode;
+    for (size_t i = 0; i < count_experiments; i++)
+    {
+        total.start();
+        transform.clear();
+        result_detection = qrcode.detect(src, transform);
+        total.stop();
+        transform_time += total.getTimeSec();
+        total.reset();
+        if (!result_detection)
+            continue;
+
+        total.start();
+        decoded_info = qrcode.decode(src, transform, straight_barcode);
+        total.stop();
+        transform_time += total.getTimeSec();
+        total.reset();
+    }
+    double fps = count_experiments / transform_time;
+    if (!result_detection)
+        cout << "QR code not found" << endl;
+    if (decoded_info.empty())
+        cout << "QR code cannot be decoded" << endl;
+
+    drawQRCodeContour(color_src, transform);
+    drawFPS(color_src, fps);
+
+    cout << "Input  image file path: " << in_file  << endl;
+    cout << "Output image file path: " << out_file << endl;
+    cout << "Size: " << color_src.size() << endl;
+    cout << "FPS: " << fps << endl;
+    cout << "Decoded info: " << decoded_info << endl;
+
+    if (!out_file.empty())
+    {
+        imwrite(out_file, color_src);
+    }
+
+    for(;;)
+    {
+        imshow("Detect QR code on image", color_src);
+        if (waitKey(0) == 27)
+            break;
+    }
+    return 0;
+}
+#+END_SRC
+
+* 참고
+ - https://github.com/spmallick/learnopencv

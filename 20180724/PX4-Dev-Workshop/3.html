@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-12-12 수 11:34 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Donghee Park" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgecfa993">1. 수업</a></li>
+<li><a href="#org7a02ab8">2. 수업 진행</a></li>
+<li><a href="#org125e284">3. 과제</a></li>
+<li><a href="#org49f521a">4. 수업 자료</a>
+<ul>
+<li><a href="#orgb8e01c9">4.1. nsh</a></li>
+<li><a href="#org42aff95">4.2. 부팅 읽기</a></li>
+<li><a href="#org380f569">4.3. Posix 관련</a>
+<ul>
+<li><a href="#orgcba3def">4.3.1. Kernal Space And User Space</a></li>
+<li><a href="#orgb541212">4.3.2. Posix System Call</a></li>
+</ul>
+</li>
+<li><a href="#org182e537">4.4. poll()</a></li>
+<li><a href="#org7959a2e">4.5. ioctl</a></li>
+<li><a href="#orge436e94">4.6. px4<sub>simple</sub><sub>app</sub> 분석</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgecfa993" class="outline-2">
+<h2 id="orgecfa993"><span class="section-number-2">1</span> 수업</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>일시: 2018. 8. 10</li>
+<li>목표: PX4 앱를 실행하고 코드를 분석 할 수 있다</li>
+<li>교재: <a href="https://goo.gl/sDfk3j">https://goo.gl/sDfk3j</a></li>
+<li>코치: 박동희 dongheepark@gmail.com</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7a02ab8" class="outline-2">
+<h2 id="org7a02ab8"><span class="section-number-2">2</span> 수업 진행</h2>
+<div class="outline-text-2" id="text-2">
+<ol class="org-ol">
+<li>질문(과제) 15분
+<ul class="org-ul">
+<li>윤년과제</li>
+<li>Pixhawk Pro3 QGC 셋업.</li>
+</ul></li>
+
+<li>C언어 기초 1시간
+<ul class="org-ul">
+<li>포멧스트링</li>
+<li>조건문</li>
+<li>함수</li>
+<li>반복문</li>
+<li>Pointer, Struct</li>
+<li>Posix Programming: Open, Poll, ioctl, Close</li>
+</ul></li>
+</ol>
+
+<p>
+참고:
+</p>
+<ul class="org-ul">
+<li>C언어 교재: <a href="https://dh8.kr/workshop/swworkshop/note/day1.html">https://dh8.kr/workshop/swworkshop/note/day1.html</a></li>
+<li>홍콩과기대: <a href="https://github.com/HKUST-Aerial-Robotics">https://github.com/HKUST-Aerial-Robotics</a></li>
+</ul>
+<ol class="org-ol">
+<li>PX4 앱만들기 (토픽 구독하기) 1시간 
+<ul class="org-ul">
+<li>uORB</li>
+<li>hello-skyworld</li>
+<li>PX4 shell(nsh) 사용하기</li>
+<li>부팅 읽기</li>
+</ul></li>
+
+<li>PX4 앱 분석 30분
+<ul class="org-ul">
+<li>`px4<sub>simple</sub><sub>app</sub>` 코드 분석</li>
+</ul></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org125e284" class="outline-2">
+<h2 id="org125e284"><span class="section-number-2">3</span> 과제</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>FizzBuzz 풀어서 <b>풀이 코드 github에 업로드</b>
+<ul class="org-ul">
+<li><a href="https://www.acmicpc.net/problem/14761">https://www.acmicpc.net/problem/14761</a></li>
+</ul></li>
+<li>`px4<sub>simple</sub><sub>app</sub>` 코드 분석 읽고 <b>질문 github에 업로드</b> 
+<ul class="org-ul">
+<li>코드: <a href="https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_simple_app/px4_simple_app.c">https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_simple_app/px4_simple_app.c</a></li>
+<li>분석: <a href="https://github.com/donghee/CodingLife/blob/master/20180724/PX4-Dev-Workshop/3.org#px4_simple_app-%EB%B6%84%EC%84%9D">https://github.com/donghee/CodingLife/blob/master/20180724/PX4-Dev-Workshop/3.org#px4_simple_app-분석</a></li>
+</ul></li>
+<li>`px4<sub>daemon</sub><sub>app</sub>` 코드 분석 하고 <b>분석 내용 github에 업로드</b> 
+<ul class="org-ul">
+<li><a href="https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_daemon_app/px4_daemon_app.c">https://github.com/PX4/Firmware/blob/761826cc5af2bef48b366d63d4953a567fa37490/src/examples/px4_daemon_app/px4_daemon_app.c</a></li>
+</ul></li>
+<li>리눅스에 ROS 설치.
+<ul class="org-ul">
+<li>설치문서: <a href="https://dev.px4.io/en/ros/mavros_installation.html">https://dev.px4.io/en/ros/mavros_installation.html</a></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org49f521a" class="outline-2">
+<h2 id="org49f521a"><span class="section-number-2">4</span> 수업 자료</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+hello-skyworld
+</p>
+
+<p>
+Firmware/cmake/configs/nuttx<sub>px4fmu</sub>-v4pro<sub>default.cmake에</sub> px4<sub>simple</sub><sub>app</sub> 주석 제거.
+</p>
+
+<pre class="example">
+/home/donghee/src/Firmware
+make posix jmavsim
+make px4fmu-v3_default
+make px4fmu-v4pro_default
+make px4fmu-v4pro_default upload
+</pre>
+
+<pre class="example">
+
+#include &lt;stdio.h&gt;
+#include &lt;px4_posix.h&gt;
+
+__EXPORT int px4_simple_app_main(int argc, char *argv[]);
+
+int px4_simple_app_main(int argc, char *argv[])
+{
+    PX4_INFO("px4_simple_app");
+
+    return 0;
+}
+
+</pre>
+</div>
+
+<div id="outline-container-orgb8e01c9" class="outline-3">
+<h3 id="orgb8e01c9"><span class="section-number-3">4.1</span> nsh</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+명령어 
+</p>
+
+<pre class="example">
+help
+ls
+cd
+uorg top
+tone_alarm
+listener sensor_accel 5
+ps
+</pre>
+
+<p>
+uorb
+</p>
+
+<p>
+<a href="https://dev.px4.io/en/middleware/uorb_graph.html#instructions">https://dev.px4.io/en/middleware/uorb_graph.html#instructions</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org42aff95" class="outline-3">
+<h3 id="org42aff95"><span class="section-number-3">4.2</span> 부팅 읽기</h3>
+<div class="outline-text-3" id="text-4-2">
+<pre class="example">
+/Firmware/ROMFS/px4fmu_common/init.d/rcS
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org380f569" class="outline-3">
+<h3 id="org380f569"><span class="section-number-3">4.3</span> Posix 관련</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+The Portable Operating System Interface (POSIX)
+</p>
+
+<p>
+Posix: IEEE Standard, API정의. 유닉스에 대한 표준은 아니지만, 99% 유닉스.
+</p>
+
+<p>
+현재 리눅스에서는 32비트의 경우 <a href="https://github.com/torvalds/linux/blob/16f73eb02d7e1765ccab3d2018e0bd98eb93d973/arch/x86/entry/syscalls/syscall_32.tbl">358</a>개의 시스템콜, 64비트의 경우 <a href="https://github.com/torvalds/linux/blob/16f73eb02d7e1765ccab3d2018e0bd98eb93d973/arch/x86/entry/syscalls/syscall_64.tbl">322</a>개의 시스템콜을 제공한다.
+</p>
+</div>
+<div id="outline-container-orgcba3def" class="outline-4">
+<h4 id="orgcba3def"><span class="section-number-4">4.3.1</span> Kernal Space And User Space</h4>
+<div class="outline-text-4" id="text-4-3-1">
+
+<div class="figure">
+<p><img src="http://i.imgur.com/eo4qp8O.png" alt="eo4qp8O.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb541212" class="outline-4">
+<h4 id="orgb541212"><span class="section-number-4">4.3.2</span> Posix System Call</h4>
+<div class="outline-text-4" id="text-4-3-2">
+<p>
+"foo"파일에 "hello world" 저장하기 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;fcntl.h&gt;</span>
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span><span style="color: #88aaff;">()</span>
+<span style="color: #ffaa88;">{</span>
+  <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">fd</span>;
+  fd = open<span style="color: #88aaff;">(</span><span style="color: #98be65;">"foo"</span>, O_WRONLY | O_CREAT, 0644<span style="color: #88aaff;">)</span>;
+  write<span style="color: #88aaff;">(</span>fd, <span style="color: #98be65;">"hello world"</span>, 11<span style="color: #88aaff;">)</span>;
+  close<span style="color: #88aaff;">(</span>fd<span style="color: #88aaff;">)</span>;
+<span style="color: #ffaa88;">}</span>
+</pre>
+</div>
+
+<p>
+Error 핸들링
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">chmod 400 foo</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;fcntl.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;errno.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;stdio.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;stdlib.h&gt;</span>
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span><span style="color: #88aaff;">()</span>
+<span style="color: #ffaa88;">{</span>
+  <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">fd</span>;
+  fd = open<span style="color: #88aaff;">(</span><span style="color: #98be65;">"foo"</span>, O_WRONLY | O_CREAT, 0644<span style="color: #88aaff;">)</span>;
+  <span style="color: #6959ce;">if</span> <span style="color: #88aaff;">(</span>fd &lt; 0<span style="color: #88aaff;">)</span> <span style="color: #ffaa88;">{</span>
+  <span style="color: #5B6268;">// </span><span style="color: #5B6268;">if ((fd = open("foo", O_WRONLY | O_CREAT, 0644)) &lt; 0) {</span>
+    printf<span style="color: #88aaff;">(</span><span style="color: #98be65;">"error number %d\n"</span>, errno<span style="color: #88aaff;">)</span>;
+    perror<span style="color: #88aaff;">(</span><span style="color: #98be65;">"foo"</span><span style="color: #88aaff;">)</span>;
+    exit<span style="color: #88aaff;">(</span>1<span style="color: #88aaff;">)</span>;
+  <span style="color: #ffaa88;">}</span>
+  write<span style="color: #88aaff;">(</span>fd, <span style="color: #98be65;">"hello world"</span>, 11<span style="color: #88aaff;">)</span>;
+  close<span style="color: #88aaff;">(</span>fd<span style="color: #88aaff;">)</span>;
+<span style="color: #ffaa88;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">man 2 open
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org182e537" class="outline-3">
+<h3 id="org182e537"><span class="section-number-3">4.4</span> poll()</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+파일 디스크립터(파일 번호)에서 발생하는 이벤트 기다리는 함수 
+</p>
+
+<p>
+uORB도 파일이다. uORB 업데이트 체크할 때 사용.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">gcc poll.c -o poll
+./poll
+<span style="color: #c678dd;">echo</span> <span style="color: #98be65;">'test'</span> | ./poll
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #6959ce;">struct</span> <span style="color: #ECBE7B;">pollfd</span> <span style="color: #ffaa88;">{</span>
+  <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">fd</span>;
+  <span style="color: #ECBE7B;">short</span> <span style="color: #dcaeea;">events</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#50836;&#52397;&#54620; &#51060;&#48292;&#53944;.</span>
+  <span style="color: #ECBE7B;">short</span> <span style="color: #dcaeea;">revents</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#48156;&#49373;&#54620; &#51060;&#48292;&#53944; &#44050;(&#47560;&#49828;&#53356;) &#51200;&#51109;.</span>
+<span style="color: #ffaa88;">}</span>
+</pre>
+</div>
+
+<p>
+Linux System Programming- Robert Love.pdf
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;fcntl.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#include</span> <span style="color: #98be65;">&lt;stdlib.h&gt;</span>
+<span style="color: #51afef; font-weight: bold;">#define</span> <span style="color: #dcaeea;">BSIZE</span> 16384
+
+<span style="color: #ECBE7B;">int</span> <span style="color: #c678dd;">main</span><span style="color: #88aaff;">()</span>
+<span style="color: #ffaa88;">{</span>
+  <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">fin</span>, <span style="color: #dcaeea;">fout</span>;
+  <span style="color: #ECBE7B;">char</span> <span style="color: #dcaeea;">buf</span><span style="color: #aaaa00;">[</span>BSIZE<span style="color: #aaaa00;">]</span>;
+  <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">count</span>;
+
+  <span style="color: #6959ce;">if</span><span style="color: #88aaff;">((</span>fin = open<span style="color: #88aaff;">(</span><span style="color: #98be65;">"foo"</span>, O_RDONLY<span style="color: #88aaff;">))</span> &lt; 0<span style="color: #88aaff;">)</span> <span style="color: #ffaa88;">{</span>
+    perror<span style="color: #88aaff;">(</span><span style="color: #98be65;">"foo"</span><span style="color: #88aaff;">)</span>;
+    exit<span style="color: #88aaff;">(</span>1<span style="color: #88aaff;">)</span>;
+  <span style="color: #ffaa88;">}</span>
+  <span style="color: #6959ce;">if</span><span style="color: #88aaff;">((</span>fout = open<span style="color: #88aaff;">(</span><span style="color: #98be65;">"bar"</span>, O_WRONLY | O_CREAT, 0644<span style="color: #88aaff;">))</span> &lt; 0<span style="color: #88aaff;">)</span> <span style="color: #ffaa88;">{</span>
+    perror<span style="color: #88aaff;">(</span><span style="color: #98be65;">"bar"</span><span style="color: #88aaff;">)</span>;
+    exit<span style="color: #88aaff;">(</span>2<span style="color: #88aaff;">)</span>;
+  <span style="color: #ffaa88;">}</span>
+
+  <span style="color: #6959ce;">while</span> <span style="color: #88aaff;">((</span>count = read<span style="color: #88aaff;">(</span>fin, buf, BSIZE<span style="color: #88aaff;">))</span> &gt; 0<span style="color: #88aaff;">)</span>
+    write<span style="color: #88aaff;">(</span>fout, buf, count<span style="color: #88aaff;">)</span>;
+
+  close<span style="color: #88aaff;">(</span>fin<span style="color: #88aaff;">)</span>;
+  close<span style="color: #88aaff;">(</span>fout<span style="color: #88aaff;">)</span>;
+<span style="color: #ffaa88;">}</span>
+
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">dd if=/dev/urandom of=foo bs=1000 count=1000</span>
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">./a.out</span>
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">cmp foo bar</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7959a2e" class="outline-3">
+<h3 id="org7959a2e"><span class="section-number-3">4.5</span> ioctl</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+I/O control device
+</p>
+
+<p>
+특정 파일의 동작이나 파라미터를 바꾸고 싶을 때 사용
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge436e94" class="outline-3">
+<h3 id="orge436e94"><span class="section-number-3">4.6</span> px4<sub>simple</sub><sub>app</sub> 분석</h3>
+<div class="outline-text-3" id="text-4-6">
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">sensor_sub_fd</span> = orb_subscribe<span style="color: #88aaff;">(</span>ORB_ID<span style="color: #88aaff;">(</span>sensor_combined<span style="color: #88aaff;">))</span>;
+</pre>
+</div>
+<ul class="org-ul">
+<li>sensor<sub>combined</sub> 파일을 오픈한다. sensor<sub>sub</sub><sub>fd는</sub> sensor<sub>combined</sub> 파일</li>
+<li>sensor<sub>combined</sub> 파일은 px4의 /obj 디렉토리에 있다.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #c678dd;">orb_set_interval</span><span style="color: #88aaff;">(</span>sensor_sub_fd, 200<span style="color: #88aaff;">)</span>;
+</pre>
+</div>
+<ul class="org-ul">
+<li>sensor<sub>combined</sub> 파일의 ORBIOCSETINTERVAL의 속성을 200ms으로 바꾼다.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #6959ce;">struct</span> <span style="color: #ECBE7B;">vehicle_attitude_s</span> <span style="color: #dcaeea;">att</span>;
+memset<span style="color: #88aaff;">(</span>&amp;att, 0, <span style="color: #6959ce;">sizeof</span><span style="color: #88aaff;">(</span>att<span style="color: #88aaff;">))</span>;
+<span style="color: #ECBE7B;">orb_advert_t</span> <span style="color: #dcaeea;">att_pub</span> = orb_advertise<span style="color: #88aaff;">(</span>ORB_ID<span style="color: #88aaff;">(</span>vehicle_attitude<span style="color: #88aaff;">)</span>, &amp;att<span style="color: #88aaff;">)</span>;
+</pre>
+</div>
+<ul class="org-ul">
+<li>vehicle<sub>attitude</sub><sub>s</sub> 구조체 선언. uORB의 vehicle<sub>attitude</sub> 메시지를 저장하는 타입.</li>
+<li>memset() 해당 메모리 주소의 값을 '0' 으로 바꾸는 함수. 메모리 세터!</li>
+<li>orb<sub>advertise</sub>: vehicle<sub>attitude</sub> 토픽을 발행(publish)하기 위한 초기화</li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">px4_pollfd_struct_t</span> <span style="color: #dcaeea;">fds</span><span style="color: #aaaa00;">[]</span> = <span style="color: #ffaa88;">{</span>
+    <span style="color: #ffaa88;">{</span> .fd = sensor_sub_fd,   .events = POLLIN <span style="color: #ffaa88;">}</span>,
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">there could be more file descriptors here, in the form like:</span>
+<span style="color: #5B6268;">     * { .fd = other_sub_fd,   .events = POLLIN },</span>
+<span style="color: #5B6268;">     </span><span style="color: #5B6268;">*/</span>
+<span style="color: #ffaa88;">}</span>;
+</pre>
+</div>
+<ul class="org-ul">
+<li>poll 구조체에 sensor<sub>sub</sub><sub>fd</sub> 파일 디스크립터와 POLLIN(입력) 이벤트를 정의. 이후 poll 함수 쓸 때 사용</li>
+<li>여러개의 파일 디스크립터를 지정할 수 있음.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">poll_ret</span> = px4_poll<span style="color: #88aaff;">(</span>fds, 1, 1000<span style="color: #88aaff;">)</span>;
+</pre>
+</div>
+<ul class="org-ul">
+<li>fds 구조체에 정의된 파일 디스크립터로 부터 이벤트가 발생하는지 체크.</li>
+<li>px4<sub>poll이</sub> 타입아웃 발생하면, 0을 리턴, 에러면 -1,</li>
+<li>여러개의 파일 디스크립터를 지정할 수 있음.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #6959ce;">struct</span> <span style="color: #ECBE7B;">sensor_combined_s</span> <span style="color: #dcaeea;">raw</span>;
+<span style="color: #5B6268;">/* </span><span style="color: #5B6268;">copy sensors raw data into local buffer </span><span style="color: #5B6268;">*/</span>
+<span style="color: #c678dd;">orb_copy</span><span style="color: #88aaff;">(</span><span style="color: #ECBE7B;">ORB_ID</span><span style="color: #88aaff;">(</span><span style="color: #dcaeea;">sensor_combined</span><span style="color: #88aaff;">)</span>, sensor_sub_fd, &amp;raw<span style="color: #88aaff;">)</span>;
+PX4_INFO<span style="color: #88aaff;">(</span><span style="color: #98be65;">"Accelerometer:\t%8.4f\t%8.4f\t%8.4f"</span>,
+<span style="color: #88aaff;">(</span><span style="color: #ECBE7B;">double</span><span style="color: #88aaff;">)</span>raw.accelerometer_m_s2<span style="color: #aaaa00;">[</span>0<span style="color: #aaaa00;">]</span>,
+<span style="color: #88aaff;">(</span><span style="color: #ECBE7B;">double</span><span style="color: #88aaff;">)</span>raw.accelerometer_m_s2<span style="color: #aaaa00;">[</span>1<span style="color: #aaaa00;">]</span>,
+<span style="color: #88aaff;">(</span><span style="color: #ECBE7B;">double</span><span style="color: #88aaff;">)</span>raw.accelerometer_m_s2<span style="color: #aaaa00;">[</span>2<span style="color: #aaaa00;">]</span><span style="color: #88aaff;">)</span>;
+</pre>
+</div>
+<ul class="org-ul">
+<li>sensor<sub>combined</sub> 메시지를 저장 할 수 있는 구조체 선언</li>
+<li>sensor<sub>sub</sub><sub>fd</sub> 로 부터 sensor<sub>combined</sub> 토픽을 읽어, raw에 저장.</li>
+<li>accelerometer<sub>m</sub><sub>s2</sub>[]: average value acceleration measured</li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-c">att.q<span style="color: #aaaa00;">[</span>0<span style="color: #aaaa00;">]</span> = raw.accelerometer_m_s2<span style="color: #aaaa00;">[</span>0<span style="color: #aaaa00;">]</span>;
+att.q<span style="color: #aaaa00;">[</span>1<span style="color: #aaaa00;">]</span> = raw.accelerometer_m_s2<span style="color: #aaaa00;">[</span>1<span style="color: #aaaa00;">]</span>;
+att.q<span style="color: #aaaa00;">[</span>2<span style="color: #aaaa00;">]</span> = raw.accelerometer_m_s2<span style="color: #aaaa00;">[</span>2<span style="color: #aaaa00;">]</span>;
+
+<span style="color: #c678dd;">orb_publish</span><span style="color: #88aaff;">(</span><span style="color: #ECBE7B;">ORB_ID</span><span style="color: #88aaff;">(</span><span style="color: #dcaeea;">vehicle_attitude</span><span style="color: #88aaff;">)</span>, att_pub, &amp;att<span style="color: #88aaff;">)</span>;
+</pre>
+</div>
+<ul class="org-ul">
+<li>vehicle<sub>attitude</sub> 토픽에 raw(측정된 가속도 평균값)을 발행(publish)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Donghee Park</p>
+<p class="date">Created: 2018-12-12 수 11:34</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
