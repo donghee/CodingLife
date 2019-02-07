@@ -11,7 +11,7 @@ parameters and upload this sketch. Watch the coordinates change as you move your
 """
 from time import sleep
 
-from pypozyx import (PozyxConstants, Coordinates, POZYX_SUCCESS, PozyxRegisters, version,
+from pypozyx import (PozyxConstants, Coordinates, EulerAngles, Acceleration, POZYX_SUCCESS, PozyxRegisters, version,
                      DeviceCoordinates, PozyxSerial, get_first_pozyx_serial_port, SingleRegister)
 #from pythonosc.udp_client import SimpleUDPClient
 
@@ -28,9 +28,11 @@ import time
 class MultitagPositioning(object):
     """Continuously performs multitag positioning"""
 
-    def printPublishPosition2(self, position, tag_id):
+    def printPublishPositionWithOrientation(self, position, orientation, accleration, tag_id):
         now = time.time()
-        i = [{"version":"1","alive":True,"tagId":str(tag_id),"success":True,"timestamp":now,"data":{"tagData":{},"anchorData":[],"coordinates":{"x":position.x,"y":position.y,"z":position.z},"orientation":{"yaw":4.258,"roll":0.249,"pitch":0.012},"metrics":{"latency":67.8,"rates":{"update":8.335,"success":8.335}}}}]
+        p = "POS ID: {}, x(mm): {}, y(mm): {}, z(mm): {}".format('0x{:04x}'.format(tag_id), position.x, position.y, position.z)
+        print(p, orientation)
+        i = [{"version":"1","alive":True,"tagId":str(tag_id),"success":True,"timestamp":now,"data":{"tagData":{},"anchorData":[],"coordinates":{"x":position.x,"y":position.y,"z":position.z},"orientation":{"yaw":orientation.heading,"roll":0.249,"pitch":0.012},"metrics":{"latency":67.8,"rates":{"update":8.335,"success":8.335}}}}]
 
         mqttc.publish("tags", json.dumps(i))
         
@@ -72,12 +74,15 @@ class MultitagPositioning(object):
         """Performs positioning and prints the results."""
         for tag_id in self.tag_ids:
             position = Coordinates()
+            orientation = EulerAngles()
+            acceleration = Acceleration()
+            self.pozyx.getEulerAngles_deg(orientation, tag_id)
+            self.pozyx.getAcceleration_mg(acceleration, tag_id)
             status = self.pozyx.doPositioning(
                 position, self.dimension, self.height, self.algorithm, remote_id=tag_id)
             if status == POZYX_SUCCESS:
-                self.printPublishPosition(position, tag_id)
-#
-                self.printPublishPosition2(position, tag_id)
+                #self.printPublishPosition(position, tag_id)
+                self.printPublishPositionWithOrientation(position, orientation, acceleration, tag_id)
             else:
                 self.printPublishErrorCode("positioning", tag_id)
 
