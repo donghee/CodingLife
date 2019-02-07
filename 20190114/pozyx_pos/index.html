@@ -191,15 +191,14 @@
        line.geometry.attributes.position.needsUpdate = true;
      }
 
+     function addPoint(x, y, z) {
      // add point
-     function addPoint(x,y,z){
        /* console.log("point nr " + count + ": " + x + " " + y + " " + z); */
        positions[count * 3 + 0] = x;
        positions[count * 3 + 1] = y;
        positions[count * 3 + 2] = z;
        count++;
        line.geometry.setDrawRange(0, count);
-       updateLine(x,y,z);
        /* console.log(positions) */
      }
 
@@ -220,18 +219,13 @@
 
      var socket = io.connect();
      socket.on('pozyx_pos', function (data) {
-       //console.log(data);
-       //cube.position.x = data['26478'].coordinates.x / 1000
-       //cube.position.z = data['26478'].coordinates.y / 1000
-       //cube.position.y = data['26478'].coordinates.z / 1000
-       //cube.rotation.x = data['26478'].orientation.yaw / 1000
-       //cube.rotation.y = data['26478'].orientation.roll / 1000
-       //cube.rotation.z = data['26478'].orientation.pitch / 1000
 
        if (duck){
          duck.position.x  = data['26478'].coordinates.x / 1000 *2
          duck.position.z  = data['26478'].coordinates.y / 1000 *2
          duck.position.y  = data['26478'].coordinates.z / 1000 / 10
+
+         duck.rotation.z  = data['26478'].orientation.yaw
          addPoint(duck.position.x, duck.position.y, duck.position.z);
        }
 
@@ -239,6 +233,8 @@
          chicken.position.x  = data['26394'].coordinates.x / 1000 *2
          chicken.position.z  = data['26394'].coordinates.y / 1000 *2
          chicken.position.y  = data['26394'].coordinates.z / 1000 / 10
+
+         duck.rotation.z  = data['26394'].orientation.yaw
        }
 
      });

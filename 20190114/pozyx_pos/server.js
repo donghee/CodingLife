@@ -6,7 +6,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require('fs')
 
-server.listen(8080);
+server.listen(8000);
 // WARNING: app.listen(80) will NOT work here!
 
 app.get('/', function (req, res) {
