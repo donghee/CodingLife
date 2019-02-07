@@ -7,7 +7,7 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
 * 수업
- - 일시: 2018. 9. 29
+ - 일시: 2018. 12. 28
  - 목표: 실제 비행 환경에서 MAVROS 노드 실행
  - 교재: https://goo.gl/sDfk3j
  - 코치: 박동희 dongheepark@gmail.com

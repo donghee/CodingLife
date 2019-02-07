@@ -61,7 +61,9 @@
  - Hello ROS (catkin build)
  - 드론 관련 패키지 소개
 
-** 5주차 MAVLINK
+** 5주차 MAVROS
+
+** 6주차 MAVLINK
   - Mavlink 소개 
   - Mavlink 프로그래밍, SDK
    - C, Python
@@ -69,8 +71,7 @@
   - Simulator를 이용하여 드론 제어 
    - 모드 바꾸기, 드론 데이터 읽기
 
-** 6주차 PX4 OFFBOARD Programming
-** 7주차 MAVROS
+** 7주차 PX4 OFFBOARD Programming
 ** 8주차 Vision, OPENCV
 ** 9주차 ROS 심화
 ** 10주차 Project: Pricision Landing 개발

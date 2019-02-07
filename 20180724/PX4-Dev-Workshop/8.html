@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-12-21 금 16:07 -->
+<!-- 2018-12-23 Sun 11:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PX4 Dev Workshop</title>
@@ -236,39 +236,39 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc60eb45">1. 수업</a></li>
-<li><a href="#org24cf2c5">2. 수업 진행</a></li>
-<li><a href="#org0fc1134">3. 수업 자료</a>
+<li><a href="#org426969e">1. 수업</a></li>
+<li><a href="#org78dec97">2. 수업 진행</a></li>
+<li><a href="#org76f393b">3. 수업 자료</a>
 <ul>
-<li><a href="#org89dedf2">3.1. 이미지 포멧</a></li>
-<li><a href="#orgae4e33a">3.2. <code>cv_bridge</code></a>
+<li><a href="#org4831c14">3.1. 이미지 포멧</a></li>
+<li><a href="#orga952dae">3.2. <code>cv_bridge</code></a>
 <ul>
-<li><a href="#orgddc0b84">3.2.1. CvImage</a></li>
+<li><a href="#orgcf45e94">3.2.1. CvImage</a></li>
 </ul>
 </li>
-<li><a href="#orgae820c4">3.3. 예시: <code>image_converter</code></a></li>
-<li><a href="#org47a3cb5">3.4. 예시: <code>image_converter</code> 노드 실행</a>
+<li><a href="#org9bb9d19">3.3. 예시: <code>image_converter</code></a></li>
+<li><a href="#org6317f7a">3.4. 예시: <code>image_converter</code> 노드 실행</a>
 <ul>
-<li><a href="#org4790561">3.4.1. 구독 <code>/cv_camera/image_raw</code> 이미지 보기</a></li>
-<li><a href="#org062ce82">3.4.2. 발행 <code>/image_converter/output_video</code> 이미지 보기</a></li>
+<li><a href="#org20041bf">3.4.1. 구독 <code>/cv_camera/image_raw</code> 이미지 보기</a></li>
+<li><a href="#org0398eec">3.4.2. 발행 <code>/image_converter/output_video</code> 이미지 보기</a></li>
 </ul>
 </li>
-<li><a href="#orgdafd4a0">3.5. 예시: object detection: <code>dnn_detect</code></a></li>
-<li><a href="#org1a53964">3.6. 예시: tag detection: aruco</a></li>
-<li><a href="#orge2938ab">3.7. 예시: position estimation using aruco</a>
+<li><a href="#orgebf511a">3.5. 예시: object detection: <code>dnn_detect</code></a></li>
+<li><a href="#orgf54cf44">3.6. 예시: tag detection: aruco</a></li>
+<li><a href="#orgc692c2b">3.7. 예시: position estimation using aruco</a>
 <ul>
-<li><a href="#org70a5983">3.7.1. Camera Calibration</a></li>
+<li><a href="#org62111b4">3.7.1. Camera Calibration</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgc4be047">4. 참고</a></li>
+<li><a href="#org14e2645">4. 참고</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc60eb45" class="outline-2">
-<h2 id="orgc60eb45"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-org426969e" class="outline-2">
+<h2 id="org426969e"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>일시: 2018.</li>
@@ -279,8 +279,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org24cf2c5" class="outline-2">
-<h2 id="org24cf2c5"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-org78dec97" class="outline-2">
+<h2 id="org78dec97"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>OPENCV</li>
@@ -291,12 +291,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org0fc1134" class="outline-2">
-<h2 id="org0fc1134"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-org76f393b" class="outline-2">
+<h2 id="org76f393b"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org89dedf2" class="outline-3">
-<h3 id="org89dedf2"><span class="section-number-3">3.1</span> 이미지 포멧</h3>
+<div id="outline-container-org4831c14" class="outline-3">
+<h3 id="org4831c14"><span class="section-number-3">3.1</span> 이미지 포멧</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>OpenCV <code>cv::Mat</code></li>
@@ -308,8 +308,8 @@ rosmsg info sensor_msgs/Image
 </div>
 </div>
 
-<div id="outline-container-orgae4e33a" class="outline-3">
-<h3 id="orgae4e33a"><span class="section-number-3">3.2</span> <code>cv_bridge</code></h3>
+<div id="outline-container-orga952dae" class="outline-3">
+<h3 id="orga952dae"><span class="section-number-3">3.2</span> <code>cv_bridge</code></h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 ROS에서의 OpenCV 인터페이스
@@ -322,22 +322,22 @@ ROS에서의 OpenCV 인터페이스
 </div>
 </div>
 
-<div id="outline-container-orgddc0b84" class="outline-4">
-<h4 id="orgddc0b84"><span class="section-number-4">3.2.1</span> CvImage</h4>
+<div id="outline-container-orgcf45e94" class="outline-4">
+<h4 id="orgcf45e94"><span class="section-number-4">3.2.1</span> CvImage</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #6959ce;">namespace</span> <span style="color: #a9a1e1;">cv_bridge</span> {
+<pre class="src src-c++"><span style="color: #51afef;">namespace</span> <span style="color: #a9a1e1;">cv_bridge</span> {
 
-<span style="color: #6959ce;">class</span> <span style="color: #ECBE7B;">CvImage</span>
+<span style="color: #51afef;">class</span> <span style="color: #ECBE7B;">CvImage</span>
 {
-<span style="color: #6959ce;">public</span>:
+<span style="color: #51afef;">public</span>:
   <span style="color: #a9a1e1;">std_msgs</span>::<span style="color: #ECBE7B;">Header</span> <span style="color: #dcaeea;">header</span>;
   <span style="color: #a9a1e1;">std</span>::<span style="color: #ECBE7B;">string</span> <span style="color: #dcaeea;">encoding</span>;
   <span style="color: #a9a1e1;">cv</span>::<span style="color: #ECBE7B;">Mat</span> <span style="color: #dcaeea;">image</span>;
 };
 
-<span style="color: #6959ce;">typedef</span> <span style="color: #a9a1e1;">boost</span>::<span style="color: #ECBE7B;">shared_ptr</span>&lt;<span style="color: #ECBE7B;">CvImage</span>&gt; <span style="color: #ECBE7B;">CvImagePtr</span>;
-<span style="color: #6959ce;">typedef</span> <span style="color: #a9a1e1;">boost</span>::<span style="color: #ECBE7B;">shared_ptr</span>&lt;<span style="color: #ECBE7B;">CvImage</span> <span style="color: #6959ce;">const</span>&gt; <span style="color: #ECBE7B;">CvImageConstPtr</span>;
+<span style="color: #51afef;">typedef</span> <span style="color: #a9a1e1;">boost</span>::<span style="color: #ECBE7B;">shared_ptr</span>&lt;<span style="color: #ECBE7B;">CvImage</span>&gt; <span style="color: #ECBE7B;">CvImagePtr</span>;
+<span style="color: #51afef;">typedef</span> <span style="color: #a9a1e1;">boost</span>::<span style="color: #ECBE7B;">shared_ptr</span>&lt;<span style="color: #ECBE7B;">CvImage</span> <span style="color: #51afef;">const</span>&gt; <span style="color: #ECBE7B;">CvImageConstPtr</span>;
 
 }
 </pre>
@@ -346,8 +346,8 @@ ROS에서의 OpenCV 인터페이스
 </div>
 </div>
 
-<div id="outline-container-orgae820c4" class="outline-3">
-<h3 id="orgae820c4"><span class="section-number-3">3.3</span> 예시: <code>image_converter</code></h3>
+<div id="outline-container-org9bb9d19" class="outline-3">
+<h3 id="org9bb9d19"><span class="section-number-3">3.3</span> 예시: <code>image_converter</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <pre class="example">
 cd ~/catkin_ws/src
@@ -461,8 +461,8 @@ catkin build cv_test
 </div>
 </div>
 
-<div id="outline-container-org47a3cb5" class="outline-3">
-<h3 id="org47a3cb5"><span class="section-number-3">3.4</span> 예시: <code>image_converter</code> 노드 실행</h3>
+<div id="outline-container-org6317f7a" class="outline-3">
+<h3 id="org6317f7a"><span class="section-number-3">3.4</span> 예시: <code>image_converter</code> 노드 실행</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 <b>ros-kinetic-cv-camera 설치</b>
@@ -493,8 +493,8 @@ rostopic list -v
 </pre>
 </div>
 
-<div id="outline-container-org4790561" class="outline-4">
-<h4 id="org4790561"><span class="section-number-4">3.4.1</span> 구독 <code>/cv_camera/image_raw</code> 이미지 보기</h4>
+<div id="outline-container-org20041bf" class="outline-4">
+<h4 id="org20041bf"><span class="section-number-4">3.4.1</span> 구독 <code>/cv_camera/image_raw</code> 이미지 보기</h4>
 <div class="outline-text-4" id="text-3-4-1">
 <p>
 image converter 에서 구독(subscribe) 하는 토픽
@@ -509,8 +509,8 @@ rqt_image_view /cv_camera/image_raw
 </div>
 </div>
 
-<div id="outline-container-org062ce82" class="outline-4">
-<h4 id="org062ce82"><span class="section-number-4">3.4.2</span> 발행 <code>/image_converter/output_video</code> 이미지 보기</h4>
+<div id="outline-container-org0398eec" class="outline-4">
+<h4 id="org0398eec"><span class="section-number-4">3.4.2</span> 발행 <code>/image_converter/output_video</code> 이미지 보기</h4>
 <div class="outline-text-4" id="text-3-4-2">
 <p>
 image converter 에서 publish 하는 토픽
@@ -538,8 +538,8 @@ rviz
 </div>
 </div>
 
-<div id="outline-container-orgdafd4a0" class="outline-3">
-<h3 id="orgdafd4a0"><span class="section-number-3">3.5</span> 예시: object detection: <code>dnn_detect</code></h3>
+<div id="outline-container-orgebf511a" class="outline-3">
+<h3 id="orgebf511a"><span class="section-number-3">3.5</span> 예시: object detection: <code>dnn_detect</code></h3>
 <div class="outline-text-3" id="text-3-5">
 
 <div class="figure">
@@ -569,8 +569,8 @@ rostopic list -v
 </div>
 </div>
 
-<div id="outline-container-org1a53964" class="outline-3">
-<h3 id="org1a53964"><span class="section-number-3">3.6</span> 예시: tag detection: aruco</h3>
+<div id="outline-container-orgf54cf44" class="outline-3">
+<h3 id="orgf54cf44"><span class="section-number-3">3.6</span> 예시: tag detection: aruco</h3>
 <div class="outline-text-3" id="text-3-6">
 
 <div class="figure">
@@ -583,7 +583,6 @@ rostopic list -v
 </p>
 <pre class="example">
 sudo apt-get install ros-kinetic-aruco-ros
-
 </pre>
 
 <p>
@@ -633,8 +632,8 @@ rosrun image_view image_view image:=/aruco_single/result
 </div>
 </div>
 
-<div id="outline-container-orge2938ab" class="outline-3">
-<h3 id="orge2938ab"><span class="section-number-3">3.7</span> 예시: position estimation using aruco</h3>
+<div id="outline-container-orgc692c2b" class="outline-3">
+<h3 id="orgc692c2b"><span class="section-number-3">3.7</span> 예시: position estimation using aruco</h3>
 <div class="outline-text-3" id="text-3-7">
 
 <div class="figure">
@@ -650,8 +649,8 @@ rostopic echo /aruco_single/pose
 </pre>
 </div>
 
-<div id="outline-container-org70a5983" class="outline-4">
-<h4 id="org70a5983"><span class="section-number-4">3.7.1</span> Camera Calibration</h4>
+<div id="outline-container-org62111b4" class="outline-4">
+<h4 id="org62111b4"><span class="section-number-4">3.7.1</span> Camera Calibration</h4>
 <div class="outline-text-4" id="text-3-7-1">
 <p>
 <a href="http://wiki.ros.org/camera_calibration">http://wiki.ros.org/camera_calibration</a>
@@ -667,21 +666,19 @@ rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/
 </pre>
 
 <p>
-<b>calibration 파일 추가 ost.yaml</b>
-<code>aruco_test.launch</code> 에 다음 내용 추가.
+calibration 후 commit 버튼 클릭
 </p>
 
-<div class="org-src-container">
-<pre class="src src-xml">&lt;<span style="color: #c678dd;">param</span> <span style="color: #dcaeea;">name</span>=<span style="color: #98be65;">"calibration_file"</span> <span style="color: #dcaeea;">type</span>=<span style="color: #98be65;">"string"</span> <span style="color: #dcaeea;">value</span>=<span style="color: #98be65;">"/tmp/ost.yaml"</span>/&gt;
-</pre>
-</div>
+<p>
+<code>cv_camera_node</code> 다시 실행하여 camera calibration 데이터 적용
+</p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc4be047" class="outline-2">
-<h2 id="orgc4be047"><span class="section-number-2">4</span> 참고</h2>
+<div id="outline-container-org14e2645" class="outline-2">
+<h2 id="org14e2645"><span class="section-number-2">4</span> 참고</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li><a href="http://wiki.ros.org/vision_opencv">http://wiki.ros.org/vision_opencv</a></li>
@@ -701,7 +698,7 @@ rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2018-12-21 금 16:07</p>
+<p class="date">Created: 2018-12-23 Sun 11:45</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

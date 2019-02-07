@@ -1,3 +1,4 @@
+
 #+STARTUP: showeverything
 #+TITLE:     PX4 Dev Workshop
 #+AUTHOR:    Donghee Park
@@ -7,323 +8,306 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
 
 * 수업
- - 일시: 2018. 9. 28
- - 목표: MAVROS 실행 노드를 만들 수 있다.
+ - 일시: 2018.
+ - 목표: OpenCV in ROS, ~cv_bridge~
  - 교재: https://goo.gl/sDfk3j
  - 코치: 박동희 dongheepark@gmail.com
 
 * 수업 진행
- - MAVROS 노드 프로그래밍
-  - 패키지 만들기
-  - 드론 이착륙(sevice call)
-  - 드론 프로그래밍(offboard mode)
-
+ - OPENCV
+ - ~cv_bridge~
+ - Object detection
+ - Tag detection
 
 * 수업 자료
-** MAVROS 노드 프로그래밍
 
-*** 패키지 만들기
+** 이미지 포멧
 
-#+begin_src sh
-$ source ~/catkin_ws/devel/setup.bash
-$ cd ~/catkin_ws/src
-$ catkin_create_pkg drone_state mavros sensor_msgs roscpp
-#+end_src
+ - OpenCV ~cv::Mat~
+ - ROS ~sensor_msgs/Image~ http://docs.ros.org/api/sensor_msgs/html/msg/Image.html
+#+BEGIN_SRC
+rosmsg info sensor_msgs/Image
+#+END_SRC
 
-*** 노드 코드 작성
+** ~cv_bridge~
 
-~/home/donghee/catkin_ws/src/drone_state/src/drone_state.cpp~
-#+begin_src c++
+ROS에서의 OpenCV 인터페이스
 
-#include "ros/ros.h"
-#include "sensor_msgs/Imu.h"
+[[http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeCppHydro?action=AttachFile&do=get&target=cvbridge4.png]]
 
-void imuDataCallback(const sensor_msgs::Imu::ConstPtr& msg){
-  ROS_INFO("\nlinear acceleration\
-      \nx: [%f]\ny:[%f]\nz:[%f]", msg->linear_acceleration.x,
-      msg->linear_acceleration.y, msg->linear_acceleration.z);
+*** CvImage
+
+#+BEGIN_SRC c++
+namespace cv_bridge {
+
+class CvImage
+{
+public:
+  std_msgs::Header header;
+  std::string encoding;
+  cv::Mat image;
+};
+
+typedef boost::shared_ptr<CvImage> CvImagePtr;
+typedef boost::shared_ptr<CvImage const> CvImageConstPtr;
+
 }
+#+END_SRC
 
-int main(int argc, char **argv){
-  ros::init(argc, argv, "drone_state");
-  ros::NodeHandle nh;
-  ros::Subscriber sub = nh.subscribe("/mavros/imu/data", 1000, imuDataCallback);
+** 예시: ~image_converter~
+
+#+BEGIN_SRC
+cd ~/catkin_ws/src
+catkin_create_pkg cv_test sensor_msgs cv_bridge roscpp rospy std_msgs image_transport
+#+END_SRC
+
+#+BEGIN_SRC
+cd cv_test/src
+#+END_SRC
+
+cat > ~image_converter.cpp~
+#+BEGIN_SRC
+#include <ros/ros.h>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
+static const std::string OPENCV_WINDOW = "Image window";
+
+class ImageConverter
+{
+  ros::NodeHandle nh_;
+  image_transport::ImageTransport it_;
+  image_transport::Subscriber image_sub_;
+  image_transport::Publisher image_pub_;
+
+public:
+  ImageConverter()
+    : it_(nh_)
+  {
+    // Subscrive to input video feed and publish output video feed
+    image_sub_ = it_.subscribe("/cv_camera/image_raw", 1,
+      &ImageConverter::imageCb, this);
+    image_pub_ = it_.advertise("/image_converter/output_video", 1);
+
+    cv::namedWindow(OPENCV_WINDOW);
+  }
+
+  ~ImageConverter()
+  {
+    cv::destroyWindow(OPENCV_WINDOW);
+  }
+
+  void imageCb(const sensor_msgs::ImageConstPtr& msg)
+  {
+    cv_bridge::CvImagePtr cv_ptr;
+    try
+    {
+      cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    }
+    catch (cv_bridge::Exception& e)
+    {
+      ROS_ERROR("cv_bridge exception: %s", e.what());
+      return;
+    }
+
+    // Draw an example circle on the video stream
+    if (cv_ptr->image.rows > 60 && cv_ptr->image.cols > 60)
+      cv::circle(cv_ptr->image, cv::Point(50, 50), 10, CV_RGB(255,0,0));
+
+    // Update GUI Window
+    cv::imshow(OPENCV_WINDOW, cv_ptr->image);
+    cv::waitKey(3);
+
+    // Output modified video stream
+    image_pub_.publish(cv_ptr->toImageMsg());
+  }
+};
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "image_converter");
+  ImageConverter ic;
   ros::spin();
   return 0;
 }
-#+end_src
+#+END_SRC
 
-빌드 스크립트 추가
+~~/catkin_ws/src/cv_test/CMakeLists.txt~ 에 다음 내용 추가
+ - ~image_converter~ 노드 컴파일 추가
+ - OpenCV 라이브러리 추가
 
-~~/catkin_ws/src/drone_state/CMakeLists.txt~ 파일 끝에 다음 3줄 추가
+#+BEGIN_SRC
+set(OpenCV_DIR /home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/)
+find_package( OpenCV REQUIRED )
 
-#+begin_src cmake
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+include_directories(include ${OpenCV_INCLUDE_DIRS})
+
 include_directories(include ${catkin_INCLUDE_DIRS})
-add_executable(drone_state src/drone_state.cpp)
-target_link_libraries(drone_state ${catkin_LIBRARIES})
-#+end_src
+add_executable(image_converter src/image_converter.cpp)
+target_link_libraries(image_converter ${catkin_LIBRARIES})
 
-환경 변수 다시 로드!
-#+begin_src sh
-$ source ~/catkin_ws/devel/setup.bash
-#+end_src
+target_link_libraries(image_converter ${OpenCV_LIBS})
+#+END_SRC
 
-*** 패키지 빌드
+#+BEGIN_SRC
+cd ~/catkin_ws
+catkin build cv_test
+#+END_SRC
 
-#+begin_src sh
-$ cd ~/catkin_ws
-$ catkin build
-#+end_src
+** 예시: ~image_converter~ 노드 실행
 
-*** 패키지 노드 실행
+*ros-kinetic-cv-camera 설치*
+#+BEGIN_SRC
+sudo apt-get install ros-kinetic-cv-camera
+#+END_SRC
 
-~drone_state~ 패키지의 ~drone_state~ 노드 실행
-#+begin_src sh
-$ rosrun drone_state drone_state
-#+end_src
+*ros master node 실행*
+#+BEGIN_SRC
+roscore
+#+END_SRC
 
+*~cv_camera_node~ 실행*
+#+BEGIN_SRC
+rosrun cv_camera cv_camera_node
+#+END_SRC
 
-*** 해보기: /mavros/state 읽어서 1초마다 비행 mode 한번씩 출력
- - ~/mavros/state~ 타입 체크하여 헤더 include
+*토픽 목록 보기*
+#+BEGIN_SRC
+rostopic list -v
+#+END_SRC
 
-# #+begin_src c++
+*** 구독 ~/cv_camera/image_raw~ 이미지 보기
+image converter 에서 구독(subscribe) 하는 토픽
 
-# #include "ros/ros.h"
-# #include "mavros_msgs/State.h"
+#+BEGIN_SRC c++
+rosrun image_view image_view image:=/cv_camera/image_raw
+// or using rqt
+rqt_image_view /cv_camera/image_raw
+#+END_SRC
 
-# void droneStateCallback(const mavros_msgs::State::ConstPtr& msg){
-#   ROS_INFO("\nDrone mode: %s", msg->mode.c_str());
-# }
+*** 발행 ~/image_converter/output_video~ 이미지 보기
+image converter 에서 publish 하는 토픽
 
-# int main(int argc, char **argv){
-#   ros::init(argc, argv, "drone_state");
-#   ros::NodeHandle nh;
-#   ros::Subscriber sub = nh.subscribe("/mavros/state", 1000, droneStateCallback);
-#   ros::spin();
-#   return 0;
-# }
-# #+end_src
+#+BEGIN_SRC
+rosrun image_view image_view image:=/image_converter/output_video
+// or using rqt
+rqt_image_view /image_converter/output_video
+#+END_SRC
 
-*** 해보기 결과:
+*rviz*
+#+BEGIN_SRC
+rviz
+#+END_SRC
 
-#+begin_src c++
-$ rosrun drone_state drone_state
-[ INFO] [1539297808.077868114]:
-Drone mode: OFFBOARD
-[ INFO] [1539297808.525173697]:
-Drone mode: OFFBOARD
-[ INFO] [1539297809.565387356]:
-Drone mode: OFFBOARD
-#+end_src
+[[https://i.imgur.com/jsulKek.png]]
 
-~rqt_graph~
+** 예시: object detection: ~dnn_detect~
 
-[[https://i.imgur.com/CGHQVwc.png]]
+[[https://i.imgur.com/GKDEe3r.png]]
 
+MobileNet-SSD detection: 딥러닝
 
-** 새로운 노드 만들기: 드론 이륙 착륙
+#+BEGIN_SRC
+sudo apt install ros-kinetic-dnn-detect
+#+END_SRC
 
-#+begin_src dot :file mavros_takeoff_and_land1.png :cmdline -Kdot -Tpng
-digraph {
-  rankdir=LR
-  graph [fontname="NanumSquare"];
-  node [shape=rect, color="#40e0d0"]
-  edge [style=dashed, fontname="NanumSquare"];
-  node1 [label= "/takeoff_and_land"]
-  node2 [label= "/mavros"]
+#+BEGIN_SRC
+roscore
+rosrun cv_camera cv_camera_node
+roslaunch dnn_detect dnn_detect.launch camera:=/cv_camera image:=image_raw
+rostopic echo /dnn_objects
+rosrun image_view image_view image:=/dnn_images
+#+END_SRC
 
-  node1 -> node2 [label="1. /mavros/cmd/arming"];
-  node1 -> node2 [label="2. /mavros/cmd/takeoff"];
-  node1 -> node2 [label="3. /mavros/cmd/land"];
-}
-#+end_src
+#+BEGIN_SRC
+rostopic list -v
+#+END_SRC
 
-~drone_command~ 패키지에 ~takeoff_and_land~ 노드를 만들어 보자.
+** 예시: tag detection: aruco
 
-2.5m 이륙후 10초 있다가 착륙
+aruco: library for detect marker https://sourceforge.net/projects/aruco/
+ 1. detect marker
+ 2. position estimation
 
-#+begin_src c++
-#include <cstdlib>
+[[https://i.imgur.com/pa6a5HY.png]]
 
-#include <ros/ros.h>
-#include <mavros_msgs/CommandBool.h>
-#include <mavros_msgs/CommandTOL.h>
-#include <mavros_msgs/SetMode.h>
+*ros-kinetic-aruco-ros 설치*
+#+BEGIN_SRC
+sudo apt-get install ros-kinetic-aruco-ros
+#+END_SRC
 
-#include <geometry_msgs/PoseStamped.h>
+~aruco_test.launch~ 작성
+#+BEGIN_SRC xml
+  <launch>
 
-int main(int argc, char **argv)
-{
-
-    int rate = 20;
-
-    ros::init(argc, argv, "takeoff_and_land");
-    ros::NodeHandle n;
-
-    ros::Rate r(rate);
-
-    ////////////////////////////////////////////
-    ///////////////////ARM//////////////////////
-    ////////////////////////////////////////////
-    ros::ServiceClient arming_client = n.serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
-    mavros_msgs::CommandBool arm_cmd;
-    arm_cmd.request.value = true;
-
-    if (arming_client.call(arm_cmd) && arm_cmd.response.success)
-    {
-        ROS_INFO("Vehicle armed");
-    } else {
-        ROS_ERROR("Failed arming or disarming");
-    }
-
-    ////////////////////////////////////////////
-    /////////////////TAKEOFF////////////////////
-    ////////////////////////////////////////////
-    ros::ServiceClient takeoff_client = n.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
-    mavros_msgs::CommandTOL takeoff_cmd;
-    takeoff_cmd.request.altitude = 10;
-    takeoff_cmd.request.latitude = 0;
-    takeoff_cmd.request.longitude = 0;
-    takeoff_cmd.request.min_pitch = 0;
-    takeoff_cmd.request.yaw = 0;
-    if(takeoff_client.call(takeoff_cmd) && takeoff_cmd.response.success){
-        ROS_INFO("Okay Takeoff");
-    }else{
-        ROS_ERROR("Failed Takeoff");
-    }
-
-    ////////////////////////////////////////////
-    /////////////////DO STUFF///////////////////
-    ////////////////////////////////////////////
-    sleep(10);
+  <arg name="markerId" default="701"/>
+  <arg name="markerSize" default="0.05"/> <!-- in meter -->
+  <arg name="eye" default="left"/>
+  <arg name="marker_frame" default="marker_frame"/>
+  <arg name="ref_frame" default=""/> <!-- leave empty and the pose will be published wrt param parent_name -->
+  <arg name="corner_refinement" default="LINES" /> <!-- NONE, HARRIS, LINES, SUBPIX -->
 
 
-    ////////////////////////////////////////////
-    ///////////////////LAND/////////////////////
-    ////////////////////////////////////////////
-    ros::ServiceClient land_client = n.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/land");
-    mavros_msgs::CommandTOL land_cmd;
-    land_cmd.request.altitude = 0;
-    land_cmd.request.latitude = 0;
-    land_cmd.request.longitude = 0;
-    land_cmd.request.min_pitch = 0;
-    land_cmd.request.yaw = 0;
-    if(land_client.call(land_cmd) && land_cmd.response.success){
-        ROS_INFO("Okay Land");
-    }else{
-        ROS_ERROR("Failed Land");
-    }
+  <node pkg="aruco_ros" type="single" name="aruco_single">
+  <remap from="/camera_info" to="/cv_camera/camera_info" />
+  <remap from="/image" to="/cv_camera/image_raw" />
+  <param name="image_is_rectified" value="True"/>
+  <param name="marker_size" value="$(arg markerSize)"/>
+  <param name="marker_id" value="$(arg markerId)"/>
+  <param name="reference_frame" value="$(arg ref_frame)"/> <!-- frame in which the marker pose will be refered -->
+  <param name="camera_frame" value="base_link"/>
+  <param name="marker_frame" value="$(arg marker_frame)" />
+  <param name="corner_refinement" value="$(arg corner_refinement)" />
+  <!-- <param name="calibration_file" type="string" value="/tmp/ost.yaml"/> -->
+  </node>
 
-    while (n.ok())
-    {
-      ros::spinOnce();
-      r.sleep();
-    }
+  </launch>
+#+END_SRC
 
-    return 0;
-}
-#+end_src
+*aruco 노드 실행*
+#+BEGIN_SRC
+roslaunch aruco_test.launch
+#+END_SRC
 
-** 새로운 노드 만들기: ~offb_node~
+*마커 결과 확인*
+#+BEGIN_SRC
+rosrun image_view image_view image:=/aruco_single/result
+#+END_SRC
 
-~drone_command~ 패키지에 ~offb_node~ 노드를 만들어 보자.
+** 예시: position estimation using aruco
 
-2m 이륙.
+[[https://i.imgur.com/arFC1S0.png]]
 
-#+begin_src c++
-/**
- * @file offb_node.cpp
- * @brief Offboard control example node, written with MAVROS version 0.19.x, PX4 Pro Flight
- * Stack and tested in Gazebo SITL
- */
+*마커 위치/자세 확인*
+#+BEGIN_SRC
+rostopic echo /aruco_single/pose
+#+END_SRC
 
-#include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <mavros_msgs/CommandBool.h>
-#include <mavros_msgs/SetMode.h>
-#include <mavros_msgs/State.h>
+*** Camera Calibration
 
-mavros_msgs::State current_state;
-void state_cb(const mavros_msgs::State::ConstPtr& msg){
-    current_state = *msg;
-}
+http://wiki.ros.org/camera_calibration
+http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
 
-int main(int argc, char **argv)
-{
-    ros::init(argc, argv, "offb_node");
-    ros::NodeHandle nh;
+*camera calibration 실행*
+#+BEGIN_SRC
+rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/cv_camera/image_raw camera:=/cv_camera
+#+END_SRC
 
-    ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
-            ("mavros/state", 10, state_cb);
-    ros::Publisher local_pos_pub = nh.advertise<geometry_msgs::PoseStamped>
-            ("mavros/setpoint_position/local", 10);
-    ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>
-            ("mavros/cmd/arming");
-    ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>
-            ("mavros/set_mode");
+calibration 후 commit 버튼 클릭
 
-    //the setpoint publishing rate MUST be faster than 2Hz
-    ros::Rate rate(20.0);
+~cv_camera_node~ 다시 실행하여 camera calibration 데이터 적용
 
-    // wait for FCU connection
-    while(ros::ok() && !current_state.connected){
-        ros::spinOnce();
-        rate.sleep();
-    }
-
-    geometry_msgs::PoseStamped pose;
-    pose.pose.position.x = 0;
-    pose.pose.position.y = 0;
-    pose.pose.position.z = 2;
-
-    //send a few setpoints before starting
-    for(int i = 100; ros::ok() && i > 0; --i){
-        local_pos_pub.publish(pose);
-        ros::spinOnce();
-        rate.sleep();
-    }
-
-    mavros_msgs::SetMode offb_set_mode;
-    offb_set_mode.request.custom_mode = "OFFBOARD";
-
-    mavros_msgs::CommandBool arm_cmd;
-    arm_cmd.request.value = true;
-
-    ros::Time last_request = ros::Time::now();
-
-    while(ros::ok()){
-        if( current_state.mode != "OFFBOARD" &&
-            (ros::Time::now() - last_request > ros::Duration(5.0))){
-            if( set_mode_client.call(offb_set_mode) &&
-                offb_set_mode.response.mode_sent){
-                ROS_INFO("Offboard enabled");
-            }
-            last_request = ros::Time::now();
-        } else {
-            if( !current_state.armed &&
-                (ros::Time::now() - last_request > ros::Duration(5.0))){
-                if( arming_client.call(arm_cmd) &&
-                    arm_cmd.response.success){
-                    ROS_INFO("Vehicle armed");
-                }
-                last_request = ros::Time::now();
-            }
-        }
-
-        local_pos_pub.publish(pose);
-
-        ros::spinOnce();
-        rate.sleep();
-    }
-
-    return 0;
-}
-#+end_src
-
-** 과제: 키보드로 OFFBOARD 모드 제어하기
- - ~offb_node~ 코드를 참고하여, 키보드로 x,y,z 위치를 제어하여 보자.
- - 참고: http://wiki.ros.org/teleop_twist_keyboard_cpp
-
-** 참고
- - https://github.com/mavlink/mavros/tree/master/mavros
- - https://github.com/Jaeyoung-Lim/modudculab_ros/blob/master/src/pub_setpoints_traj.cpp
+* 참고
+ - http://wiki.ros.org/vision_opencv
+ - http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages
+  - http://wiki.ros.org/image_transport/Tutorials/PublishingImages
+  - http://wiki.ros.org/image_transport/Tutorials/SubscribingToImages
+ - aruco maker generator http://chev.me/arucogen/
+ - http://wiki.ros.org/dnn_detect
+  - mobilenet-ssd https://github.com/weiliu89/caffe/tree/ssd
