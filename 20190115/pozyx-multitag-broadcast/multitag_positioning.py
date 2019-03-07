@@ -18,6 +18,7 @@ from pypozyx import (PozyxConstants, Coordinates, EulerAngles, Acceleration, POZ
 from pypozyx.tools.version_check import perform_latest_version_check
 
 
+import struct
 import json
 import paho.mqtt.client as mqtt
 mqttc = mqtt.Client()
@@ -28,11 +29,11 @@ import time
 class MultitagPositioning(object):
     """Continuously performs multitag positioning"""
 
-    def printPublishPositionWithOrientation(self, position, orientation, accleration, tag_id):
+    def printPublishPositionWithOrientation(self, position, orientation, acceleration, tag_id):
         now = time.time()
         p = "POS ID: {}, x(mm): {}, y(mm): {}, z(mm): {}".format('0x{:04x}'.format(tag_id), position.x, position.y, position.z)
         print(p, orientation)
-        i = [{"version":"1","alive":True,"tagId":str(tag_id),"success":True,"timestamp":now,"data":{"tagData":{},"anchorData":[],"coordinates":{"x":position.x,"y":position.y,"z":position.z},"orientation":{"yaw":orientation.heading,"roll":0.249,"pitch":0.012},"metrics":{"latency":67.8,"rates":{"update":8.335,"success":8.335}}}}]
+        i = [{"version":"1","alive":True,"tagId":str(tag_id),"success":True,"timestamp":now,"data":{"tagData":{},"anchorData":[],"coordinates":{"x":position.x,"y":position.y,"z":position.z},"orientation":{"yaw":orientation.heading,"roll":orientation.roll,"pitch":orientation.pitch},"metrics":{"latency":67.8,"rates":{"update":8.335,"success":8.335}}}}]
 
         mqttc.publish("tags", json.dumps(i))
         
@@ -76,15 +77,21 @@ class MultitagPositioning(object):
             position = Coordinates()
             orientation = EulerAngles()
             acceleration = Acceleration()
-            self.pozyx.getEulerAngles_deg(orientation, tag_id)
-            self.pozyx.getAcceleration_mg(acceleration, tag_id)
-            status = self.pozyx.doPositioning(
-                position, self.dimension, self.height, self.algorithm, remote_id=tag_id)
-            if status == POZYX_SUCCESS:
-                #self.printPublishPosition(position, tag_id)
-                self.printPublishPositionWithOrientation(position, orientation, acceleration, tag_id)
-            else:
-                self.printPublishErrorCode("positioning", tag_id)
+            try:
+                status = self.pozyx.doPositioning(
+                    position, self.dimension, self.height, self.algorithm, remote_id=tag_id)
+                status &= self.pozyx.getEulerAngles_deg(orientation, tag_id)
+                status &= self.pozyx.getAcceleration_mg(acceleration, tag_id)
+
+                if status == POZYX_SUCCESS:
+                    #self.printPublishPosition(position, tag_id)
+                    self.printPublishPositionWithOrientation(position, orientation, acceleration, tag_id)
+                else:
+                    self.printPublishErrorCode("positioning", tag_id)
+            except struct.error as err:
+                print(err)
+
+
 
     def printPublishPosition(self, position, network_id):
         """Prints the Pozyx's position and possibly sends it as a OSC packet"""
@@ -118,7 +125,7 @@ class MultitagPositioning(object):
         if tag_id is None:
             tag_id = 0
         if status == POZYX_SUCCESS:
-            print("Configuration of tag %s: success" % tag_id)
+            print("Configuration of tag 0x%0.4x: success" % tag_id)
         else:
             self.printPublishErrorCode("configuration", tag_id)
 
@@ -171,16 +178,20 @@ if __name__ == "__main__":
 
 
     # IDs of the tags to position, add None to position the local tag as well.
-    tag_ids = [0x671a, 0x676e]
+    #tag_ids = [0x671a, 0x676e]
+    tag_ids = [0xa001, 0xa002, 0xa003]
 
     # necessary data for calibration
-    anchors = [DeviceCoordinates(0x6714, 1, Coordinates(47, 63, 2150)),
-               DeviceCoordinates(0x6711, 1, Coordinates(39, -3006, 2300)),
-               DeviceCoordinates(0x6717, 1, Coordinates(5300, -3002, 2300)),
-               DeviceCoordinates(0x675b, 1, Coordinates(5356, 15, 2000))]
+    anchors = [DeviceCoordinates(0x6714, 1, Coordinates(0, 0, 1500)),
+               DeviceCoordinates(0x6711, 1, Coordinates(785, 2900, 1200)),
+               DeviceCoordinates(0x6717, 1, Coordinates(5416, 3670, 2000)),
+               DeviceCoordinates(0x675b, 1, Coordinates(5000, 0, 1800)),
+               DeviceCoordinates(0x6743, 1, Coordinates(3140, 4252, 900)),
+               DeviceCoordinates(0x671b, 1, Coordinates(6050, 1400, 1000))]
 
     # positioning algorithm to use, other is PozyxConstants.POSITIONING_ALGORITHM_TRACKING
     algorithm = PozyxConstants.POSITIONING_ALGORITHM_UWB_ONLY
+    #algorithm = PozyxConstants.POSITIONING_ALGORITHM_TRACKING
     # positioning dimension. Others are PozyxConstants.DIMENSION_2D, PozyxConstants.DIMENSION_2_5D
     dimension = PozyxConstants.DIMENSION_3D
     # height of device, required in 2.5D positioning

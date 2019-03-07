@@ -12,3 +12,6 @@ paho-mqtt = "*"
 
 [requires]
 python_version = "3.5"
+
+[scripts]
+start = "python multitag_positioning.py"
