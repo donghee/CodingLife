@@ -105,7 +105,7 @@ puppeteer.launch({headless: true, devtools: false, args: ['--no-sandbox', '--dis
 }).then(async (biddingInfos) => {
   //console.log(biddingInfos);
 
-  let subject = '[BIDDING] ETRI 입찰 목록 '+ new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substr(0, 10)
+  let subject = '[BIDDING] ETRI 입찰 목록 '+ new Date().toLocaleDateString().replace(/T/, ' ').replace(/\..+/, '').substr(0, 10)
   let body = 'https://ebid.etri.re.kr/ebid/index.do \n';
   biddingInfos.forEach(function(info) {
      body += `${info.title} ${info.startDate} ${info.endDate} \n`;
