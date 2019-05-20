@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.1.1",
+    "puppeteer": "^1.16.0"
+  },
+  "name": "bidding-list",
+  "version": "1.0.0",
+  "main": "etri-ebid-bidding.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node etri-ebid-bidding.js",
+    "start-service": "node cron-bidding.js"
+  },
+  "author": "donghee",
+  "license": "ISC",
+  "description": ""
+}
