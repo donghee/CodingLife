@@ -2,7 +2,8 @@ const puppeteer = require('puppeteer');
 
 async function getBiddingInfo(page, frame) {
   let biddingInfo = [];
-  await frame.evaluate((page) => window.gotoPage(page, 'VIEW'), page);
+  let estimatedPrice;
+  await frame.evaluate(async (page) => window.gotoPage(page, 'VIEW'), page);
   await frame.waitFor(3000);
 
   const biddingCount =  await frame.evaluate(async () => {
@@ -11,6 +12,12 @@ async function getBiddingInfo(page, frame) {
   });
 
   for (let i = 0; i < biddingCount; i++) {
+    const biddingNumber = await frame.$eval('#table01 > tbody >'
+                                       + ` tr:nth-child(${i+2}) >`
+                                       + ' td:nth-child(2)',
+                                       element =>
+                                       element.textContent.replace( /\s\s+/g, ' ' ));
+
     const biddingTitle = await frame.$eval('#table01 > tbody >'
                                            + ` tr:nth-child(${i+2}) >`
                                            + ' td:nth-child(3)',
@@ -28,8 +35,22 @@ async function getBiddingInfo(page, frame) {
                                          + ' td:nth-child(6)',
                                          element =>
                                          element.textContent.trim());
-    console.log(biddingTitle, startBidding, endBidding);
-    biddingInfo.push({title:biddingTitle, startDate:startBidding, endDate:endBidding})
+
+    await frame.evaluate(async (biddingNumber) => window.fnDetailCustView(biddingNumber), biddingNumber);
+    await frame.waitFor(5000);
+
+    estimatedPrice = await frame.$eval('#table01 > tbody >'
+                                       + ' tr:nth-child(7) >'
+                                       + ' td:nth-child(2)',
+                                       element =>
+                                       element.textContent.replace( /\s\s+/g, ' ' ));
+
+    // go back
+    await frame.evaluate(async () => window.history.back(1));
+    await frame.waitFor(2500);
+
+    console.log(biddingNumber, biddingTitle, estimatedPrice, startBidding, endBidding);
+    biddingInfo.push({number: biddingNumber, title:biddingTitle, price:estimatedPrice, startDate:startBidding, endDate:endBidding})
   }
   return biddingInfo;
 };
@@ -50,12 +71,13 @@ puppeteer.launch({headless: true, devtools: false, args: ['--no-sandbox', '--dis
 
   await page.click('#header > div > ul > li:nth-child(1) > a');
 
-  await page.waitFor(3000);
+  await page.waitFor(5000);
 
   const frame = await page.frames().find(frame => frame.name() ===
                                          'home_frm_right');
+  await page.waitFor(3000);
 
-  await frame.evaluate(() => window.gotoPage(1, 'VIEW'));
+  await frame.evaluate(async () => window.gotoPage(1, 'VIEW'));
   await frame.waitFor(3000);
 
   const firstPages =  await frame.evaluate(async () => {
@@ -70,7 +92,7 @@ puppeteer.launch({headless: true, devtools: false, args: ['--no-sandbox', '--dis
       return pageCount;
     });
 
-  await frame.evaluate(() => window.gotoPage(11, 'NEXT'));
+  await frame.evaluate(async () => window.gotoPage(11, 'NEXT'));
   await frame.waitFor(3000);
 
   const nextPages =  await frame.evaluate(async () => {
@@ -83,8 +105,7 @@ puppeteer.launch({headless: true, devtools: false, args: ['--no-sandbox', '--dis
                                                 + ' > tbody > tr >'
                                                 + ' td > a').length;
       return pageCount+1;
-    });
-
+  });
 
   console.log(firstPages);
   console.log(nextPages);
@@ -108,14 +129,13 @@ puppeteer.launch({headless: true, devtools: false, args: ['--no-sandbox', '--dis
   let subject = '[BIDDING] ETRI 입찰 목록 '+ new Date().toLocaleDateString().replace(/T/, ' ').replace(/\..+/, '').substr(0, 10)
   let body = 'https://ebid.etri.re.kr/ebid/index.do \n';
   biddingInfos.forEach(function(info) {
-     body += `${info.title} ${info.startDate} ${info.endDate} \n`;
+     body += `${info.number} ${info.title} ${info.price} ${info.startDate} ${info.endDate} \n`;
   });
 
   console.log(body);
   const mail = require('./send-mail');
   await mail.sendMail('dongheepark@gmail.com, donghee@subak.io, designersfinger@gmail.com', subject, body).catch(console.error);
 });
-
 }
 
 getBiddingInfos();
