@@ -8,6 +8,8 @@ cron.schedule('0 6 * * *', function(){
 
     var commandList = [
         "node etri-ebid-bidding.js",
+        "sleep 60",
+        "node g2b-bidding.js",
     ]
 
     shell.series(commandList , function(err){
