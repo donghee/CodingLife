@@ -51,7 +51,7 @@ async function getBiddingInfo(page, frame) {
     try {
       console.log('배정예산');
       const estimatedPriceElement = await frame.$x('//div[../../th/p="배정예산"]');
-      estimatedPrice = await frame.evaluate(div => '배정:' + div.textContent.trim(), estimatedPriceElement[0]);
+      estimatedPrice = await frame.evaluate(div => '(배정예산)' + div.textContent.trim(), estimatedPriceElement[0]);
     } catch (e) {
     }
   }
@@ -101,7 +101,7 @@ puppeteer.launch({headless: true, devtools: false, args: ['--no-sandbox', '--dis
 }).then(async (biddingInfos) => {
 
   let subject = '[BIDDING] 나라장터 입찰 목록 '+ new Date().toLocaleDateString().replace(/T/, ' ').replace(/\..+/, '').substr(0, 10)
-  let body = '';
+  let body = 'http://www.g2b.go.kr/pt/menu/selectSubFrame.do?framesrc=/pt/menu/frameTgong.do?url=http://www.g2b.go.kr:8101/ep/tbid/tbidList.do?taskClCds=&bidNm=%B5%E5%B7%D0&searchDtType=1&fromBidDt=2020/04/07&toBidDt=2020/05/07&fromOpenBidDt=&toOpenBidDt=&radOrgan=1&instNm=&area=&regYn=Y&bidSearchType=1&searchType=1 \n'
   biddingInfos.forEach(function(info) {
      body += `${info.number} ${info.title} ${info.price} ${info.startDate} ${info.endDate} \n`;
   });

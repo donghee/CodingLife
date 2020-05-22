@@ -4,7 +4,7 @@ async function getBiddingInfo(page, frame) {
   let biddingInfo = [];
   let estimatedPrice;
   await frame.evaluate(async (page) => window.gotoPage(page, 'VIEW'), page);
-  await frame.waitFor(3000);
+  await frame.waitFor(4000);
 
   const biddingCount =  await frame.evaluate(async () => {
       let biddingCount = document.querySelectorAll('#table01 > tbody> tr').length;
@@ -36,6 +36,7 @@ async function getBiddingInfo(page, frame) {
                                          element =>
                                          element.textContent.trim());
 
+    await frame.waitFor(3000);
     await frame.evaluate(async (biddingNumber) => window.fnDetailCustView(biddingNumber), biddingNumber);
     await frame.waitFor(5000);
 
@@ -47,7 +48,7 @@ async function getBiddingInfo(page, frame) {
 
     // go back
     await frame.evaluate(async () => window.history.back(1));
-    await frame.waitFor(2500);
+    await frame.waitFor(5000);
 
     console.log(biddingNumber, biddingTitle, estimatedPrice, startBidding, endBidding);
     biddingInfo.push({number: biddingNumber, title:biddingTitle, price:estimatedPrice, startDate:startBidding, endDate:endBidding})
@@ -75,10 +76,11 @@ puppeteer.launch({headless: true, devtools: false, args: ['--no-sandbox', '--dis
 
   const frame = await page.frames().find(frame => frame.name() ===
                                          'home_frm_right');
-  await page.waitFor(3000);
+  await page.waitFor(4000);
+  await frame.waitForSelector('#table01');
 
   await frame.evaluate(async () => window.gotoPage(1, 'VIEW'));
-  await frame.waitFor(3000);
+  await frame.waitFor(5000);
 
   const firstPages =  await frame.evaluate(async () => {
       const pageCount = document.querySelectorAll('#divBody > form >'
