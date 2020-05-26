@@ -1,7 +1,7 @@
 
 # 수업 교재
 
-https://learn.subak.io/
+https://learn.dronemap.io
 
 ## PX4 오픈소스 드론 워크숍
 
