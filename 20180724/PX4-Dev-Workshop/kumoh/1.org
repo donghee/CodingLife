@@ -212,7 +212,7 @@ Turtle
 1. 환경 변수 설정
 
 #+begin_src sh
-$ source /opt/ros/kinetic/setup.bash
+$ source /opt/ros/melodic/setup.bash
 #+end_src
 
 2. roscore 실행
@@ -298,7 +298,7 @@ https://goo.gl/fzhFYX
 
 #+begin_src sh
 $ sudo apt-get remove '.*gazebo.*' '.*sdformat.*' '.*ignition-math.*' '.*ignition-msgs.*' '.*ignition-transport.*'
-$ sudo apt-get install ros-kinetic-desktop-full -y
+$ sudo apt-get install ros-melodic-desktop-full -y
 #+end_src
 
 ** MavROS 설치 및 실행
