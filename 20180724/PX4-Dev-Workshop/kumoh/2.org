@@ -29,7 +29,7 @@
 Advance vision research by providing not only open but also optimized code for basic vision infrastructure. *No more reinventing the wheel.*
 
 Disseminate vision knowledge by providing a *common infrastructure that developers could build on*, so that code would be more readily readable and transferable.
-#+EMD_QUOTE
+#+END_QUOTE
 
 ** OpenCV 설치
 
@@ -991,3 +991,17 @@ https://www.youtube.com/watch?v=aCH259ggKb0
  - https://github.com/claymation/lander/
  - http://web.ics.purdue.edu/~rvoyles/Classes/ROSprogramming/Lectures/TF%20(transform)%20in%20ROS.pdf
  - https://www.ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2017/lecture3.pdf
+
+----
+
+https://github.com/CopterExpress/clover/tree/master/aruco_pose
+
+* 참고
+ - https://clover.coex.tech/en
+
+
+
+* Gazebo에 카메라 추가하기
+
+ -  http://gazebosim.org/tutorials?tut=add_laser
+ - https://blog.naver.com/PostView.nhn?blogId=dnddnjs11&logNo=220852140714&parentCategoryNo=&categoryNo=17&viewDate=&isShowPopularPosts=false&from=postView

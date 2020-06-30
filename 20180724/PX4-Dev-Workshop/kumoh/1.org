@@ -18,9 +18,14 @@
 
 3. Linux 사용하기
 
-4. Git 사용하기
+* PX4 소개
+
+https://px4.io/
+
+https://learn.dronemap.io/px4-workbook/px4-intro.html
 
 5. PX4 Firmware Build
+  - https://dev.px4.io
   - gazebo 사용하기, QGroundControl 사용하기.
 
 6. PX4 미들웨어 및 앱 구조 소개
