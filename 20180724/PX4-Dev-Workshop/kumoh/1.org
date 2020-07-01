@@ -7,7 +7,7 @@
 
 * 수업
  - 목표: 드론 제어 소프트웨어에 대해 이해할 수 있고, 프로그래밍 환경을 구축할 수 있다.
- - 교재: https://goo.gl/sDfk3j
+ - 교재: https://learn.dronemap.io/
  - 코치: 박동희 dongheepark@gmail.com
 
 * 드론 제어 소프트웨어 소개 및 설치

@@ -1,6 +1,9 @@
 # 수업 교재
- https://learn.dronemap.io
 
+ 교재: https://learn.dronemap.io
+ 채팅: https://discord.gg/2HkV6a
+
+# 순서
  - [1일차](1.org) 드론 제어 소프트웨어 소개 및 설치, ROS 프로그래밍
  - [2일차](2.org) 컴퓨터 비전: OpenCV, Maker Detect, Pose Estimation
  - 3일차 드론 조립 및 비행

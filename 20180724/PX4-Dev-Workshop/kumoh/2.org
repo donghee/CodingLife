@@ -7,7 +7,7 @@
 
 * 수업
  - 목표: 컴퓨터 비전: OpenCV, Maker Detect, Pose Estimation 에 대해서 이해하고 관련 패키지를 사용할 수 있다.
- - 교재: https://goo.gl/sDfk3j
+ - 교재: https://learn.dronemap.io/
  - 코치: 박동희 dongheepark@gmail.com
 
 * 수업 진행
