@@ -20,15 +20,52 @@
 
 * PX4 소개
 
-https://px4.io/
-
-https://learn.dronemap.io/px4-workbook/px4-intro.html
+ - https://px4.io/
+   - Pixhawk
+   - PX4 Firmware
+   - Mavlink
+   - QGroundControl
+ - https://learn.dronemap.io/px4-workbook/px4-intro.html
+   - 소프트웨어 아키텍처
+   - 시뮬레이터 포트 구성
 
 5. PX4 Firmware Build
   - https://dev.px4.io
-  - gazebo 사용하기, QGroundControl 사용하기.
+  - gazebo 사용하기
+  - Qgroundcontrol
 
-6. PX4 미들웨어 및 앱 구조 소개
+** PX4 v.10.1 다운로드
+#+BEGIN_SRC
+cd ~
+git clone https://github.com/PX4/Firmware.git --recursive
+cd ~/Firmware
+bash ./Tools/setup/ubuntu.sh
+git checkout v1.10.1
+git submodule update --init --recursive
+#+END_SRC
+
+** gazebo 실행
+#+BEGIN_SRC
+cd ~/Firmware
+make px4_sitl gazebo
+#+END_SRC
+
+** QGroundControl 사용
+
+다운로드: https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
+
+QGroundControl 다운로드 및 실행
+#+BEGIN_SRC
+sudo usermod -a -G dialout $USER
+sudo apt-get remove modemmanager -y
+sudo apt install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl -y
+
+cd ~/Downloads
+chmod +x ./QGroundControl.AppImage
+./QGroundControl.AppImage
+#+END_SRC
+
+7. PX4 미들웨어 및 앱 구조 소개
  - 디렉토리 구조 소개
  - uORB
  - PX4 shell 사용하기
@@ -37,7 +74,7 @@ https://learn.dronemap.io/px4-workbook/px4-intro.html
 * ROS 프로그래밍
 
 ** ROS
- - Robot Operating System: 로봇 빌들에 사용되는 라이브러리 어플리케이션 모음 http://www.ros.org/
+ - Robot Operating System: 로봇 빌드에 사용되는 라이브러리 어플리케이션 모음 http://www.ros.org/
  - 목표: 로봇을 만들때 기존의 재활용 하고 공유하자.
  - History:
   - 2000s: Standford Artificial intelligence
@@ -258,7 +295,7 @@ rostopic info /turtle1/cmd_vel
 *** Turtlesim 메시지 정보
 
 #+begin_src sh
-$ rosmsg info geometry_msg/Twist
+$ rosmsg info geometry_msgs/Twist
 geometry_msgs/Vector3 linear
   float64 x
   float64 y
@@ -291,19 +328,7 @@ rqt_graph
 
 [[http://wiki.ros.org/rqt_graph?action=AttachFile&do=get&target=snap_rqt_graph_moveit_demo.png]]
 
-
-** Gazebo Install
-
-https://goo.gl/fzhFYX
-
-#+begin_src sh
-$ sudo apt-get remove '.*gazebo.*' '.*sdformat.*' '.*ignition-math.*' '.*ignition-msgs.*' '.*ignition-transport.*'
-$ sudo apt-get install ros-melodic-desktop-full -y
-#+end_src
-
 ** MavROS 설치 및 실행
-
-https://goo.gl/JcPk1Q
 
 #+begin_src sh
 
@@ -327,9 +352,22 @@ wstool merge -t src /tmp/mavros.rosinstall
 wstool update -t src
 rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
 
+### Install GeographicLib datasets
+./src/mavros/mavros/scripts/install_geographiclib_datasets.sh
+
+### Build source
 catkin build
 
+### source setup.bash
+source devel/setup.bash
 
+#+end_src
+
+환경변수 설정: workspace
+
+#+begin_src
+cd ~/catkin_ws
+source devel/setup.bash
 #+end_src
 
 ~mavros_node~ 실행
@@ -340,13 +378,13 @@ rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="ud
 
 ~mavros_node~ 실행 (다른 방법)
 #+begin_src sh
-# px4.launch 이용하여 mavros node 실행
-roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.1.36:14557" _gcs_url:"udp://@127.0.0.1"
+# px4.launch 이용하여 mavros node 실행. fcu ip주소는 192.168.0.xxx
+roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.0.xxx:14557" _gcs_url:"udp://@127.0.0.1"
 #+end_src
 
 ** Gazebo 실행
 #+begin_src sh
-$ make posix_sitl_default gazebo
+$ make posix_sitl gazebo
 #+end_src
 
 
@@ -479,7 +517,7 @@ pose:
   position:
     x: 5.0
     y: 0.0
-    z: 0.0
+    z: 1.0
   orientation:
     x: 0.0
     y: 0.0
@@ -498,10 +536,10 @@ $ rostopic pub -r 10 /mavros/setpoint_velocity/cmd_vel geometry_msgs/TwistStampe
 *** 실습
 
 준비: 순서대로 실행
-  - Gazebo 실행: ~cd ~/src/Firmware; make posix_sitl_default gazebo~
-  - TX2의 MAVROS를 PC(192.168.88.53)의 Gazebo와 연결 ~roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.88.53:14557" gcs_url:="udp://@192.168.88.53"~ \\
-    또는 PC의 MAVROS를 PC(127.0.0.1)의 Gazebo와 연결 ~rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"~
-  - QGroundControl 실행: PX4 Parameter ~COM_OF_LOSS_T~ 파라미터 10초로 바꾸기. Failsafe timeout을 10초로 바꾸어야 커맨드라인에서 드론을 조정하기 편하다.
+  - Gazebo 실행: ~cd ~/Firmware; make posix_sitl gazebo~
+  - PC의 MAVROS를 PC(127.0.0.1)의 Gazebo와 연결 ~rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"~ \\
+    또는 Raspberry PI의 MAVROS를 PC(192.168.88.53)의 Gazebo와 연결 ~roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.88.53:14557" gcs_url:="udp://@192.168.88.53"~
+  - QGroundControl 실행: PX4 Parameter ~COM_OF_LOSS_T~ 파라미터 30초로 바꾸기. Failsafe timeout을 30초로 바꾸어야 커맨드라인에서 드론을 조정하기 편하다.
 
 \\
 
@@ -553,12 +591,12 @@ w \\
 #+begin_src sh
 $ source ~/catkin_ws/devel/setup.bash
 $ cd ~/catkin_ws/src
-$ catkin_create_pkg drone_state mavros sensor_msgs roscpp
+$ catkin_create_pkg drone_control mavros sensor_msgs roscpp
 #+end_src
 
 *** 노드 코드 작성
 
-~/home/donghee/catkin_ws/src/drone_state/src/drone_state.cpp~
+~\~/catkin_ws/src/drone_control/src/drone_state.cpp~
 #+begin_src c++
 
 #include "ros/ros.h"
@@ -581,7 +619,7 @@ int main(int argc, char **argv){
 
 빌드 스크립트 추가
 
-~~/catkin_ws/src/drone_state/CMakeLists.txt~ 파일 끝에 다음 3줄 추가
+~\~/catkin_ws/src/drone_control/CMakeLists.txt~ 파일 끝에 다음 3줄 추가
 
 #+begin_src cmake
 include_directories(include ${catkin_INCLUDE_DIRS})
@@ -603,9 +641,9 @@ $ catkin build
 
 *** 패키지 노드 실행
 
-~drone_state~ 패키지의 ~drone_state~ 노드 실행
+~drone_control~ 패키지의 ~drone_state~ 노드 실행
 #+begin_src sh
-$ rosrun drone_state drone_state
+$ rosrun drone_control drone_state
 #+end_src
 
 
@@ -633,7 +671,7 @@ int main(int argc, char **argv){
 *** 해보기 결과:
 
 #+begin_src c++
-$ rosrun drone_state drone_state
+$ rosrun drone_control drone_state
 [ INFO] [1539297808.077868114]:
 Drone mode: OFFBOARD
 [ INFO] [1539297808.525173697]:
@@ -664,7 +702,7 @@ digraph {
 }
 #+end_src
 
-~drone_command~ 패키지에 ~takeoff_and_land~ 노드를 만들어 보자.
+~drone_control~ 패키지에 ~takeoff_and_land~ 노드를 만들어 보자.
 
 2.5m 이륙후 10초 있다가 착륙
 
@@ -742,11 +780,20 @@ int main(int argc, char **argv)
 }
 #+end_src
 
-  * 실행: ~rosrun drone_command takeoff_and_land~
+~\~/catkin_ws/src/drone_control/CMakeLists.txt~ 파일 끝에 다음 3줄 추가
+
+#+begin_src cmake
+include_directories(include ${catkin_INCLUDE_DIRS})
+add_executable(takeoff_and_land src/takeoff_and_land.cpp)
+target_link_libraries(takeoff_and_land ${catkin_LIBRARIES})
+#+end_src
+
+
+  * 실행: ~rosrun drone_control takeoff_and_land~
 
 ** 새로운 노드 만들기: ~offb_node~
 
-~drone_command~ 패키지에 ~offb_node~ 노드를 만들어 보자.
+~drone_control~ 패키지에 ~offb_node~ 노드를 만들어 보자.
 
 2m 이륙.
 
@@ -840,7 +887,7 @@ int main(int argc, char **argv)
 }
 #+end_src
 
-  * 실행: ~rosrun drone_command offb_node~
+  * 실행: ~rosrun drone_control offb_node~
 
 ** 새로운 노드 만들기: ~circle~
 
@@ -935,13 +982,13 @@ int main(int argc, char **argv)
             }
         }
 
-    theta = wn*count*0.05;
+        theta = wn*count*0.05;
 
         pose.pose.position.x = r*sin(theta);
         pose.pose.position.y = r*cos(theta);
         pose.pose.position.z = 2;
 
-    count++;
+        count++;
 
         local_pos_pub.publish(pose);
         ros::spinOnce();
@@ -952,7 +999,7 @@ int main(int argc, char **argv)
 }
 #+end_src
 
-  * 실행: ~rosrun drone_command circle~
+  * 실행: ~rosrun drone_control circle~
 *** 해보기: 원의 너비와 속도를 바꾸어 보자. 힌트 (wn, r)
 
 ** 과제: 키보드로 OFFBOARD 모드 제어하기
