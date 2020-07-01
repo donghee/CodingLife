@@ -13,6 +13,9 @@
 * 수업 진행
  - 컴퓨터 비전 소개
  - OpenCV
+ - ~cv_bridge~
+ - Object detection
+ - Tag detection
 
 * 수업 자료
 
@@ -41,8 +44,10 @@ OpenCV 설치 스크립트(20분 정도)
 
 https://gist.github.com/donghee/15d7272885ac3505e0f20a63678e7ba3
 
+실습: build error 해결
+
 *** 예제
- - /home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/samples
+ - /home/donghee/installation/OpenCV-3.4.4/share/OpenCV/samples
 
 ** OpenCV 소개
 
@@ -78,7 +83,7 @@ using namespace cv;
 int main( int argc, char** argv ) {
   Mat img = imread( argv[1], -1 );
   if( img.empty() ) return -1;
-p  namedWindow( "Example2", WINDOW_AUTOSIZE );
+  namedWindow( "Example2", WINDOW_AUTOSIZE );
   imshow( "Example2", img );
   waitKey(0);
   destroyWindow( "Example2" );
@@ -204,6 +209,7 @@ int main(int argc, char** argv)
 #+END_SRC
 
 ----
+
 *** Python (OpenCV-3.4.4)
 
 OpenCV 설치 (Python)
@@ -214,10 +220,6 @@ pip install opencv-python --user
 #+BEGIN_SRC py
 import cv2
 exit()
-
-sudo apt-get install ros-kinetic-usb-cam
-sudo apt-get install ros-kinetic-image-view
-
 #+END_SRC
 
 3. camera 읽기
@@ -247,415 +249,9 @@ cv2.destroyAllWindows()
 #+END_SRC
 
 ** 실습
-**** face detect
+**** face detect (힌트 haarcascade)
 
-#+BEGIN_SRC
-#include "opencv2/objdetect.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
-#include <iostream>
-
-using namespace std;
-using namespace cv;
-
-// Function for Face Detection
-void detectAndDraw( Mat& img, CascadeClassifier& cascade,
-                CascadeClassifier& nestedCascade, double scale );
-string cascadeName, nestedCascadeName;
-
-int main( int argc, const char** argv )
-{
-    // VideoCapture class for playing video for which faces to be detected
-    VideoCapture capture;
-    Mat frame, image;
-
-    // PreDefined trained XML classifiers with facial features
-    CascadeClassifier cascade, nestedCascade;
-    double scale=1;
-
-    // Load classifiers from "opencv/data/haarcascades" directory
-    nestedCascade.load( "haarcascade_eye_tree_eyeglasses.xml" ) ;
-
-    // Change path before execution
-    cascade.load( "haarcascade_frontalcatface.xml" ) ;
-
-    // Start Video..1) 0 for WebCam 2) "Path to Video" for a Local Video
-    capture.open(0);
-    if( capture.isOpened() )
-    {
-        // Capture frames from video and detect faces
-        cout << "Face Detection Started...." << endl;
-        while(1)
-        {
-            capture >> frame;
-            if( frame.empty() )
-                break;
-            Mat frame1 = frame.clone();
-            detectAndDraw( frame1, cascade, nestedCascade, scale );
-            char c = (char)waitKey(10);
-
-            // Press q to exit from window
-            if( c == 27 || c == 'q' || c == 'Q' )
-                break;
-        }
-    }
-    else
-        cout<<"Could not Open Camera";
-    return 0;
-}
-
-void detectAndDraw( Mat& img, CascadeClassifier& cascade,
-                    CascadeClassifier& nestedCascade,
-                    double scale)
-{
-    vector<Rect> faces, faces2;
-    Mat gray, smallImg;
-
-    cvtColor( img, gray, COLOR_BGR2GRAY ); // Convert to Gray Scale
-    double fx = 1 / scale;
-
-    // Resize the Grayscale Image
-    resize( gray, smallImg, Size(), fx, fx, INTER_LINEAR );
-    equalizeHist( smallImg, smallImg );
-
-    // Detect faces of different sizes using cascade classifier
-    cascade.detectMultiScale( smallImg, faces, 1.1,
-                            2, 0|CASCADE_SCALE_IMAGE, Size(30, 30) );
-
-    // Draw circles around the faces
-    for ( size_t i = 0; i < faces.size(); i++ )
-    {
-        Rect r = faces[i];
-        Mat smallImgROI;
-        vector<Rect> nestedObjects;
-        Point center;
-        Scalar color = Scalar(255, 0, 0); // Color for Drawing tool
-        int radius;
-
-        double aspect_ratio = (double)r.width/r.height;
-        if( 0.75 < aspect_ratio && aspect_ratio < 1.3 )
-        {
-            center.x = cvRound((r.x + r.width*0.5)*scale);
-            center.y = cvRound((r.y + r.height*0.5)*scale);
-            radius = cvRound((r.width + r.height)*0.25*scale);
-            circle( img, center, radius, color, 3, 8, 0 );
-        }
-        else
-            rectangle( img, cvPoint(cvRound(r.x*scale), cvRound(r.y*scale)),
-                    cvPoint(cvRound((r.x + r.width-1)*scale),
-                    cvRound((r.y + r.height-1)*scale)), color, 3, 8, 0);
-        if( nestedCascade.empty() )
-            continue;
-        smallImgROI = smallImg( r );
-
-        // Detection of eyes int the input image
-        nestedCascade.detectMultiScale( smallImgROI, nestedObjects, 1.1, 2,
-                                        0|CASCADE_SCALE_IMAGE, Size(30, 30) );
-
-        // Draw circles around eyes
-        for ( size_t j = 0; j < nestedObjects.size(); j++ )
-        {
-            Rect nr = nestedObjects[j];
-            center.x = cvRound((r.x + nr.x + nr.width*0.5)*scale);
-            center.y = cvRound((r.y + nr.y + nr.height*0.5)*scale);
-            radius = cvRound((nr.width + nr.height)*0.25*scale);
-            circle( img, center, radius, color, 3, 8, 0 );
-        }
-    }
-
-    // Show Processed Image with detected faces
-    imshow( "Face Detection", img );
-}
-
-#+END_SRC
-**** QRCode Decoder from image
- - 오늘의 목표
- - 3개파일 필요. CMakeList.txt qrCode.cpp qrcode.png
- - qrcode.png는 https://www.the-qrcode-generator.com/ 에서 생성
-
-
-***** CMakeLists.txt
-#+BEGIN_SRC cmake
-cmake_minimum_required(VERSION 2.8.12)
-
-PROJECT(opencv_tests)
-
-#set(OpenCV_DIR <specify your path to the opencv installation directory>)
-set(OpenCV_DIR /home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/)
-find_package( OpenCV REQUIRED )
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
-
-include_directories( ${OpenCV_INCLUDE_DIRS})
-
-MACRO(add_example name)
-  ADD_EXECUTABLE(${name} ${name}.cpp)
-  TARGET_LINK_LIBRARIES(${name} ${OpenCV_LIBS})
-ENDMACRO()
-
-add_example(qrcode)
-add_example(qrcode-video)
-#+END_SRC
-
-***** qrcode.cpp
-
-#+BEGIN_SRC cpp
-// #include <opencv2/opencv.hpp>
-#include <opencv2/objdetect.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <iostream>
-
-using namespace cv;
-using namespace std;
-
-void display(Mat &im, Mat &bbox)
-{
-  int n = bbox.rows;
-  for(int i = 0 ; i < n ; i++)
-  {
-    line(im, Point2i(bbox.at<float>(i,0),bbox.at<float>(i,1)), Point2i(bbox.at<float>((i+1) % n,0), bbox.at<float>((i+1) % n,1)), Scalar(255,0,0), 3);
-  }
-  imshow("Result", im);
-}
-
-int main(int argc, char* argv[])
-{
-  // Read image
-  Mat inputImage;
-  if(argc>1)
-    inputImage = imread(argv[1]);
-  else
-    inputImage = imread("qrcode.png");
-
-  QRCodeDetector qrDecoder;
-
-  Mat bbox, rectifiedImage;
-
-  std::string data = qrDecoder.detectAndDecode(inputImage, bbox, rectifiedImage);
-  if(data.length()>0)
-  {
-    cout << "Decoded Data : " << data << endl;
-
-    display(inputImage, bbox);
-    rectifiedImage.convertTo(rectifiedImage, CV_8UC3);
-    imshow("Rectified QRCode", rectifiedImage);
-
-    waitKey(0);
-  }
-  else
-    cout << "QR Code not detected" << endl;
-}
-#+END_SRC
-
-**** QRCode Decoder from WebCAM
-
-***** qrcode-video.cpp
-
-#+BEGIN_SRC cpp
-#include "opencv2/objdetect.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/highgui.hpp"
-#include <string>
-#include <iostream>
-
-using namespace std;
-using namespace cv;
-
-static void drawQRCodeContour(Mat &color_image, vector<Point> transform);
-static void drawFPS(Mat &color_image, double fps);
-static int  liveQRCodeDetect(const string& out_file);
-static int  imageQRCodeDetect(const string& in_file, const string& out_file);
-
-int main(int argc, char *argv[])
-{
-    const string keys =
-        "{h help ? |        | print help messages }"
-        "{i in     |        | input  path to file for detect (with parameter - show image, otherwise - camera)}"
-        "{o out    |        | output path to file (save image, work with -i parameter) }";
-    CommandLineParser cmd_parser(argc, argv, keys);
-
-    cmd_parser.about("This program detects the QR-codes from camera or images using the OpenCV library.");
-    if (cmd_parser.has("help"))
-    {
-        cmd_parser.printMessage();
-        return 0;
-    }
-
-    string in_file_name  = cmd_parser.get<string>("in");    // input  path to image
-    string out_file_name;
-    if (cmd_parser.has("out"))
-        out_file_name = cmd_parser.get<string>("out");   // output path to image
-
-    if (!cmd_parser.check())
-    {
-        cmd_parser.printErrors();
-        return -1;
-    }
-
-    int return_code = 0;
-    if (in_file_name.empty())
-    {
-        return_code = liveQRCodeDetect(out_file_name);
-    }
-    else
-    {
-        return_code = imageQRCodeDetect(samples::findFile(in_file_name), out_file_name);
-    }
-    return return_code;
-}
-
-void drawQRCodeContour(Mat &color_image, vector<Point> transform)
-{
-    if (!transform.empty())
-    {
-        double show_radius = (color_image.rows  > color_image.cols)
-                   ? (2.813 * color_image.rows) / color_image.cols
-                   : (2.813 * color_image.cols) / color_image.rows;
-        double contour_radius = show_radius * 0.4;
-
-        vector< vector<Point> > contours;
-        contours.push_back(transform);
-        drawContours(color_image, contours, 0, Scalar(211, 0, 148), cvRound(contour_radius));
-
-        RNG rng(1000);
-        for (size_t i = 0; i < 4; i++)
-        {
-            Scalar color = Scalar(rng.uniform(0,255), rng.uniform(0, 255), rng.uniform(0, 255));
-            circle(color_image, transform[i], cvRound(show_radius), color, -1);
-        }
-    }
-}
-
-void drawFPS(Mat &color_image, double fps)
-{
-    ostringstream convert;
-    convert << cvRound(fps) << " FPS (QR detection)";
-    putText(color_image, convert.str(), Point(25, 25), FONT_HERSHEY_DUPLEX, 1, Scalar(0, 0, 255), 2);
-}
-
-int liveQRCodeDetect(const string& out_file)
-{
-    VideoCapture cap(0);
-    if(!cap.isOpened())
-    {
-        cout << "Cannot open a camera" << endl;
-        return -4;
-    }
-
-    QRCodeDetector qrcode;
-    TickMeter total;
-    for(;;)
-    {
-        Mat frame, src, straight_barcode;
-        string decode_info;
-        vector<Point> transform;
-        cap >> frame;
-        if (frame.empty())
-        {
-            cout << "End of video stream" << endl;
-            break;
-        }
-        cvtColor(frame, src, COLOR_BGR2GRAY);
-
-        total.start();
-        bool result_detection = qrcode.detect(src, transform);
-        if (result_detection)
-        {
-            decode_info = qrcode.decode(src, transform, straight_barcode);
-            if (!decode_info.empty()) { cout << decode_info << endl; }
-        }
-        total.stop();
-        double fps = 1 / total.getTimeSec();
-        total.reset();
-
-        if (result_detection) { drawQRCodeContour(frame, transform); }
-        drawFPS(frame, fps);
-
-        imshow("Live QR code detector", frame);
-        char c = (char)waitKey(30);
-        if (c == 27)
-            break;
-        if (c == ' ' && !out_file.empty())
-            imwrite(out_file, frame); // TODO write original frame too
-    }
-    return 0;
-}
-
-int imageQRCodeDetect(const string& in_file, const string& out_file)
-{
-    Mat color_src = imread(in_file, IMREAD_COLOR), src;
-    cvtColor(color_src, src, COLOR_BGR2GRAY);
-    Mat straight_barcode;
-    string decoded_info;
-    vector<Point> transform;
-    const int count_experiments = 10;
-    double transform_time = 0.0;
-    bool result_detection = false;
-    TickMeter total;
-    QRCodeDetector qrcode;
-    for (size_t i = 0; i < count_experiments; i++)
-    {
-        total.start();
-        transform.clear();
-        result_detection = qrcode.detect(src, transform);
-        total.stop();
-        transform_time += total.getTimeSec();
-        total.reset();
-        if (!result_detection)
-            continue;
-
-        total.start();
-        decoded_info = qrcode.decode(src, transform, straight_barcode);
-        total.stop();
-        transform_time += total.getTimeSec();
-        total.reset();
-    }
-    double fps = count_experiments / transform_time;
-    if (!result_detection)
-        cout << "QR code not found" << endl;
-    if (decoded_info.empty())
-        cout << "QR code cannot be decoded" << endl;
-
-    drawQRCodeContour(color_src, transform);
-    drawFPS(color_src, fps);
-
-    cout << "Input  image file path: " << in_file  << endl;
-    cout << "Output image file path: " << out_file << endl;
-    cout << "Size: " << color_src.size() << endl;
-    cout << "FPS: " << fps << endl;
-    cout << "Decoded info: " << decoded_info << endl;
-
-    if (!out_file.empty())
-    {
-        imwrite(out_file, color_src);
-    }
-
-    for(;;)
-    {
-        imshow("Detect QR code on image", color_src);
-        if (waitKey(0) == 27)
-            break;
-    }
-    return 0;
-}
-#+END_SRC
-
-* 참고
- - https://github.com/spmallick/learnopencv
-
-----
-
-* 수업 진행
- - OPENCV
- - ~cv_bridge~
- - Object detection
- - Tag detection
-
-* 수업 자료
-** 이미지 포멧
+** ROS 이미지 메시지
 
  - OpenCV ~cv::Mat~
  - ROS ~sensor_msgs/Image~ http://docs.ros.org/api/sensor_msgs/html/msg/Image.html
@@ -774,7 +370,7 @@ int main(int argc, char** argv)
  - OpenCV 라이브러리 추가
 
 #+BEGIN_SRC
-set(OpenCV_DIR /home/donghee/tmp/installation/OpenCV-3.4.4/share/OpenCV/)
+set(OpenCV_DIR /home/donghee/installation/OpenCV-3.4.4/share/OpenCV/)
 find_package( OpenCV REQUIRED )
 
 set(CMAKE_CXX_STANDARD 11)
@@ -796,9 +392,11 @@ catkin build cv_test
 
 ** 예시: ~image_converter~ 노드 실행
 
-*ros-kinetic-cv-camera 설치*
+*cv-camera, image-view 설치*
+
 #+BEGIN_SRC
-sudo apt-get install ros-kinetic-cv-camera
+sudo apt-get install ros-melodic-cv-camera
+sudo apt-get install ros-melodic-image-view
 #+END_SRC
 
 *ros master node 실행*
@@ -811,13 +409,18 @@ roscore
 rosrun cv_camera cv_camera_node
 #+END_SRC
 
+*~image_converter~ 실행*
+#+BEGIN_SRC
+rosrun cv_test image_converter
+#+END_SRC
+
 *토픽 목록 보기*
 #+BEGIN_SRC
 rostopic list -v
 #+END_SRC
 
 *** 구독 ~/cv_camera/image_raw~ 이미지 보기
-image converter 에서 구독(subscribe) 하는 토픽
+image converter 에서 구독(subscribe) 하는 토픽 이미지 확인
 
 #+BEGIN_SRC c++
 rosrun image_view image_view image:=/cv_camera/image_raw
@@ -826,7 +429,7 @@ rqt_image_view /cv_camera/image_raw
 #+END_SRC
 
 *** 발행 ~/image_converter/output_video~ 이미지 보기
-image converter 에서 publish 하는 토픽
+image converter 에서 publish 하는 토픽 이미지 확인
 
 #+BEGIN_SRC
 rosrun image_view image_view image:=/image_converter/output_video
@@ -835,17 +438,23 @@ rqt_image_view /image_converter/output_video
 #+END_SRC
 
 *rviz*
+
 #+BEGIN_SRC
 rviz
 #+END_SRC
 
 [[https://i.imgur.com/jsulKek.png]]
 
+*** 실습
+ - ~/image_converter/output_video~ 토픽의 이미지에 circle 좌표(x,y)를 표시해보자.
+
 ** 예시: object detection: ~dnn_detect~
 
 [[https://i.imgur.com/GKDEe3r.png]]
 
 MobileNet-SSD detection: 딥러닝
+
+ros kinetic 버전에서만 동작
 
 #+BEGIN_SRC
 sudo apt install ros-kinetic-dnn-detect
@@ -871,9 +480,9 @@ aruco: library for detect marker https://sourceforge.net/projects/aruco/
 
 [[https://i.imgur.com/pa6a5HY.png]]
 
-*ros-kinetic-aruco-ros 설치*
+*ros-melodic-aruco-ros 설치*
 #+BEGIN_SRC
-sudo apt-get install ros-kinetic-aruco-ros
+sudo apt-get install ros-melodic-aruco-ros
 #+END_SRC
 
 ~aruco_test.launch~ 작성

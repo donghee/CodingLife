@@ -596,7 +596,7 @@ $ catkin_create_pkg drone_control mavros sensor_msgs roscpp
 
 *** 노드 코드 작성
 
-~\~/catkin_ws/src/drone_control/src/drone_state.cpp~
+~~/catkin_ws/src/drone_control/src/drone_state.cpp~
 #+begin_src c++
 
 #include "ros/ros.h"
@@ -619,7 +619,7 @@ int main(int argc, char **argv){
 
 빌드 스크립트 추가
 
-~\~/catkin_ws/src/drone_control/CMakeLists.txt~ 파일 끝에 다음 3줄 추가
+~~/catkin_ws/src/drone_control/CMakeLists.txt~ 파일 끝에 다음 3줄 추가
 
 #+begin_src cmake
 include_directories(include ${catkin_INCLUDE_DIRS})
@@ -783,7 +783,6 @@ int main(int argc, char **argv)
 ~\~/catkin_ws/src/drone_control/CMakeLists.txt~ 파일 끝에 다음 3줄 추가
 
 #+begin_src cmake
-include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(takeoff_and_land src/takeoff_and_land.cpp)
 target_link_libraries(takeoff_and_land ${catkin_LIBRARIES})
 #+end_src
