@@ -71,6 +71,10 @@ chmod +x ./QGroundControl.AppImage
  - PX4 shell 사용하기
  - hello-skyworld
 
+* Linux 사용하기
+ - Ubuntu 18.04 설치
+ - 주요 명령어 소개(파일 조작, 프로그램설치, 쉘스크립트, git)
+
 * ROS 프로그래밍
 
 ** ROS

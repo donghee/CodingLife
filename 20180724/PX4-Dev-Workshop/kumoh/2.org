@@ -607,10 +607,3 @@ https://github.com/CopterExpress/clover/tree/master/aruco_pose
 
 * 참고
  - https://clover.coex.tech/en
-
-
-
-* Gazebo에 카메라 추가하기
-
- -  http://gazebosim.org/tutorials?tut=add_laser
- - https://blog.naver.com/PostView.nhn?blogId=dnddnjs11&logNo=220852140714&parentCategoryNo=&categoryNo=17&viewDate=&isShowPopularPosts=false&from=postView

@@ -30,3 +30,26 @@
  - OpenCV
  - Aruco Maker Detector
  - Pose Estimation
+
+----
+
+# Docker
+
+ROS 개발을 위한  docker 환경
+
+docker donghee/user 이미지 실행 
+
+```
+docker run -it --privileged -v /dev/video0:/dev/video0 -v $HOME:/home/user:rw -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=${DISPLAY} --user $(id -u):$(id -g) donghee/ubuntu:bionic /bin/bash
+```
+
+기존의 docker 이미지에 접속
+
+```
+docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -u $(id -u):$(id -g) -it $(docker ps -q) bash
+```
+
+docker에서 gazebo 실행시 QT XCB error 해결 https://github.com/nanocurrency/nano-node/issues/1055
+```
+sudo ln -sf /usr/lib/x86_64-linux-gnu/qt5/plugins/platforms/ /usr/bin/
+```
