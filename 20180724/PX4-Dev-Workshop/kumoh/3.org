@@ -4,8 +4,20 @@
 #+EMAIL:     dongheepark@gmail.com
 #+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+#
+* 수업
+ - 목표: 컴퓨터 비전을 시뮬레이터에서 테스트할 수 있는 환경을 만들 수 있다.
+ - 교재: https://learn.dronemap.io/
+ - 코치: 박동희 dongheepark@gmail.com
 
-* Gazebo에 카메라 추가
+* 수업 진행
+ - Gazebo에 카메라 추가
+ 
+* 수업 자료
+
+** Gazebo에 카메라 추가
+
+[[https://i.imgur.com/NlL3bhA.png]]
 
 Gazebo 에서 드론에 부착된 카메라를 이용한 컴퓨터 비전을 시뮬레이션 하기 위해서는 기체에 카메라를 부착해야 한다.
 
@@ -47,6 +59,8 @@ enable_visual="1"
 
 #+END_SRC
 
+** Gazebo 실행
+
 모델 확인
 #+BEGIN_SRC
 cd ~/Firmware
@@ -76,7 +90,7 @@ rm ~/.ros/eeprom/parameters
 #+END_SRC
 
 
-* Gazebo에 카메라 영상을 ROS image_raw 토픽으로 보기
+** Gazebo의 카메라 영상을 ROS image_raw 토픽으로 보기
 
 [[https://i.imgur.com/PSvUDWs.png]]
 
@@ -88,25 +102,6 @@ $ rostopic echo /iris/camera_red_iris/image_raw
 
 $ rosrun image_view image_view image:=/iris/camera_red_iris/image_raw
 #+END_SRC
-
-----
-
-/gazebo/default/iris/camera
-
-gazebo에서 ctrl+t 누르면 가제보 토픽 메세지
-
-https://github.com/pineland/px4/wiki/02.2-%EB%93%9C%EB%A1%A0%EC%97%90-Camera-%EB%8B%AC%EA%B8%B0
-
-
-  <!-- Downward facing camera -->
-   <xacro:include filename="$(find victim_localization)/urdf/iris_accessories/generic_camera.urdf.xacro" />
- <!-- <xacro:generic_camera name="downward_cam" parent="base_link" ros_topic="camera/image" cam_info_topic="camera/camera_info" update_rate="20" res_x="640" res_y="480" image_format="R8G8B8" hfov="100">
-    <origin xyz="0.0 0.0 -0.045" rpy="0 ${M_PI/2} 0"/> -->
-    <xacro:generic_camera name="downward_cam" parent="base_link" ros_topic="camera/image" cam_info_topic="camera/camera_info" update_rate="77" res_x="1228" res_y="1027" image_format="R8G8B8" hfov="52.9855">
-    <origin xyz="0.0 0.0 -0.045" rpy="0 ${M_PI/2} 0"/>
-  </xacro:generic_camera>
-
-https://github.com/AbdulrahmanGoian/victim_localization/blob/8be58d929a1c68232e2beef964b4026cb92c5c68/urdf/iris/iris_with_sensors.xacro
 
 * 참고
  - https://github.com/spmallick/learnopencv
@@ -124,3 +119,7 @@ https://github.com/AbdulrahmanGoian/victim_localization/blob/8be58d929a1c68232e2
  - https://pub.tik.ee.ethz.ch/students/2018-FS/SA-2018-21.pdf drone precision landing using vision
  - https://github.com/mwryu88/ARUCO Aruco model for gazebo 
  - https://github.com/AerialRobotics-IITK/aruco_detection_gazebo/blob/master/tf-library/offboard/src/offb_node.cpp
+ - gazebo에서 ctrl+t 누르면 가제보 토픽 메세지
+ - https://github.com/AbdulrahmanGoian/victim_localization/blob/8be58d929a1c68232e2beef964b4026cb92c5c68/urdf/iris/iris_with_sensors.xacro
+
+
