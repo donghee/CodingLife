@@ -29,7 +29,25 @@
    - 소프트웨어 아키텍처
    - 시뮬레이터 포트 구성
 
-5. PX4 Firmware Build
+** PX4 미들웨어 및 앱 구조 소개
+ - 디렉토리 구조 소개
+ - uORB
+ - PX4 shell 사용하기
+ - hello-skyworld
+
+
+* PX4 개발환경 구성 (+ROS)
+
+https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html
+
+#+BEGIN_SRC
+cd ~
+wget https://raw.githubusercontent.com/PX4/Devguide/master/build_scripts/ubuntu_sim_ros_melodic.sh
+chmod +x ubuntu_sim_ros_melodic.sh
+./ubuntu_sim_ros_melodic.sh
+#+END_SRC
+
+* PX4 Firmware Build
   - https://dev.px4.io
   - gazebo 사용하기
   - Qgroundcontrol
@@ -64,12 +82,6 @@ cd ~/Downloads
 chmod +x ./QGroundControl.AppImage
 ./QGroundControl.AppImage
 #+END_SRC
-
-7. PX4 미들웨어 및 앱 구조 소개
- - 디렉토리 구조 소개
- - uORB
- - PX4 shell 사용하기
- - hello-skyworld
 
 * Linux 사용하기
  - Ubuntu 18.04 설치
@@ -781,6 +793,7 @@ int main(int argc, char **argv)
     }
 
     return 0;
+
 }
 #+end_src
 
