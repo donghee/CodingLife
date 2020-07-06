@@ -1,7 +1,7 @@
 # 수업 교재
 
- 교재: https://learn.dronemap.io
- 채팅: https://discord.gg/2HkV6a
+ - 교재: https://learn.dronemap.io
+ - 채팅: https://discord.gg/2HkV6a
 
 # 순서
  - [1일차](1.org) 드론 제어 소프트웨어 소개 및 설치, ROS 프로그래밍
@@ -37,7 +37,7 @@
 
 ROS 개발을 위한  docker 환경
 
-docker donghee/user 이미지 실행 
+docker donghee/user 이미지 실행
 
 ```
 docker run -it --privileged -v /dev/video0:/dev/video0 -v $HOME:/home/user:rw -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=${DISPLAY} --user $(id -u):$(id -g) donghee/ubuntu:bionic /bin/bash

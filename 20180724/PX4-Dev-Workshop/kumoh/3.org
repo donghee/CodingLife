@@ -33,7 +33,7 @@ cd ~/Firmware/Tools/sitl_gazebo/models/rotors_description/urdf
 
 2. 카메라 추가
 
-iris_base.xacro에서 다음 내용을 '<!-- Mount an ADIS16448 IMU.-->' 전에 추가
+~iris_base.xacro~ 파일에서 다음 내용을 '<!-- Mount an ADIS16448 IMU -->' 전에 추가
 
 #+BEGIN_SRC
 
@@ -121,5 +121,3 @@ $ rosrun image_view image_view image:=/iris/camera_red_iris/image_raw
  - https://github.com/AerialRobotics-IITK/aruco_detection_gazebo/blob/master/tf-library/offboard/src/offb_node.cpp
  - gazebo에서 ctrl+t 누르면 가제보 토픽 메세지
  - https://github.com/AbdulrahmanGoian/victim_localization/blob/8be58d929a1c68232e2beef964b4026cb92c5c68/urdf/iris/iris_with_sensors.xacro
-
-
