@@ -96,11 +96,11 @@ rm ~/.ros/eeprom/parameters
 
 ~image_raw~ 토픽 확인
 #+BEGIN_SRC
-$ rostopic list | grep camera
-  /iris/camera_red_iris/image_raw
-$ rostopic echo /iris/camera_red_iris/image_raw
+rostopic list | grep camera
 
-$ rosrun image_view image_view image:=/iris/camera_red_iris/image_raw
+rostopic echo /iris/camera_red_iris/image_raw
+
+rosrun image_view image_view image:=/iris/camera_red_iris/image_raw
 #+END_SRC
 
 * 참고

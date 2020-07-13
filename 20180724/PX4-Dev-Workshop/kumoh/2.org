@@ -480,9 +480,17 @@ aruco: library for detect marker https://sourceforge.net/projects/aruco/
 
 [[https://i.imgur.com/pa6a5HY.png]]
 
-*ros-melodic-aruco-ros 설치*
+*aruco-ros 설치* ros melodic 버전
 #+BEGIN_SRC
-sudo apt-get install ros-melodic-aruco-ros
+cd ~/catkin_ws/src/
+git clone https://github.com/pal-robotics/aruco_ros
+cd ~/catkin_ws
+catkin build aruco_ros
+#+END_SRC
+
+*ros-kinetic-aruco-ros 설치* ros kinetic 버전
+#+BEGIN_SRC
+sudo apt-get install ros-kinetic-aruco-ros
 #+END_SRC
 
 ~aruco_test.launch~ 작성
@@ -495,7 +503,6 @@ sudo apt-get install ros-melodic-aruco-ros
   <arg name="marker_frame" default="marker_frame"/>
   <arg name="ref_frame" default=""/> <!-- leave empty and the pose will be published wrt param parent_name -->
   <arg name="corner_refinement" default="LINES" /> <!-- NONE, HARRIS, LINES, SUBPIX -->
-
 
   <node pkg="aruco_ros" type="single" name="aruco_single">
   <remap from="/camera_info" to="/cv_camera/camera_info" />
@@ -551,6 +558,7 @@ calibration 후 commit 버튼 클릭
  - http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages
   - http://wiki.ros.org/image_transport/Tutorials/PublishingImages
   - http://wiki.ros.org/image_transport/Tutorials/SubscribingToImages
+ - ArUco Library Documentation https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/
  - aruco maker generator http://chev.me/arucogen/
  - http://wiki.ros.org/dnn_detect
   - mobilenet-ssd https://github.com/weiliu89/caffe/tree/ssd

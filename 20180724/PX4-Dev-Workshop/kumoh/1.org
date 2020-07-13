@@ -595,6 +595,29 @@ w \\
 
 # https://www.andre-gaschler.com/rotationconverter/
 
+** 토픽 레코드: rosbag
+리뷰할때 유용
+
+arm: mavros 패키지의 mavsafety 사용
+#+begin_src
+rosrun mavros mavsafety arm
+#+end_src
+
+change mode: mavsys 노드 사용
+#+begin_src
+rosrun mavros mavsys mode -c OFFBOARD
+#+end_src
+
+토픽 저장하기
+#+begin_src
+rostopic list -v
+mkdir ~/bagfiles
+cd ~/bagfiles
+rosbag record -O iris_default_1 /mavros/local_position/pose
+rosbag info iris_default_1.bag
+rqt_bag
+#+end_src
+
 ** 참고
  - https://github.com/mavlink/mavros/tree/master/mavros
 

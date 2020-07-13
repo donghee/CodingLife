@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-07-06 Mon 18:06 -->
+<!-- 2020-07-13 Mon 10:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -270,96 +270,97 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org78d16d5">1. 수업</a></li>
-<li><a href="#orge6efd6d">2. 드론 제어 소프트웨어 소개 및 설치</a></li>
-<li><a href="#org2641094">3. PX4 소개</a>
+<li><a href="#orge0366a3">1. 수업</a></li>
+<li><a href="#orge35bd04">2. 드론 제어 소프트웨어 소개 및 설치</a></li>
+<li><a href="#org32283e5">3. PX4 소개</a>
 <ul>
-<li><a href="#org17203d6">3.1. PX4 미들웨어 및 앱 구조 소개</a></li>
+<li><a href="#org17f9e22">3.1. PX4 미들웨어 및 앱 구조 소개</a></li>
 </ul>
 </li>
-<li><a href="#org0f985e6">4. PX4 개발환경 구성 (+ROS)</a></li>
-<li><a href="#org5f6c9a5">5. PX4 Firmware Build</a>
+<li><a href="#org588af78">4. PX4 개발환경 구성 (+ROS)</a></li>
+<li><a href="#orgc71ce82">5. PX4 Firmware Build</a>
 <ul>
-<li><a href="#org2b99eaf">5.1. PX4 v.10.1 다운로드</a></li>
-<li><a href="#orgdfeb371">5.2. gazebo 실행</a></li>
-<li><a href="#orgd8d5c27">5.3. QGroundControl 사용</a></li>
+<li><a href="#orgc12ca8d">5.1. PX4 v.10.1 다운로드</a></li>
+<li><a href="#org2ba58aa">5.2. gazebo 실행</a></li>
+<li><a href="#org2e2815f">5.3. QGroundControl 사용</a></li>
 </ul>
 </li>
-<li><a href="#org72783ec">6. Linux 사용하기</a></li>
-<li><a href="#orgbf4b505">7. ROS 프로그래밍</a>
+<li><a href="#orga49f8d1">6. Linux 사용하기</a></li>
+<li><a href="#org222adb1">7. ROS 프로그래밍</a>
 <ul>
-<li><a href="#orgb203184">7.1. ROS</a></li>
-<li><a href="#org2f02df8">7.2. ROS Nodes and Topics</a>
+<li><a href="#orga817476">7.1. ROS</a></li>
+<li><a href="#org65b28bd">7.2. ROS Nodes and Topics</a>
 <ul>
-<li><a href="#org7f767c4">7.2.1. ROS Master Process</a></li>
-<li><a href="#orgc700337">7.2.2. Topics</a></li>
-<li><a href="#org8fda8cc">7.2.3. Publish and Subscribe</a></li>
+<li><a href="#org34f3c7b">7.2.1. ROS Master Process</a></li>
+<li><a href="#org3399981">7.2.2. Topics</a></li>
+<li><a href="#org1846ce0">7.2.3. Publish and Subscribe</a></li>
 </ul>
 </li>
-<li><a href="#orgb275142">7.3. ROS Message Passing</a></li>
-<li><a href="#org0ee9632">7.4. ROS Services</a>
+<li><a href="#org974e793">7.3. ROS Message Passing</a></li>
+<li><a href="#org805d731">7.4. ROS Services</a>
 <ul>
-<li><a href="#orgda4e4b8">7.4.1. 예시: 카메라 이미지 얻기</a></li>
+<li><a href="#org7a47ea7">7.4.1. 예시: 카메라 이미지 얻기</a></li>
 </ul>
 </li>
-<li><a href="#org0856bf7">7.5. ROS Turtlesim</a>
+<li><a href="#org7f66be0">7.5. ROS Turtlesim</a>
 <ul>
-<li><a href="#org7208f34">7.5.1. Turtlesim 실행하기</a></li>
-<li><a href="#org962635e">7.5.2. Turtlesim 노드 목록</a></li>
-<li><a href="#org271d7c0">7.5.3. Turtlesim 토픽 목록</a></li>
-<li><a href="#orga7b77e9">7.5.4. Turtlesim 토픽 정보</a></li>
-<li><a href="#orgf326cd6">7.5.5. Turtlesim 메시지 정보</a></li>
-<li><a href="#orgff9258d">7.5.6. Turtlesim Echo a Topic</a></li>
-<li><a href="#org12af16d">7.5.7. <code>rqt_graph</code></a></li>
+<li><a href="#org6cd4e8c">7.5.1. Turtlesim 실행하기</a></li>
+<li><a href="#orgeadf695">7.5.2. Turtlesim 노드 목록</a></li>
+<li><a href="#orgd4d29cd">7.5.3. Turtlesim 토픽 목록</a></li>
+<li><a href="#orge788211">7.5.4. Turtlesim 토픽 정보</a></li>
+<li><a href="#orgeb1d265">7.5.5. Turtlesim 메시지 정보</a></li>
+<li><a href="#orga5bdf4a">7.5.6. Turtlesim Echo a Topic</a></li>
+<li><a href="#org227c3a1">7.5.7. <code>rqt_graph</code></a></li>
 </ul>
 </li>
-<li><a href="#org8452f6b">7.6. MavROS 설치 및 실행</a></li>
-<li><a href="#orge74722b">7.7. Gazebo 실행</a></li>
+<li><a href="#orga2c1c58">7.6. MavROS 설치 및 실행</a></li>
+<li><a href="#orgcba2e5f">7.7. Gazebo 실행</a></li>
 </ul>
 </li>
-<li><a href="#orga171d1c">8. ROS 노드 관리</a>
+<li><a href="#org91a5723">8. ROS 노드 관리</a>
 <ul>
-<li><a href="#org7920b39">8.1. ROS 노드 실행 및 관리</a></li>
-<li><a href="#org2ebe0db">8.2. ROS 노드 토픽 명령 실행하기. (MAVROS 위주)</a>
+<li><a href="#orgd1c3c7d">8.1. ROS 노드 실행 및 관리</a></li>
+<li><a href="#org941d86e">8.2. ROS 노드 토픽 명령 실행하기. (MAVROS 위주)</a>
 <ul>
-<li><a href="#orgf0ac25b">8.2.1. Subscribe</a></li>
-<li><a href="#org68dca70">8.2.2. Services</a></li>
-<li><a href="#org26ea01b">8.2.3. Publish</a></li>
-<li><a href="#orgf32337a">8.2.4. 실습</a></li>
+<li><a href="#orgdd3d530">8.2.1. Subscribe</a></li>
+<li><a href="#orgfad70ad">8.2.2. Services</a></li>
+<li><a href="#org80d4c1e">8.2.3. Publish</a></li>
+<li><a href="#org702339f">8.2.4. 실습</a></li>
 </ul>
 </li>
-<li><a href="#orgfd339a1">8.3. 참고</a></li>
+<li><a href="#orgd293c48">8.3. 토픽 레코드: rosbag</a></li>
+<li><a href="#org6198f9c">8.4. 참고</a></li>
 </ul>
 </li>
-<li><a href="#org2b4e280">9. ROS 노드 만들기</a>
+<li><a href="#orgc39692d">9. ROS 노드 만들기</a>
 <ul>
-<li><a href="#org73cc76f">9.1. 새로운 노드 만들기</a>
+<li><a href="#orgb4844bc">9.1. 새로운 노드 만들기</a>
 <ul>
-<li><a href="#org2fe4383">9.1.1. 패키지 만들기</a></li>
-<li><a href="#orgb684cec">9.1.2. 노드 코드 작성</a></li>
-<li><a href="#orga3a5c42">9.1.3. 패키지 빌드</a></li>
-<li><a href="#org4a697ae">9.1.4. 패키지 노드 실행</a></li>
-<li><a href="#orgfe5343e">9.1.5. 해보기: /mavros/state 읽어서 1초마다 비행 mode 한번씩 출력</a></li>
-<li><a href="#org01ea535">9.1.6. 해보기 결과:</a></li>
+<li><a href="#orgcdbf8cf">9.1.1. 패키지 만들기</a></li>
+<li><a href="#orge3a89cd">9.1.2. 노드 코드 작성</a></li>
+<li><a href="#orge05ad08">9.1.3. 패키지 빌드</a></li>
+<li><a href="#org8cd5d70">9.1.4. 패키지 노드 실행</a></li>
+<li><a href="#org32b7b35">9.1.5. 해보기: /mavros/state 읽어서 1초마다 비행 mode 한번씩 출력</a></li>
+<li><a href="#org540fb64">9.1.6. 해보기 결과:</a></li>
 </ul>
 </li>
-<li><a href="#org1c3770b">9.2. 새로운 노드 만들기: 드론 이륙 착륙</a></li>
-<li><a href="#orge4a1aeb">9.3. 새로운 노드 만들기: <code>offb_node</code></a></li>
-<li><a href="#org8ef751b">9.4. 새로운 노드 만들기: <code>circle</code></a>
+<li><a href="#org6894755">9.2. 새로운 노드 만들기: 드론 이륙 착륙</a></li>
+<li><a href="#org4b83c4b">9.3. 새로운 노드 만들기: <code>offb_node</code></a></li>
+<li><a href="#org8602ce3">9.4. 새로운 노드 만들기: <code>circle</code></a>
 <ul>
-<li><a href="#orgbd91143">9.4.1. 해보기: 원의 너비와 속도를 바꾸어 보자. 힌트 (wn, r)</a></li>
+<li><a href="#org566cae6">9.4.1. 해보기: 원의 너비와 속도를 바꾸어 보자. 힌트 (wn, r)</a></li>
 </ul>
 </li>
-<li><a href="#org4bc2d3f">9.5. 과제: 키보드로 OFFBOARD 모드 제어하기</a></li>
-<li><a href="#org06215a5">9.6. 참고</a></li>
+<li><a href="#org12babe8">9.5. 과제: 키보드로 OFFBOARD 모드 제어하기</a></li>
+<li><a href="#org003fd6f">9.6. 참고</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org78d16d5" class="outline-2">
-<h2 id="org78d16d5"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-orge0366a3" class="outline-2">
+<h2 id="orge0366a3"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>목표: 드론 제어 소프트웨어에 대해 이해할 수 있고, 프로그래밍 환경을 구축할 수 있다.</li>
@@ -369,8 +370,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orge6efd6d" class="outline-2">
-<h2 id="orge6efd6d"><span class="section-number-2">2</span> 드론 제어 소프트웨어 소개 및 설치</h2>
+<div id="outline-container-orge35bd04" class="outline-2">
+<h2 id="orge35bd04"><span class="section-number-2">2</span> 드론 제어 소프트웨어 소개 및 설치</h2>
 <div class="outline-text-2" id="text-2">
 <ol class="org-ol">
 <li>워크숍 소개, 참가자 소개</li>
@@ -382,8 +383,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org2641094" class="outline-2">
-<h2 id="org2641094"><span class="section-number-2">3</span> PX4 소개</h2>
+<div id="outline-container-org32283e5" class="outline-2">
+<h2 id="org32283e5"><span class="section-number-2">3</span> PX4 소개</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li><a href="https://px4.io/">https://px4.io/</a>
@@ -401,8 +402,8 @@ for the JavaScript code in this tag.
 </ul>
 </div>
 
-<div id="outline-container-org17203d6" class="outline-3">
-<h3 id="org17203d6"><span class="section-number-3">3.1</span> PX4 미들웨어 및 앱 구조 소개</h3>
+<div id="outline-container-org17f9e22" class="outline-3">
+<h3 id="org17f9e22"><span class="section-number-3">3.1</span> PX4 미들웨어 및 앱 구조 소개</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>디렉토리 구조 소개</li>
@@ -415,8 +416,8 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org0f985e6" class="outline-2">
-<h2 id="org0f985e6"><span class="section-number-2">4</span> PX4 개발환경 구성 (+ROS)</h2>
+<div id="outline-container-org588af78" class="outline-2">
+<h2 id="org588af78"><span class="section-number-2">4</span> PX4 개발환경 구성 (+ROS)</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 <a href="https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html">https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html</a>
@@ -431,8 +432,8 @@ chmod +x ubuntu_sim_ros_melodic.sh
 </div>
 </div>
 
-<div id="outline-container-org5f6c9a5" class="outline-2">
-<h2 id="org5f6c9a5"><span class="section-number-2">5</span> PX4 Firmware Build</h2>
+<div id="outline-container-orgc71ce82" class="outline-2">
+<h2 id="orgc71ce82"><span class="section-number-2">5</span> PX4 Firmware Build</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li><a href="https://dev.px4.io">https://dev.px4.io</a></li>
@@ -441,8 +442,8 @@ chmod +x ubuntu_sim_ros_melodic.sh
 </ul>
 </div>
 
-<div id="outline-container-org2b99eaf" class="outline-3">
-<h3 id="org2b99eaf"><span class="section-number-3">5.1</span> PX4 v.10.1 다운로드</h3>
+<div id="outline-container-orgc12ca8d" class="outline-3">
+<h3 id="orgc12ca8d"><span class="section-number-3">5.1</span> PX4 v.10.1 다운로드</h3>
 <div class="outline-text-3" id="text-5-1">
 <pre class="example">
 cd ~
@@ -455,8 +456,8 @@ git submodule update --init --recursive
 </div>
 </div>
 
-<div id="outline-container-orgdfeb371" class="outline-3">
-<h3 id="orgdfeb371"><span class="section-number-3">5.2</span> gazebo 실행</h3>
+<div id="outline-container-org2ba58aa" class="outline-3">
+<h3 id="org2ba58aa"><span class="section-number-3">5.2</span> gazebo 실행</h3>
 <div class="outline-text-3" id="text-5-2">
 <pre class="example">
 cd ~/Firmware
@@ -465,8 +466,8 @@ make px4_sitl gazebo
 </div>
 </div>
 
-<div id="outline-container-orgd8d5c27" class="outline-3">
-<h3 id="orgd8d5c27"><span class="section-number-3">5.3</span> QGroundControl 사용</h3>
+<div id="outline-container-org2e2815f" class="outline-3">
+<h3 id="org2e2815f"><span class="section-number-3">5.3</span> QGroundControl 사용</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 다운로드: <a href="https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html">https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html</a>
@@ -488,8 +489,8 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </div>
 
-<div id="outline-container-org72783ec" class="outline-2">
-<h2 id="org72783ec"><span class="section-number-2">6</span> Linux 사용하기</h2>
+<div id="outline-container-orga49f8d1" class="outline-2">
+<h2 id="orga49f8d1"><span class="section-number-2">6</span> Linux 사용하기</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li>Ubuntu 18.04 설치</li>
@@ -498,12 +499,12 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </div>
 
-<div id="outline-container-orgbf4b505" class="outline-2">
-<h2 id="orgbf4b505"><span class="section-number-2">7</span> ROS 프로그래밍</h2>
+<div id="outline-container-org222adb1" class="outline-2">
+<h2 id="org222adb1"><span class="section-number-2">7</span> ROS 프로그래밍</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orgb203184" class="outline-3">
-<h3 id="orgb203184"><span class="section-number-3">7.1</span> ROS</h3>
+<div id="outline-container-orga817476" class="outline-3">
+<h3 id="orga817476"><span class="section-number-3">7.1</span> ROS</h3>
 <div class="outline-text-3" id="text-7-1">
 <ul class="org-ul">
 <li>Robot Operating System: 로봇 빌드에 사용되는 라이브러리 어플리케이션 모음 <a href="http://www.ros.org/">http://www.ros.org/</a></li>
@@ -519,8 +520,8 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </div>
 
-<div id="outline-container-org2f02df8" class="outline-3">
-<h3 id="org2f02df8"><span class="section-number-3">7.2</span> ROS Nodes and Topics</h3>
+<div id="outline-container-org65b28bd" class="outline-3">
+<h3 id="org65b28bd"><span class="section-number-3">7.2</span> ROS Nodes and Topics</h3>
 <div class="outline-text-3" id="text-7-2">
 
 <div class="figure">
@@ -530,7 +531,7 @@ chmod +x ./QGroundControl.AppImage
 </div>
 
 <ol class="org-ol">
-<li><a id="org5d66028"></a>Perception: Sense<br />
+<li><a id="orga4dfc5a"></a>Perception: Sense<br />
 <div class="outline-text-5" id="text-7-2-0-1">
 <ul class="org-ul">
 <li>Sensor Fusion</li>
@@ -540,7 +541,7 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </li>
 
-<li><a id="org4eb0407"></a>Dicesion Making: Decide<br />
+<li><a id="orgd005235"></a>Dicesion Making: Decide<br />
 <div class="outline-text-5" id="text-7-2-0-2">
 <ul class="org-ul">
 <li>Path Planning</li>
@@ -550,7 +551,7 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </li>
 
-<li><a id="org5ac47bc"></a>Actuation: Act<br />
+<li><a id="org252c2fd"></a>Actuation: Act<br />
 <div class="outline-text-5" id="text-7-2-0-3">
 <ul class="org-ul">
 <li>PID Control</li>
@@ -560,8 +561,8 @@ chmod +x ./QGroundControl.AppImage
 </li>
 </ol>
 
-<div id="outline-container-org7f767c4" class="outline-4">
-<h4 id="org7f767c4"><span class="section-number-4">7.2.1</span> ROS Master Process</h4>
+<div id="outline-container-org34f3c7b" class="outline-4">
+<h4 id="org34f3c7b"><span class="section-number-4">7.2.1</span> ROS Master Process</h4>
 <div class="outline-text-4" id="text-7-2-1">
 <p>
 노드 관리
@@ -575,8 +576,8 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </div>
 
-<div id="outline-container-orgc700337" class="outline-4">
-<h4 id="orgc700337"><span class="section-number-4">7.2.2</span> Topics</h4>
+<div id="outline-container-org3399981" class="outline-4">
+<h4 id="org3399981"><span class="section-number-4">7.2.2</span> Topics</h4>
 <div class="outline-text-4" id="text-7-2-2">
 <p>
 노드간 통신 인터페이스. 구독 발행의 이름
@@ -590,8 +591,8 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </div>
 
-<div id="outline-container-org8fda8cc" class="outline-4">
-<h4 id="org8fda8cc"><span class="section-number-4">7.2.3</span> Publish and Subscribe</h4>
+<div id="outline-container-org1846ce0" class="outline-4">
+<h4 id="org1846ce0"><span class="section-number-4">7.2.3</span> Publish and Subscribe</h4>
 <div class="outline-text-4" id="text-7-2-3">
 <p>
 발행과 구독. 신문/잡지 발행 구독에 비유
@@ -616,8 +617,8 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </div>
 
-<div id="outline-container-orgb275142" class="outline-3">
-<h3 id="orgb275142"><span class="section-number-3">7.3</span> ROS Message Passing</h3>
+<div id="outline-container-org974e793" class="outline-3">
+<h3 id="org974e793"><span class="section-number-3">7.3</span> ROS Message Passing</h3>
 <div class="outline-text-3" id="text-7-3">
 <p>
 메시지: 노드간 통신할때 이동하는 실제 데이터
@@ -636,8 +637,8 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </div>
 
-<div id="outline-container-org0ee9632" class="outline-3">
-<h3 id="org0ee9632"><span class="section-number-3">7.4</span> ROS Services</h3>
+<div id="outline-container-org805d731" class="outline-3">
+<h3 id="org805d731"><span class="section-number-3">7.4</span> ROS Services</h3>
 <div class="outline-text-3" id="text-7-4">
 <ul class="org-ul">
 <li>Request-Response, 1:1 통신</li>
@@ -645,8 +646,8 @@ chmod +x ./QGroundControl.AppImage
 </ul>
 </div>
 
-<div id="outline-container-orgda4e4b8" class="outline-4">
-<h4 id="orgda4e4b8"><span class="section-number-4">7.4.1</span> 예시: 카메라 이미지 얻기</h4>
+<div id="outline-container-org7a47ea7" class="outline-4">
+<h4 id="org7a47ea7"><span class="section-number-4">7.4.1</span> 예시: 카메라 이미지 얻기</h4>
 <div class="outline-text-4" id="text-7-4-1">
 
 <div class="figure">
@@ -663,8 +664,8 @@ chmod +x ./QGroundControl.AppImage
 </div>
 </div>
 
-<div id="outline-container-org0856bf7" class="outline-3">
-<h3 id="org0856bf7"><span class="section-number-3">7.5</span> ROS Turtlesim</h3>
+<div id="outline-container-org7f66be0" class="outline-3">
+<h3 id="org7f66be0"><span class="section-number-3">7.5</span> ROS Turtlesim</h3>
 <div class="outline-text-3" id="text-7-5">
 <p>
 Turtle
@@ -677,8 +678,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-org7208f34" class="outline-4">
-<h4 id="org7208f34"><span class="section-number-4">7.5.1</span> Turtlesim 실행하기</h4>
+<div id="outline-container-org6cd4e8c" class="outline-4">
+<h4 id="org6cd4e8c"><span class="section-number-4">7.5.1</span> Turtlesim 실행하기</h4>
 <div class="outline-text-4" id="text-7-5-1">
 
 <div class="figure">
@@ -731,8 +732,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-org962635e" class="outline-4">
-<h4 id="org962635e"><span class="section-number-4">7.5.2</span> Turtlesim 노드 목록</h4>
+<div id="outline-container-orgeadf695" class="outline-4">
+<h4 id="orgeadf695"><span class="section-number-4">7.5.2</span> Turtlesim 노드 목록</h4>
 <div class="outline-text-4" id="text-7-5-2">
 <div class="org-src-container">
 <pre class="src src-sh">rosnode list
@@ -745,8 +746,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-org271d7c0" class="outline-4">
-<h4 id="org271d7c0"><span class="section-number-4">7.5.3</span> Turtlesim 토픽 목록</h4>
+<div id="outline-container-orgd4d29cd" class="outline-4">
+<h4 id="orgd4d29cd"><span class="section-number-4">7.5.3</span> Turtlesim 토픽 목록</h4>
 <div class="outline-text-4" id="text-7-5-3">
 <div class="org-src-container">
 <pre class="src src-sh">rostopic list
@@ -755,8 +756,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-orga7b77e9" class="outline-4">
-<h4 id="orga7b77e9"><span class="section-number-4">7.5.4</span> Turtlesim 토픽 정보</h4>
+<div id="outline-container-orge788211" class="outline-4">
+<h4 id="orge788211"><span class="section-number-4">7.5.4</span> Turtlesim 토픽 정보</h4>
 <div class="outline-text-4" id="text-7-5-4">
 <div class="org-src-container">
 <pre class="src src-sh">rostopic info /turtle1/cmd_vel
@@ -766,8 +767,8 @@ Turtle
 </div>
 </div>
 
-<div id="outline-container-orgf326cd6" class="outline-4">
-<h4 id="orgf326cd6"><span class="section-number-4">7.5.5</span> Turtlesim 메시지 정보</h4>
+<div id="outline-container-orgeb1d265" class="outline-4">
+<h4 id="orgeb1d265"><span class="section-number-4">7.5.5</span> Turtlesim 메시지 정보</h4>
 <div class="outline-text-4" id="text-7-5-5">
 <div class="org-src-container">
 <pre class="src src-sh">$ rosmsg info geometry_msgs/Twist
@@ -793,8 +794,8 @@ or
 </div>
 </div>
 
-<div id="outline-container-orgff9258d" class="outline-4">
-<h4 id="orgff9258d"><span class="section-number-4">7.5.6</span> Turtlesim Echo a Topic</h4>
+<div id="outline-container-orga5bdf4a" class="outline-4">
+<h4 id="orga5bdf4a"><span class="section-number-4">7.5.6</span> Turtlesim Echo a Topic</h4>
 <div class="outline-text-4" id="text-7-5-6">
 <p>
 디버깅시 편리
@@ -807,8 +808,8 @@ or
 </div>
 </div>
 
-<div id="outline-container-org12af16d" class="outline-4">
-<h4 id="org12af16d"><span class="section-number-4">7.5.7</span> <code>rqt_graph</code></h4>
+<div id="outline-container-org227c3a1" class="outline-4">
+<h4 id="org227c3a1"><span class="section-number-4">7.5.7</span> <code>rqt_graph</code></h4>
 <div class="outline-text-4" id="text-7-5-7">
 <div class="org-src-container">
 <pre class="src src-sh">rqt_graph
@@ -824,8 +825,8 @@ or
 </div>
 </div>
 
-<div id="outline-container-org8452f6b" class="outline-3">
-<h3 id="org8452f6b"><span class="section-number-3">7.6</span> MavROS 설치 및 실행</h3>
+<div id="outline-container-orga2c1c58" class="outline-3">
+<h3 id="orga2c1c58"><span class="section-number-3">7.6</span> MavROS 설치 및 실행</h3>
 <div class="outline-text-3" id="text-7-6">
 <div class="org-src-container">
 <pre class="src src-sh">
@@ -890,8 +891,8 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 </div>
 
-<div id="outline-container-orge74722b" class="outline-3">
-<h3 id="orge74722b"><span class="section-number-3">7.7</span> Gazebo 실행</h3>
+<div id="outline-container-orgcba2e5f" class="outline-3">
+<h3 id="orgcba2e5f"><span class="section-number-3">7.7</span> Gazebo 실행</h3>
 <div class="outline-text-3" id="text-7-7">
 <div class="org-src-container">
 <pre class="src src-sh">$ make posix_sitl gazebo
@@ -902,16 +903,16 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 
 
-<div id="outline-container-orga171d1c" class="outline-2">
-<h2 id="orga171d1c"><span class="section-number-2">8</span> ROS 노드 관리</h2>
+<div id="outline-container-org91a5723" class="outline-2">
+<h2 id="org91a5723"><span class="section-number-2">8</span> ROS 노드 관리</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org7920b39" class="outline-3">
-<h3 id="org7920b39"><span class="section-number-3">8.1</span> ROS 노드 실행 및 관리</h3>
+<div id="outline-container-orgd1c3c7d" class="outline-3">
+<h3 id="orgd1c3c7d"><span class="section-number-3">8.1</span> ROS 노드 실행 및 관리</h3>
 <div class="outline-text-3" id="text-8-1">
 </div>
 <ol class="org-ol">
-<li><a id="org6c64a68"></a>ROS Core 노드 실행<br />
+<li><a id="orga60925c"></a>ROS Core 노드 실행<br />
 <div class="outline-text-5" id="text-8-1-0-1">
 <div class="org-src-container">
 <pre class="src src-sh">$ roscore
@@ -920,7 +921,7 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 </li>
 
-<li><a id="org4cb2300"></a>MAVROS 노드 실행<br />
+<li><a id="org00235a8"></a>MAVROS 노드 실행<br />
 <div class="outline-text-5" id="text-8-1-0-2">
 <div class="org-src-container">
 <pre class="src src-sh">$ roslaunch mavros px4.launch
@@ -932,7 +933,7 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 </li>
 
-<li><a id="org4b99dc1"></a>토픽 목록<br />
+<li><a id="org5b678ba"></a>토픽 목록<br />
 <div class="outline-text-5" id="text-8-1-0-3">
 <div class="org-src-container">
 <pre class="src src-sh">$ rostopic list
@@ -941,9 +942,9 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 </li>
 
-<li><a id="org257533f"></a>토픽 내용 보기<br />
+<li><a id="org22853de"></a>토픽 내용 보기<br />
 <ol class="org-ol">
-<li><a id="orgbdfa0c3"></a>메시지 타입 보기<br />
+<li><a id="orgec37edd"></a>메시지 타입 보기<br />
 <div class="outline-text-6" id="text-8-1-0-4-1">
 <div class="org-src-container">
 <pre class="src src-sh">$ rostopic info /mavros/state
@@ -960,7 +961,7 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 </li>
 
-<li><a id="orgf64bc1c"></a>메시지 내용<br />
+<li><a id="org5b44d35"></a>메시지 내용<br />
 <div class="outline-text-6" id="text-8-1-0-4-2">
 <div class="org-src-container">
 <pre class="src src-sh">$ rostopic echo /mavros/state
@@ -969,7 +970,7 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 </li>
 
-<li><a id="org89f1cd7"></a>토픽 publish 주기 보기<br />
+<li><a id="org7614eb6"></a>토픽 publish 주기 보기<br />
 <div class="outline-text-6" id="text-8-1-0-4-3">
 <div class="org-src-container">
 <pre class="src src-sh">$ rostopic hz /mavros/state
@@ -978,7 +979,7 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 </li>
 
-<li><a id="org50b9f73"></a>실행 노드 확인<br />
+<li><a id="org24e1c9a"></a>실행 노드 확인<br />
 <div class="outline-text-6" id="text-8-1-0-4-4">
 <div class="org-src-container">
 <pre class="src src-sh">$ rqt_graph
@@ -991,16 +992,16 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </ol>
 </div>
 
-<div id="outline-container-org2ebe0db" class="outline-3">
-<h3 id="org2ebe0db"><span class="section-number-3">8.2</span> ROS 노드 토픽 명령 실행하기. (MAVROS 위주)</h3>
+<div id="outline-container-org941d86e" class="outline-3">
+<h3 id="org941d86e"><span class="section-number-3">8.2</span> ROS 노드 토픽 명령 실행하기. (MAVROS 위주)</h3>
 <div class="outline-text-3" id="text-8-2">
 <p>
 <a href="http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics">http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics</a>
 </p>
 </div>
 
-<div id="outline-container-orgf0ac25b" class="outline-4">
-<h4 id="orgf0ac25b"><span class="section-number-4">8.2.1</span> Subscribe</h4>
+<div id="outline-container-orgdd3d530" class="outline-4">
+<h4 id="orgdd3d530"><span class="section-number-4">8.2.1</span> Subscribe</h4>
 <div class="outline-text-4" id="text-8-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">rostopic echo [topic]
@@ -1009,7 +1010,7 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 
 <ol class="org-ol">
-<li><a id="orge09e065"></a><code>STATE</code><br />
+<li><a id="orgf88b54f"></a><code>STATE</code><br />
 <div class="outline-text-5" id="text-8-2-1-1">
 <div class="org-src-container">
 <pre class="src src-sh">$ rostopic echo /mavros/state
@@ -1018,7 +1019,7 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 </li>
 
-<li><a id="org7e459e9"></a><code>LOCAL_POSITION</code> 확인<br />
+<li><a id="org9cc154e"></a><code>LOCAL_POSITION</code> 확인<br />
 <div class="outline-text-5" id="text-8-2-1-2">
 <div class="org-src-container">
 <pre class="src src-sh">$ rostopic echo /mavros/local_position/pose
@@ -1029,8 +1030,8 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </ol>
 </div>
 
-<div id="outline-container-org68dca70" class="outline-4">
-<h4 id="org68dca70"><span class="section-number-4">8.2.2</span> Services</h4>
+<div id="outline-container-orgfad70ad" class="outline-4">
+<h4 id="orgfad70ad"><span class="section-number-4">8.2.2</span> Services</h4>
 <div class="outline-text-4" id="text-8-2-2">
 <div class="org-src-container">
 <pre class="src src-sh">rosservice call [topic] [msg_type] [args]
@@ -1039,7 +1040,7 @@ roslaunch mavros px4.launch fcu_url:=<span style="color: #DB8E73;">"udp://:14540
 </div>
 
 <ol class="org-ol">
-<li><a id="orgf4a4f51"></a><code>SET_MODE</code><br />
+<li><a id="orgebf1031"></a><code>SET_MODE</code><br />
 <div class="outline-text-5" id="text-8-2-2-1">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #579C4C;"># </span><span style="color: #579C4C;">https://github.com/mavlink/mavros/blob/master/mavros_msgs/srv/SetMode.srv</span>
@@ -1064,7 +1065,7 @@ rosservice call /mavros/set_mode <span style="color: #DB8E73;">"base_mode: 0</sp
 </div>
 </li>
 
-<li><a id="org8ff2206"></a><code>ARMING</code><br />
+<li><a id="orga6ed3b5"></a><code>ARMING</code><br />
 <div class="outline-text-5" id="text-8-2-2-2">
 <div class="org-src-container">
 <pre class="src src-sh">rosservice call /mavros/cmd/arming <span style="color: #DB8E73;">"value: true"</span>
@@ -1073,7 +1074,7 @@ rosservice call /mavros/set_mode <span style="color: #DB8E73;">"base_mode: 0</sp
 </div>
 </li>
 
-<li><a id="org4cf0930"></a><code>TAKEOFF</code><br />
+<li><a id="org4e724c0"></a><code>TAKEOFF</code><br />
 <div class="outline-text-5" id="text-8-2-2-3">
 <div class="org-src-container">
 <pre class="src src-sh">rosservice call /mavros/cmd/takeoff <span style="color: #DB8E73;">"{min_pitch: 0.0, yaw: 0.0, latitude: 47.3977508, longitude: 8.5456074, altitude: 2.5}"</span>
@@ -1084,8 +1085,8 @@ rosservice call /mavros/set_mode <span style="color: #DB8E73;">"base_mode: 0</sp
 </ol>
 </div>
 
-<div id="outline-container-org26ea01b" class="outline-4">
-<h4 id="org26ea01b"><span class="section-number-4">8.2.3</span> Publish</h4>
+<div id="outline-container-org80d4c1e" class="outline-4">
+<h4 id="org80d4c1e"><span class="section-number-4">8.2.3</span> Publish</h4>
 <div class="outline-text-4" id="text-8-2-3">
 <div class="org-src-container">
 <pre class="src src-sh">rostopic pub [topic] [msg_type] [args]
@@ -1094,7 +1095,7 @@ rosservice call /mavros/set_mode <span style="color: #DB8E73;">"base_mode: 0</sp
 </div>
 
 <ol class="org-ol">
-<li><a id="org12065f9"></a><code>SETPOINT_POSITION</code><br />
+<li><a id="org0665376"></a><code>SETPOINT_POSITION</code><br />
 <div class="outline-text-5" id="text-8-2-3-1">
 <p>
 OFFBOARD 모드에서 동작
@@ -1118,7 +1119,7 @@ OFFBOARD 모드에서 동작
 </div>
 </li>
 
-<li><a id="org8b3e666"></a><code>SETPOINT_VELOCITY</code><br />
+<li><a id="org8146e59"></a><code>SETPOINT_VELOCITY</code><br />
 <div class="outline-text-5" id="text-8-2-3-2">
 <p>
 OFFBOARD 모드에서 동작
@@ -1133,8 +1134,8 @@ OFFBOARD 모드에서 동작
 </ol>
 </div>
 
-<div id="outline-container-orgf32337a" class="outline-4">
-<h4 id="orgf32337a"><span class="section-number-4">8.2.4</span> 실습</h4>
+<div id="outline-container-org702339f" class="outline-4">
+<h4 id="org702339f"><span class="section-number-4">8.2.4</span> 실습</h4>
 <div class="outline-text-4" id="text-8-2-4">
 <p>
 준비: 순서대로 실행
@@ -1200,9 +1201,44 @@ w \\
 </div>
 </div>
 
-<div id="outline-container-orgfd339a1" class="outline-3">
-<h3 id="orgfd339a1"><span class="section-number-3">8.3</span> 참고</h3>
+<div id="outline-container-orgd293c48" class="outline-3">
+<h3 id="orgd293c48"><span class="section-number-3">8.3</span> 토픽 레코드: rosbag</h3>
 <div class="outline-text-3" id="text-8-3">
+<p>
+리뷰할때 유용
+</p>
+
+<p>
+arm: mavros 패키지의 mavsafety 사용
+</p>
+<pre class="example">
+rosrun mavros mavsafety arm
+</pre>
+
+<p>
+change mode: mavsys 노드 사용
+</p>
+<pre class="example">
+rosrun mavros mavsys mode -c OFFBOARD
+</pre>
+
+<p>
+토픽 저장하기
+</p>
+<pre class="example">
+rostopic list -v
+mkdir ~/bagfiles
+cd ~/bagfiles
+rosbag record -O iris_default_1 /mavros/local_position/pose
+rosbag info iris_default_1.bag
+rqt_bag
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org6198f9c" class="outline-3">
+<h3 id="org6198f9c"><span class="section-number-3">8.4</span> 참고</h3>
+<div class="outline-text-3" id="text-8-4">
 <ul class="org-ul">
 <li><a href="https://github.com/mavlink/mavros/tree/master/mavros">https://github.com/mavlink/mavros/tree/master/mavros</a></li>
 </ul>
@@ -1210,16 +1246,16 @@ w \\
 </div>
 </div>
 
-<div id="outline-container-org2b4e280" class="outline-2">
-<h2 id="org2b4e280"><span class="section-number-2">9</span> ROS 노드 만들기</h2>
+<div id="outline-container-orgc39692d" class="outline-2">
+<h2 id="orgc39692d"><span class="section-number-2">9</span> ROS 노드 만들기</h2>
 <div class="outline-text-2" id="text-9">
 </div>
-<div id="outline-container-org73cc76f" class="outline-3">
-<h3 id="org73cc76f"><span class="section-number-3">9.1</span> 새로운 노드 만들기</h3>
+<div id="outline-container-orgb4844bc" class="outline-3">
+<h3 id="orgb4844bc"><span class="section-number-3">9.1</span> 새로운 노드 만들기</h3>
 <div class="outline-text-3" id="text-9-1">
 </div>
-<div id="outline-container-org2fe4383" class="outline-4">
-<h4 id="org2fe4383"><span class="section-number-4">9.1.1</span> 패키지 만들기</h4>
+<div id="outline-container-orgcdbf8cf" class="outline-4">
+<h4 id="orgcdbf8cf"><span class="section-number-4">9.1.1</span> 패키지 만들기</h4>
 <div class="outline-text-4" id="text-9-1-1">
 <div class="org-src-container">
 <pre class="src src-sh">$ source ~/catkin_ws/devel/setup.bash
@@ -1230,8 +1266,8 @@ $ catkin_create_pkg drone_control mavros sensor_msgs roscpp
 </div>
 </div>
 
-<div id="outline-container-orgb684cec" class="outline-4">
-<h4 id="orgb684cec"><span class="section-number-4">9.1.2</span> 노드 코드 작성</h4>
+<div id="outline-container-orge3a89cd" class="outline-4">
+<h4 id="orge3a89cd"><span class="section-number-4">9.1.2</span> 노드 코드 작성</h4>
 <div class="outline-text-4" id="text-9-1-2">
 <p>
 <code>~/catkin_ws/src/drone_control/src/drone_state.cpp</code>
@@ -1282,8 +1318,8 @@ target_link_libraries(drone_state ${catkin_LIBRARIES})
 </div>
 </div>
 
-<div id="outline-container-orga3a5c42" class="outline-4">
-<h4 id="orga3a5c42"><span class="section-number-4">9.1.3</span> 패키지 빌드</h4>
+<div id="outline-container-orge05ad08" class="outline-4">
+<h4 id="orge05ad08"><span class="section-number-4">9.1.3</span> 패키지 빌드</h4>
 <div class="outline-text-4" id="text-9-1-3">
 <div class="org-src-container">
 <pre class="src src-sh">$ cd ~/catkin_ws
@@ -1293,8 +1329,8 @@ $ catkin build
 </div>
 </div>
 
-<div id="outline-container-org4a697ae" class="outline-4">
-<h4 id="org4a697ae"><span class="section-number-4">9.1.4</span> 패키지 노드 실행</h4>
+<div id="outline-container-org8cd5d70" class="outline-4">
+<h4 id="org8cd5d70"><span class="section-number-4">9.1.4</span> 패키지 노드 실행</h4>
 <div class="outline-text-4" id="text-9-1-4">
 <p>
 <code>drone_control</code> 패키지의 <code>drone_state</code> 노드 실행
@@ -1307,8 +1343,8 @@ $ catkin build
 </div>
 
 
-<div id="outline-container-orgfe5343e" class="outline-4">
-<h4 id="orgfe5343e"><span class="section-number-4">9.1.5</span> 해보기: /mavros/state 읽어서 1초마다 비행 mode 한번씩 출력</h4>
+<div id="outline-container-org32b7b35" class="outline-4">
+<h4 id="org32b7b35"><span class="section-number-4">9.1.5</span> 해보기: /mavros/state 읽어서 1초마다 비행 mode 한번씩 출력</h4>
 <div class="outline-text-4" id="text-9-1-5">
 <ul class="org-ul">
 <li><code>/mavros/state</code> 타입 체크하여 헤더 include</li>
@@ -1335,8 +1371,8 @@ $ catkin build
 </div>
 </div>
 
-<div id="outline-container-org01ea535" class="outline-4">
-<h4 id="org01ea535"><span class="section-number-4">9.1.6</span> 해보기 결과:</h4>
+<div id="outline-container-org540fb64" class="outline-4">
+<h4 id="org540fb64"><span class="section-number-4">9.1.6</span> 해보기 결과:</h4>
 <div class="outline-text-4" id="text-9-1-6">
 <div class="org-src-container">
 <pre class="src src-c++">$ rosrun drone_control drone_state
@@ -1363,8 +1399,8 @@ Drone mode: OFFBOARD
 </div>
 
 
-<div id="outline-container-org1c3770b" class="outline-3">
-<h3 id="org1c3770b"><span class="section-number-3">9.2</span> 새로운 노드 만들기: 드론 이륙 착륙</h3>
+<div id="outline-container-org6894755" class="outline-3">
+<h3 id="org6894755"><span class="section-number-3">9.2</span> 새로운 노드 만들기: 드론 이륙 착륙</h3>
 <div class="outline-text-3" id="text-9-2">
 
 <div class="figure">
@@ -1473,8 +1509,8 @@ target_link_libraries(takeoff_and_land ${catkin_LIBRARIES})
 </div>
 </div>
 
-<div id="outline-container-orge4a1aeb" class="outline-3">
-<h3 id="orge4a1aeb"><span class="section-number-3">9.3</span> 새로운 노드 만들기: <code>offb_node</code></h3>
+<div id="outline-container-org4b83c4b" class="outline-3">
+<h3 id="org4b83c4b"><span class="section-number-3">9.3</span> 새로운 노드 만들기: <code>offb_node</code></h3>
 <div class="outline-text-3" id="text-9-3">
 <p>
 <code>drone_control</code> 패키지에 <code>offb_node</code> 노드를 만들어 보자.
@@ -1581,8 +1617,8 @@ target_link_libraries(takeoff_and_land ${catkin_LIBRARIES})
 </div>
 </div>
 
-<div id="outline-container-org8ef751b" class="outline-3">
-<h3 id="org8ef751b"><span class="section-number-3">9.4</span> 새로운 노드 만들기: <code>circle</code></h3>
+<div id="outline-container-org8602ce3" class="outline-3">
+<h3 id="org8602ce3"><span class="section-number-3">9.4</span> 새로운 노드 만들기: <code>circle</code></h3>
 <div class="outline-text-3" id="text-9-4">
 <p>
 출처: <a href="https://github.com/Jaeyoung-Lim/modudculab_ros/blob/master/src/pub_setpoints_traj.cpp">https://github.com/Jaeyoung-Lim/modudculab_ros/blob/master/src/pub_setpoints_traj.cpp</a>
@@ -1698,13 +1734,13 @@ int main(int argc, char **argv)
 <li>실행: <code>rosrun drone_control circle</code></li>
 </ul>
 </div>
-<div id="outline-container-orgbd91143" class="outline-4">
-<h4 id="orgbd91143"><span class="section-number-4">9.4.1</span> 해보기: 원의 너비와 속도를 바꾸어 보자. 힌트 (wn, r)</h4>
+<div id="outline-container-org566cae6" class="outline-4">
+<h4 id="org566cae6"><span class="section-number-4">9.4.1</span> 해보기: 원의 너비와 속도를 바꾸어 보자. 힌트 (wn, r)</h4>
 </div>
 </div>
 
-<div id="outline-container-org4bc2d3f" class="outline-3">
-<h3 id="org4bc2d3f"><span class="section-number-3">9.5</span> 과제: 키보드로 OFFBOARD 모드 제어하기</h3>
+<div id="outline-container-org12babe8" class="outline-3">
+<h3 id="org12babe8"><span class="section-number-3">9.5</span> 과제: 키보드로 OFFBOARD 모드 제어하기</h3>
 <div class="outline-text-3" id="text-9-5">
 <ul class="org-ul">
 <li><code>offb_node</code> 코드를 참고하여, 키보드로 x,y,z 위치를 제어하여 보자.</li>
@@ -1713,8 +1749,8 @@ int main(int argc, char **argv)
 </div>
 </div>
 
-<div id="outline-container-org06215a5" class="outline-3">
-<h3 id="org06215a5"><span class="section-number-3">9.6</span> 참고</h3>
+<div id="outline-container-org003fd6f" class="outline-3">
+<h3 id="org003fd6f"><span class="section-number-3">9.6</span> 참고</h3>
 <div class="outline-text-3" id="text-9-6">
 <ul class="org-ul">
 <li><a href="https://github.com/mavlink/mavros/tree/master/mavros">https://github.com/mavlink/mavros/tree/master/mavros</a></li>
@@ -1726,7 +1762,7 @@ int main(int argc, char **argv)
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2020-07-06 Mon 18:06</p>
+<p class="date">Created: 2020-07-13 Mon 10:28</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
