@@ -3,7 +3,7 @@
 # Creative Commons, Share-Alike (cc)
 #+EMAIL:     dongheepark@gmail.com
 #+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
 #
 * 수업
  - 목표: 컴퓨터 비전을 시뮬레이터에서 테스트할 수 있는 환경을 만들 수 있다.
