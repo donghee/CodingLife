@@ -2,6 +2,7 @@
 #+AUTHOR:    Donghee Park
 # Creative Commons, Share-Alike (cc)
 #+EMAIL:     dongheepark@gmail.com
+#+TITLE: PX4 and ROS Programming Day 2
 #+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
 

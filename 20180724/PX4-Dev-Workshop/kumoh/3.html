@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-03 월 22:05 -->
+<!-- 2020-08-03 월 22:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&lrm;</title>
+<title>PX4 and ROS Programming Day 3</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Donghee Park" />
 <style type="text/css">
@@ -244,25 +244,27 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
+<h1 class="title">PX4 and ROS Programming Day 3</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1d48d7b">1. 수업</a></li>
-<li><a href="#orge2d36e8">2. 수업 진행</a></li>
-<li><a href="#org566ecf9">3. 수업 자료</a>
+<li><a href="#orgafbdd39">1. 수업</a></li>
+<li><a href="#orgfd12ecf">2. 수업 진행</a></li>
+<li><a href="#orgb085cd4">3. 수업 자료</a>
 <ul>
-<li><a href="#orgc0d3907">3.1. Gazebo에 카메라 추가</a></li>
-<li><a href="#org7a0b1e7">3.2. Gazebo 실행</a></li>
-<li><a href="#org1498c86">3.3. Gazebo의 카메라 영상을 ROS image<sub>raw</sub> 토픽으로 보기</a></li>
+<li><a href="#org8c02269">3.1. Gazebo에 카메라 추가</a></li>
+<li><a href="#org55c972d">3.2. Gazebo 실행</a></li>
+<li><a href="#org22e9541">3.3. Gazebo의 카메라 영상을 ROS image<sub>raw</sub> 토픽으로 보기</a></li>
 </ul>
 </li>
-<li><a href="#org59719ed">4. 참고</a></li>
+<li><a href="#org11a5a71">4. 참고</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org1d48d7b" class="outline-2">
-<h2 id="org1d48d7b"><span class="section-number-2">1</span> 수업</h2>
+
+<div id="outline-container-orgafbdd39" class="outline-2">
+<h2 id="orgafbdd39"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>목표: 컴퓨터 비전을 시뮬레이터에서 테스트할 수 있는 환경을 만들 수 있다.</li>
@@ -272,8 +274,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orge2d36e8" class="outline-2">
-<h2 id="orge2d36e8"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-orgfd12ecf" class="outline-2">
+<h2 id="orgfd12ecf"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>Gazebo에 카메라 추가</li>
@@ -281,12 +283,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org566ecf9" class="outline-2">
-<h2 id="org566ecf9"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-orgb085cd4" class="outline-2">
+<h2 id="orgb085cd4"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgc0d3907" class="outline-3">
-<h3 id="orgc0d3907"><span class="section-number-3">3.1</span> Gazebo에 카메라 추가</h3>
+<div id="outline-container-org8c02269" class="outline-3">
+<h3 id="org8c02269"><span class="section-number-3">3.1</span> Gazebo에 카메라 추가</h3>
 <div class="outline-text-3" id="text-3-1">
 
 <div class="figure">
@@ -348,8 +350,8 @@ enable_visual="1"
 </div>
 </div>
 
-<div id="outline-container-org7a0b1e7" class="outline-3">
-<h3 id="org7a0b1e7"><span class="section-number-3">3.2</span> Gazebo 실행</h3>
+<div id="outline-container-org55c972d" class="outline-3">
+<h3 id="org55c972d"><span class="section-number-3">3.2</span> Gazebo 실행</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 모델 확인
@@ -388,8 +390,8 @@ rm ~/.ros/eeprom/parameters
 </div>
 
 
-<div id="outline-container-org1498c86" class="outline-3">
-<h3 id="org1498c86"><span class="section-number-3">3.3</span> Gazebo의 카메라 영상을 ROS image<sub>raw</sub> 토픽으로 보기</h3>
+<div id="outline-container-org22e9541" class="outline-3">
+<h3 id="org22e9541"><span class="section-number-3">3.3</span> Gazebo의 카메라 영상을 ROS image<sub>raw</sub> 토픽으로 보기</h3>
 <div class="outline-text-3" id="text-3-3">
 
 <div class="figure">
@@ -411,8 +413,8 @@ rosrun image_view image_view image:=/iris/camera_red_iris/image_raw
 </div>
 </div>
 
-<div id="outline-container-org59719ed" class="outline-2">
-<h2 id="org59719ed"><span class="section-number-2">4</span> 참고</h2>
+<div id="outline-container-org11a5a71" class="outline-2">
+<h2 id="org11a5a71"><span class="section-number-2">4</span> 참고</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li><a href="https://github.com/spmallick/learnopencv">https://github.com/spmallick/learnopencv</a></li>
@@ -440,7 +442,7 @@ rosrun image_view image_view image:=/iris/camera_red_iris/image_raw
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2020-08-03 월 22:05</p>
+<p class="date">Created: 2020-08-03 월 22:14</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

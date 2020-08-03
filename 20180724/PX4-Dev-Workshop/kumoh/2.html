@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-03 월 22:05 -->
+<!-- 2020-08-03 월 22:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&lrm;</title>
+<title>PX4 and ROS Programming Day 2</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Donghee Park" />
 <style type="text/css">
@@ -244,76 +244,77 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
+<h1 class="title">PX4 and ROS Programming Day 2</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc0de23e">1. 수업</a></li>
-<li><a href="#org456efe0">2. 수업 진행</a></li>
-<li><a href="#org9af10df">3. 수업 자료</a>
+<li><a href="#org75d1141">1. 수업</a></li>
+<li><a href="#org054bc58">2. 수업 진행</a></li>
+<li><a href="#org8a1402a">3. 수업 자료</a>
 <ul>
-<li><a href="#org4a53859">3.1. OpenCV 소개</a></li>
-<li><a href="#org63b3ee1">3.2. OpenCV 설치</a>
+<li><a href="#org977e0d8">3.1. OpenCV 소개</a></li>
+<li><a href="#org7fd17db">3.2. OpenCV 설치</a>
 <ul>
-<li><a href="#orge688111">3.2.1. C++ (OpenCV-3.4.4)</a></li>
-<li><a href="#orgfbacb15">3.2.2. 예제</a></li>
+<li><a href="#org4fe72ef">3.2.1. C++ (OpenCV-3.4.4)</a></li>
+<li><a href="#org10488f1">3.2.2. 예제</a></li>
 </ul>
 </li>
-<li><a href="#orgbc96b85">3.3. OpenCV 소개</a>
+<li><a href="#org2628c41">3.3. OpenCV 소개</a>
 <ul>
-<li><a href="#org6175bba">3.3.1. Mat: 이미지 타입</a></li>
-<li><a href="#org70ff864">3.3.2. Mat: 이미지 읽기</a></li>
-<li><a href="#orgfe63971">3.3.3. Mat: 복사</a></li>
-<li><a href="#org59c14c8">3.3.4. Filter: Sharpen</a></li>
-<li><a href="#org61a19fe">3.3.5. Python (OpenCV-3.4.4)</a></li>
+<li><a href="#org6a338e5">3.3.1. Mat: 이미지 타입</a></li>
+<li><a href="#orgbaf99c1">3.3.2. Mat: 이미지 읽기</a></li>
+<li><a href="#orgc8836e1">3.3.3. Mat: 복사</a></li>
+<li><a href="#orgc3e2ea0">3.3.4. Filter: Sharpen</a></li>
+<li><a href="#org897a876">3.3.5. Python (OpenCV-3.4.4)</a></li>
 </ul>
 </li>
-<li><a href="#org25801f9">3.4. 실습</a></li>
-<li><a href="#org323164e">3.5. ROS 이미지 메시지</a></li>
-<li><a href="#org1943058">3.6. <code>cv_bridge</code></a>
+<li><a href="#org789aae5">3.4. 실습</a></li>
+<li><a href="#orgd7005dc">3.5. ROS 이미지 메시지</a></li>
+<li><a href="#org13b4b21">3.6. <code>cv_bridge</code></a>
 <ul>
-<li><a href="#org0e84c68">3.6.1. CvImage</a></li>
+<li><a href="#org01a8f7c">3.6.1. CvImage</a></li>
 </ul>
 </li>
-<li><a href="#org8261414">3.7. 예시: <code>image_converter</code></a></li>
-<li><a href="#orgb53a2ff">3.8. 예시: <code>image_converter</code> 노드 실행</a>
+<li><a href="#org246a535">3.7. 예시: <code>image_converter</code></a></li>
+<li><a href="#org37b50fd">3.8. 예시: <code>image_converter</code> 노드 실행</a>
 <ul>
-<li><a href="#orgf18b710">3.8.1. 구독 <code>/cv_camera/image_raw</code> 이미지 보기</a></li>
-<li><a href="#org58e63b3">3.8.2. 발행 <code>/image_converter/output_video</code> 이미지 보기</a></li>
-<li><a href="#org80008bb">3.8.3. 실습</a></li>
+<li><a href="#orgaf64bc6">3.8.1. 구독 <code>/cv_camera/image_raw</code> 이미지 보기</a></li>
+<li><a href="#org867207a">3.8.2. 발행 <code>/image_converter/output_video</code> 이미지 보기</a></li>
+<li><a href="#org8ba1aba">3.8.3. 실습</a></li>
 </ul>
 </li>
-<li><a href="#orgc9d646f">3.9. 예시: object detection: <code>dnn_detect</code></a></li>
-<li><a href="#org7d00faf">3.10. 예시: tag detection: aruco</a></li>
-<li><a href="#org5716c88">3.11. 예시: position estimation using aruco</a>
+<li><a href="#orgbb0fab0">3.9. 예시: object detection: <code>dnn_detect</code></a></li>
+<li><a href="#org7a33716">3.10. 예시: tag detection: aruco</a></li>
+<li><a href="#org5ebd996">3.11. 예시: position estimation using aruco</a>
 <ul>
-<li><a href="#orgfad0bc5">3.11.1. Camera Calibration</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#org333746a">4. 참고</a>
-<ul>
-<li><a href="#orga79413a">4.1. TF</a>
-<ul>
-<li><a href="#orgf7cbee6">4.1.1. TF?</a></li>
-<li><a href="#orge7f000f">4.1.2. TF의 xyz ?</a></li>
-</ul>
-</li>
-<li><a href="#orgc370cb2">4.2. TF의 lookupTransform</a>
-<ul>
-<li><a href="#org5271a36">4.2.1. TF 실습</a></li>
+<li><a href="#orgd149bd2">3.11.1. Camera Calibration</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org5a51391">5. 참고</a></li>
+<li><a href="#org0991246">4. 참고</a>
+<ul>
+<li><a href="#org0e8f5ea">4.1. TF</a>
+<ul>
+<li><a href="#org58e3850">4.1.1. TF?</a></li>
+<li><a href="#org43d10a6">4.1.2. TF의 xyz ?</a></li>
+</ul>
+</li>
+<li><a href="#orga27f097">4.2. TF의 lookupTransform</a>
+<ul>
+<li><a href="#org6eec9e2">4.2.1. TF 실습</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgba9408f">5. 참고</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc0de23e" class="outline-2">
-<h2 id="orgc0de23e"><span class="section-number-2">1</span> 수업</h2>
+<div id="outline-container-org75d1141" class="outline-2">
+<h2 id="org75d1141"><span class="section-number-2">1</span> 수업</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>목표: 컴퓨터 비전: OpenCV, Maker Detect, Pose Estimation 에 대해서 이해하고 관련 패키지를 사용할 수 있다.</li>
@@ -323,8 +324,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org456efe0" class="outline-2">
-<h2 id="org456efe0"><span class="section-number-2">2</span> 수업 진행</h2>
+<div id="outline-container-org054bc58" class="outline-2">
+<h2 id="org054bc58"><span class="section-number-2">2</span> 수업 진행</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li>컴퓨터 비전 소개</li>
@@ -336,12 +337,12 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org9af10df" class="outline-2">
-<h2 id="org9af10df"><span class="section-number-2">3</span> 수업 자료</h2>
+<div id="outline-container-org8a1402a" class="outline-2">
+<h2 id="org8a1402a"><span class="section-number-2">3</span> 수업 자료</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org4a53859" class="outline-3">
-<h3 id="org4a53859"><span class="section-number-3">3.1</span> OpenCV 소개</h3>
+<div id="outline-container-org977e0d8" class="outline-3">
+<h3 id="org977e0d8"><span class="section-number-3">3.1</span> OpenCV 소개</h3>
 <div class="outline-text-3" id="text-3-1">
 <ul class="org-ul">
 <li>1999 Gary Bradsky 개발 시작</li>
@@ -365,12 +366,12 @@ Disseminate vision knowledge by providing a <b>common infrastructure that develo
 </div>
 </div>
 
-<div id="outline-container-org63b3ee1" class="outline-3">
-<h3 id="org63b3ee1"><span class="section-number-3">3.2</span> OpenCV 설치</h3>
+<div id="outline-container-org7fd17db" class="outline-3">
+<h3 id="org7fd17db"><span class="section-number-3">3.2</span> OpenCV 설치</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-orge688111" class="outline-4">
-<h4 id="orge688111"><span class="section-number-4">3.2.1</span> C++ (OpenCV-3.4.4)</h4>
+<div id="outline-container-org4fe72ef" class="outline-4">
+<h4 id="org4fe72ef"><span class="section-number-4">3.2.1</span> C++ (OpenCV-3.4.4)</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <ul class="org-ul">
 <li>C++11, CMake 3.5.1</li>
@@ -391,8 +392,8 @@ OpenCV 설치 스크립트(20분 정도)
 </div>
 </div>
 
-<div id="outline-container-orgfbacb15" class="outline-4">
-<h4 id="orgfbacb15"><span class="section-number-4">3.2.2</span> 예제</h4>
+<div id="outline-container-org10488f1" class="outline-4">
+<h4 id="org10488f1"><span class="section-number-4">3.2.2</span> 예제</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <ul class="org-ul">
 <li>/home/donghee/installation/OpenCV-3.4.4/share/OpenCV/samples</li>
@@ -401,12 +402,12 @@ OpenCV 설치 스크립트(20분 정도)
 </div>
 </div>
 
-<div id="outline-container-orgbc96b85" class="outline-3">
-<h3 id="orgbc96b85"><span class="section-number-3">3.3</span> OpenCV 소개</h3>
+<div id="outline-container-org2628c41" class="outline-3">
+<h3 id="org2628c41"><span class="section-number-3">3.3</span> OpenCV 소개</h3>
 <div class="outline-text-3" id="text-3-3">
 </div>
-<div id="outline-container-org6175bba" class="outline-4">
-<h4 id="org6175bba"><span class="section-number-4">3.3.1</span> Mat: 이미지 타입</h4>
+<div id="outline-container-org6a338e5" class="outline-4">
+<h4 id="org6a338e5"><span class="section-number-4">3.3.1</span> Mat: 이미지 타입</h4>
 <div class="outline-text-4" id="text-3-3-1">
 
 <div class="figure">
@@ -440,8 +441,8 @@ imshow(<span style="color: #DB8E73;">"Mat"</span>, M);
 </div>
 </div>
 
-<div id="outline-container-org70ff864" class="outline-4">
-<h4 id="org70ff864"><span class="section-number-4">3.3.2</span> Mat: 이미지 읽기</h4>
+<div id="outline-container-orgbaf99c1" class="outline-4">
+<h4 id="orgbaf99c1"><span class="section-number-4">3.3.2</span> Mat: 이미지 읽기</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF; font-weight: bold;">image</span>;
@@ -468,8 +469,8 @@ imshow(<span style="color: #DB8E73;">"Read image"</span>, image);
 </div>
 </div>
 
-<div id="outline-container-orgfe63971" class="outline-4">
-<h4 id="orgfe63971"><span class="section-number-4">3.3.3</span> Mat: 복사</h4>
+<div id="outline-container-orgc8836e1" class="outline-4">
+<h4 id="orgc8836e1"><span class="section-number-4">3.3.3</span> Mat: 복사</h4>
 <div class="outline-text-4" id="text-3-3-3">
 <p>
 B는 A의 refernce(헤더만 복사)
@@ -486,8 +487,8 @@ C = A.clone();                                    <span style="color: #ff0000;">
 </div>
 </div>
 
-<div id="outline-container-org59c14c8" class="outline-4">
-<h4 id="org59c14c8"><span class="section-number-4">3.3.4</span> Filter: Sharpen</h4>
+<div id="outline-container-orgc3e2ea0" class="outline-4">
+<h4 id="orgc3e2ea0"><span class="section-number-4">3.3.4</span> Filter: Sharpen</h4>
 <div class="outline-text-4" id="text-3-3-4">
 <p>
 선명하게(Sharpen) 필터: 현재 위치(i,j)를 변형. 현재 위치 픽셀에 5배 곱하여 더하고, 주변(4방)은 1배 곱하여 뺀다. 현재 위치에 저장.
@@ -618,8 +619,8 @@ sharpen.cpp
 </div>
 </div>
 
-<div id="outline-container-org61a19fe" class="outline-4">
-<h4 id="org61a19fe"><span class="section-number-4">3.3.5</span> Python (OpenCV-3.4.4)</h4>
+<div id="outline-container-org897a876" class="outline-4">
+<h4 id="org897a876"><span class="section-number-4">3.3.5</span> Python (OpenCV-3.4.4)</h4>
 <div class="outline-text-4" id="text-3-3-5">
 <p>
 OpenCV 설치 (Python)
@@ -669,17 +670,17 @@ cv2.destroyAllWindows()
 </div>
 </div>
 
-<div id="outline-container-org25801f9" class="outline-3">
-<h3 id="org25801f9"><span class="section-number-3">3.4</span> 실습</h3>
+<div id="outline-container-org789aae5" class="outline-3">
+<h3 id="org789aae5"><span class="section-number-3">3.4</span> 실습</h3>
 <div class="outline-text-3" id="text-3-4">
 </div>
 <ol class="org-ol">
-<li><a id="orgca5e0a5"></a>face detect (힌트 haarcascade)<br /></li>
+<li><a id="org0e46eb9"></a>face detect (힌트 haarcascade)<br /></li>
 </ol>
 </div>
 
-<div id="outline-container-org323164e" class="outline-3">
-<h3 id="org323164e"><span class="section-number-3">3.5</span> ROS 이미지 메시지</h3>
+<div id="outline-container-orgd7005dc" class="outline-3">
+<h3 id="orgd7005dc"><span class="section-number-3">3.5</span> ROS 이미지 메시지</h3>
 <div class="outline-text-3" id="text-3-5">
 <ul class="org-ul">
 <li>OpenCV <code>cv::Mat</code></li>
@@ -691,8 +692,8 @@ rosmsg info sensor_msgs/Image
 </div>
 </div>
 
-<div id="outline-container-org1943058" class="outline-3">
-<h3 id="org1943058"><span class="section-number-3">3.6</span> <code>cv_bridge</code></h3>
+<div id="outline-container-org13b4b21" class="outline-3">
+<h3 id="org13b4b21"><span class="section-number-3">3.6</span> <code>cv_bridge</code></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 ROS에서의 OpenCV 인터페이스
@@ -705,8 +706,8 @@ ROS에서의 OpenCV 인터페이스
 </div>
 </div>
 
-<div id="outline-container-org0e84c68" class="outline-4">
-<h4 id="org0e84c68"><span class="section-number-4">3.6.1</span> CvImage</h4>
+<div id="outline-container-org01a8f7c" class="outline-4">
+<h4 id="org01a8f7c"><span class="section-number-4">3.6.1</span> CvImage</h4>
 <div class="outline-text-4" id="text-3-6-1">
 <div class="org-src-container">
 <pre class="src src-c++"><span style="color: #6959ce;">namespace</span> <span style="color: #339CDB;">cv_bridge</span> {
@@ -729,8 +730,8 @@ ROS에서의 OpenCV 인터페이스
 </div>
 </div>
 
-<div id="outline-container-org8261414" class="outline-3">
-<h3 id="org8261414"><span class="section-number-3">3.7</span> 예시: <code>image_converter</code></h3>
+<div id="outline-container-org246a535" class="outline-3">
+<h3 id="org246a535"><span class="section-number-3">3.7</span> 예시: <code>image_converter</code></h3>
 <div class="outline-text-3" id="text-3-7">
 <pre class="example">
 cd ~/catkin_ws/src
@@ -844,8 +845,8 @@ catkin build cv_test
 </div>
 </div>
 
-<div id="outline-container-orgb53a2ff" class="outline-3">
-<h3 id="orgb53a2ff"><span class="section-number-3">3.8</span> 예시: <code>image_converter</code> 노드 실행</h3>
+<div id="outline-container-org37b50fd" class="outline-3">
+<h3 id="org37b50fd"><span class="section-number-3">3.8</span> 예시: <code>image_converter</code> 노드 실행</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 <b>cv-camera, image-view 설치</b>
@@ -885,8 +886,8 @@ rostopic list -v
 </pre>
 </div>
 
-<div id="outline-container-orgf18b710" class="outline-4">
-<h4 id="orgf18b710"><span class="section-number-4">3.8.1</span> 구독 <code>/cv_camera/image_raw</code> 이미지 보기</h4>
+<div id="outline-container-orgaf64bc6" class="outline-4">
+<h4 id="orgaf64bc6"><span class="section-number-4">3.8.1</span> 구독 <code>/cv_camera/image_raw</code> 이미지 보기</h4>
 <div class="outline-text-4" id="text-3-8-1">
 <p>
 image converter 에서 구독(subscribe) 하는 토픽 이미지 확인
@@ -901,8 +902,8 @@ rqt_image_view /cv_camera/image_raw
 </div>
 </div>
 
-<div id="outline-container-org58e63b3" class="outline-4">
-<h4 id="org58e63b3"><span class="section-number-4">3.8.2</span> 발행 <code>/image_converter/output_video</code> 이미지 보기</h4>
+<div id="outline-container-org867207a" class="outline-4">
+<h4 id="org867207a"><span class="section-number-4">3.8.2</span> 발행 <code>/image_converter/output_video</code> 이미지 보기</h4>
 <div class="outline-text-4" id="text-3-8-2">
 <p>
 image converter 에서 publish 하는 토픽 이미지 확인
@@ -930,8 +931,8 @@ rviz
 </div>
 </div>
 
-<div id="outline-container-org80008bb" class="outline-4">
-<h4 id="org80008bb"><span class="section-number-4">3.8.3</span> 실습</h4>
+<div id="outline-container-org8ba1aba" class="outline-4">
+<h4 id="org8ba1aba"><span class="section-number-4">3.8.3</span> 실습</h4>
 <div class="outline-text-4" id="text-3-8-3">
 <ul class="org-ul">
 <li><code>/image_converter/output_video</code> 토픽의 이미지에 circle 좌표(x,y)를 표시해보자.</li>
@@ -940,8 +941,8 @@ rviz
 </div>
 </div>
 
-<div id="outline-container-orgc9d646f" class="outline-3">
-<h3 id="orgc9d646f"><span class="section-number-3">3.9</span> 예시: object detection: <code>dnn_detect</code></h3>
+<div id="outline-container-orgbb0fab0" class="outline-3">
+<h3 id="orgbb0fab0"><span class="section-number-3">3.9</span> 예시: object detection: <code>dnn_detect</code></h3>
 <div class="outline-text-3" id="text-3-9">
 
 <div class="figure">
@@ -975,8 +976,8 @@ rostopic list -v
 </div>
 </div>
 
-<div id="outline-container-org7d00faf" class="outline-3">
-<h3 id="org7d00faf"><span class="section-number-3">3.10</span> 예시: tag detection: aruco</h3>
+<div id="outline-container-org7a33716" class="outline-3">
+<h3 id="org7a33716"><span class="section-number-3">3.10</span> 예시: tag detection: aruco</h3>
 <div class="outline-text-3" id="text-3-10">
 <p>
 aruco: library for detect marker <a href="https://sourceforge.net/projects/aruco/">https://sourceforge.net/projects/aruco/</a>
@@ -1055,8 +1056,8 @@ rosrun image_view image_view image:=/aruco_single/result
 </div>
 </div>
 
-<div id="outline-container-org5716c88" class="outline-3">
-<h3 id="org5716c88"><span class="section-number-3">3.11</span> 예시: position estimation using aruco</h3>
+<div id="outline-container-org5ebd996" class="outline-3">
+<h3 id="org5ebd996"><span class="section-number-3">3.11</span> 예시: position estimation using aruco</h3>
 <div class="outline-text-3" id="text-3-11">
 
 <div class="figure">
@@ -1072,8 +1073,8 @@ rostopic echo /aruco_single/pose
 </pre>
 </div>
 
-<div id="outline-container-orgfad0bc5" class="outline-4">
-<h4 id="orgfad0bc5"><span class="section-number-4">3.11.1</span> Camera Calibration</h4>
+<div id="outline-container-orgd149bd2" class="outline-4">
+<h4 id="orgd149bd2"><span class="section-number-4">3.11.1</span> Camera Calibration</h4>
 <div class="outline-text-4" id="text-3-11-1">
 <p>
 <a href="http://wiki.ros.org/camera_calibration">http://wiki.ros.org/camera_calibration</a>
@@ -1099,8 +1100,8 @@ calibration 후 commit 버튼 클릭
 </div>
 </div>
 
-<div id="outline-container-org333746a" class="outline-2">
-<h2 id="org333746a"><span class="section-number-2">4</span> 참고</h2>
+<div id="outline-container-org0991246" class="outline-2">
+<h2 id="org0991246"><span class="section-number-2">4</span> 참고</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li><a href="http://wiki.ros.org/vision_opencv">http://wiki.ros.org/vision_opencv</a></li>
@@ -1121,8 +1122,8 @@ calibration 후 commit 버튼 클릭
 -&#x2014;
 </p>
 </div>
-<div id="outline-container-orga79413a" class="outline-3">
-<h3 id="orga79413a"><span class="section-number-3">4.1</span> TF</h3>
+<div id="outline-container-org0e8f5ea" class="outline-3">
+<h3 id="org0e8f5ea"><span class="section-number-3">4.1</span> TF</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 TF(TransForm 프레임 변환)
@@ -1133,8 +1134,8 @@ TF(TransForm 프레임 변환)
 </p>
 </div>
 
-<div id="outline-container-orgf7cbee6" class="outline-4">
-<h4 id="orgf7cbee6"><span class="section-number-4">4.1.1</span> TF?</h4>
+<div id="outline-container-org58e3850" class="outline-4">
+<h4 id="org58e3850"><span class="section-number-4">4.1.1</span> TF?</h4>
 <div class="outline-text-4" id="text-4-1-1">
 
 <div class="figure">
@@ -1149,8 +1150,8 @@ Publisher: 좌표간의 <b>변환</b> 을 /tf에 방송(publish)
 </div>
 </div>
 
-<div id="outline-container-orge7f000f" class="outline-4">
-<h4 id="orge7f000f"><span class="section-number-4">4.1.2</span> TF의 xyz ?</h4>
+<div id="outline-container-org43d10a6" class="outline-4">
+<h4 id="org43d10a6"><span class="section-number-4">4.1.2</span> TF의 xyz ?</h4>
 <div class="outline-text-4" id="text-4-1-2">
 <p>
 x - forward
@@ -1169,8 +1170,8 @@ z - pointing up
 </div>
 </div>
 
-<div id="outline-container-orgc370cb2" class="outline-3">
-<h3 id="orgc370cb2"><span class="section-number-3">4.2</span> TF의 lookupTransform</h3>
+<div id="outline-container-orga27f097" class="outline-3">
+<h3 id="orga27f097"><span class="section-number-3">4.2</span> TF의 lookupTransform</h3>
 <div class="outline-text-3" id="text-4-2">
 
 <div class="figure">
@@ -1180,8 +1181,8 @@ z - pointing up
 </div>
 
 
-<div id="outline-container-org5271a36" class="outline-4">
-<h4 id="org5271a36"><span class="section-number-4">4.2.1</span> TF 실습</h4>
+<div id="outline-container-org6eec9e2" class="outline-4">
+<h4 id="org6eec9e2"><span class="section-number-4">4.2.1</span> TF 실습</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <p>
 터틀심의 /turtle1을 따라다니는 turtle2를 만들어 보자
@@ -1222,8 +1223,8 @@ z - pointing up
 </div>
 </div>
 
-<div id="outline-container-org5a51391" class="outline-2">
-<h2 id="org5a51391"><span class="section-number-2">5</span> 참고</h2>
+<div id="outline-container-orgba9408f" class="outline-2">
+<h2 id="orgba9408f"><span class="section-number-2">5</span> 참고</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li><a href="https://clover.coex.tech/en">https://clover.coex.tech/en</a></li>
@@ -1233,7 +1234,7 @@ z - pointing up
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2020-08-03 월 22:05</p>
+<p class="date">Created: 2020-08-03 월 22:14</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
