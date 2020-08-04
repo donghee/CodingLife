@@ -122,3 +122,5 @@ rosrun image_view image_view image:=/iris/camera_red_iris/image_raw
  - https://github.com/AerialRobotics-IITK/aruco_detection_gazebo/blob/master/tf-library/offboard/src/offb_node.cpp
  - gazebo에서 ctrl+t 누르면 가제보 토픽 메세지
  - https://github.com/AbdulrahmanGoian/victim_localization/blob/8be58d929a1c68232e2beef964b4026cb92c5c68/urdf/iris/iris_with_sensors.xacro
+
+https://pdfs.semanticscholar.org/b562/b5a97fc85c574d6baaa803122e35686e047e.pdf?_ga=2.88187419.1227225162.1596473043-1633752812.1596473043

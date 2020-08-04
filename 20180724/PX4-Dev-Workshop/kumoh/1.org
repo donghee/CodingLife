@@ -50,7 +50,7 @@ chmod +x ubuntu_sim_ros_melodic.sh
 
 * PX4 Firmware Build
   - https://dev.px4.io
-  - gazebo 사용하기
+  - Gazebo 사용하기
   - Qgroundcontrol
 
 ** PX4 v.10.1 다운로드
@@ -63,7 +63,7 @@ git checkout v1.10.1
 git submodule update --init --recursive
 #+END_SRC
 
-** gazebo 실행
+** Gazebo 실행
 #+BEGIN_SRC
 cd ~/Firmware
 make px4_sitl gazebo
@@ -345,7 +345,13 @@ rqt_graph
 
 [[http://wiki.ros.org/rqt_graph?action=AttachFile&do=get&target=snap_rqt_graph_moveit_demo.png]]
 
-** MavROS 설치 및 실행
+** MavROS
+
+http://wiki.ros.org/mavros mavlink ros wrapper
+
+[[https://i.imgur.com/9z8DEIn.png]]
+
+*** MavROS 설치 및 실행 (이미 자동설치됨, 안해도됨)
 
 #+begin_src sh
 
@@ -400,8 +406,14 @@ roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.0.xxx:14557" _gcs_url
 #+end_src
 
 ** Gazebo 실행
+시뮬레이터의 홈 위치(위도 경도 해발고도) 지정
+
 #+begin_src sh
-$ make posix_sitl gazebo
+export PX4_HOME_LAT=35.9012382
+export PX4_HOME_LON=128.854495337
+export PX4_HOME_ALT=71
+
+make posix_sitl gazebo
 #+end_src
 
 
@@ -596,18 +608,59 @@ w \\
 
 # https://www.andre-gaschler.com/rotationconverter/
 
-** 토픽 레코드: rosbag
-리뷰할때 유용
+*** 유용한 mavros 명령(노드) 모음
 
-arm: mavros 패키지의 mavsafety 사용
+mavros 패키지의 mavsafety 노드: arm, disarm, safetyarea
+
 #+begin_src
 rosrun mavros mavsafety arm
 #+end_src
 
-change mode: mavsys 노드 사용
+mavcmd 노드:
+
+예시: takeoff from current position (10도 각도 피치, 90도 방향 보고, 5m 위로 takeoff)
+#+begin_src
+rosrun mavros mavcmd takeoffcur 10 90 5
+#+end_src
+
+예시: home 지정(RTL 위치, 위도 35.9012382 경도 128.85449537 해발고도 71m)
+google earth: https://earth.google.com/web/search/35.9012382+128.85449537
+#+begin_src
+rosrun mavros mavcmd sethome 35.9012382 128.854495337 71
+#+end_src
+
+mavsetp 노드: setpoint 한번 보내기 (setpoint 테스트용, position, velocity, acceleration 가능)
+
+예시: x=1m, y=1m, z=1m, yaw=90도 setpoint 보내기
+#+begin_src
+rosrun mavros mavsetp local -p 1 1 2 90
+#+end_src
+
+mavsys 노드: change mode
 #+begin_src
 rosrun mavros mavsys mode -c OFFBOARD
 #+end_src
+
+mavparam 노드: parameter set, get, load, dump
+
+예시: 파라미터 덤프
+#+begin_src
+rosrun mavros mavparam dump /tmp/params
+#+end_src
+
+mavftp 노드: px4의 파일 시스템 접근
+
+예시: 로그 다운로드
+#+begin_src
+rosrun mavros mavftp download log/2020-08-03/14_37_15.ul
+#+end_src
+
+
+
+
+** 토픽 레코드: rosbag
+리뷰할때 유용
+
 
 토픽 저장하기
 #+begin_src
@@ -638,7 +691,6 @@ $ catkin_create_pkg drone_control mavros sensor_msgs roscpp
 
 ~~/catkin_ws/src/drone_control/src/drone_state.cpp~
 #+begin_src c++
-
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
 
@@ -929,13 +981,44 @@ int main(int argc, char **argv)
 
   * 실행: ~rosrun drone_control offb_node~
 
+*** launch 파일을 이용하여 노드 한번에 실행 (옵션)
+roscore, gazebo, mavros, offb_node 노드를 한번에 실행하기 위해서 roslaunch를 이용해보자.
+
+~~/catkin_ws/src/drone_control/launch/offb_node.launch~ 파일에 다음 내용 추가
+#+begin_src
+<launch>
+    <node name="offb_node" pkg="drone_control" type="offb_node"/>
+    <include file="$(find px4)/launch/mavros_posix_sitl.launch">
+      <arg name="vehicle" value="iris"/>
+    </include>
+</launch>
+#+end_src
+
+~~/.bashrc~ 파일의 끝에 다음 내용을 추가
+환경 변수 추가
+#+begin_src
+PX4_SRC_DIR=$HOME/Firmware
+source $PX4_SRC_DIR/Tools/setup_gazebo.bash $PX4_SRC_DIR $PX4_SRC_DIR/build/px4_sitl_default > /dev/null
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$PX4_SRC_DIR:$PX4_SRC_DIR/Tools/sitl_gazebo
+#+end_src
+
+#+begin_src sh
+source ~/.bashrc
+catkin build
+#+end_src
+
+#+begin_src sh
+roslaunch drone_control offb_node.launch
+#+end_src
+
+
 ** 새로운 노드 만들기: ~circle~
 
 출처: https://github.com/Jaeyoung-Lim/modudculab_ros/blob/master/src/pub_setpoints_traj.cpp
 
 #+begin_src
 /**
- * @file offb_node.cpp
+ * @file circle.cpp
  * @brief offboard example node, written with mavros version 0.14.2, px4 flight
  * stack and tested in Gazebo SITL
  */
