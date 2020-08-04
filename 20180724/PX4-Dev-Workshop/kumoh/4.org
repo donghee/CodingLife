@@ -140,6 +140,8 @@ $ rosrun drone_control_py offb_node.py
 ** joystic
 
 mavros extras mavteleop
+Logitech Wireless Gamepad F710 (DirectInput Mode)
+
 
 https://github.com/nasa-jpl/osr-rover-code/blob/master/ROS/osr/src/joystick.py
 
