@@ -1,7 +1,7 @@
 # 수업 교재
 
  - 교재: https://learn.dronemap.io
- - 채팅: https://discord.gg/2HkV6a
+ - 채팅: http://pad.dh8.kr/p/daegu
 
 # 순서
  - [1일차](https://raw.githack.com/donghee/CodingLife/master/20180724/PX4-Dev-Workshop/mini/1.html) 드론 제어 소프트웨어 소개 및 설치, ROS 프로그래밍
