@@ -333,12 +333,12 @@ $ source /opt/ros/melodic/setup.bash
 $ roscore
 #+end_src
 
-3. turtlesim 패키지의 turtlesim_node 실행
+3. turtlesim 패키지의 ~turtlesim_node~ 실행
 #+begin_src sh
 $ rosrun turtlesim turtlesim_node
 #+end_src
 
-4. turtlesim 패키지의 turtle_teleop_key 실행
+4. turtlesim 패키지의 ~turtle_teleop_key~ 실행
 #+begin_src sh
 rosrun turtlesim turtle_teleop_key
 #+end_src
@@ -710,11 +710,8 @@ rosrun mavros mavftp download log/2020-08-03/14_37_15.ul
 #+end_src
 
 
-
-
 ** 토픽 레코드: rosbag
 리뷰할때 유용
-
 
 토픽 저장하기
 #+begin_src
