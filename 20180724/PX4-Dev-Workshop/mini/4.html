@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-05 Wed 09:25 -->
+<!-- 2020-08-06 목 08:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -246,25 +246,26 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9a1cfb8">1. 새로운 노드 만들기 (python)</a>
+<li><a href="#orgb97bfed">1. 새로운 노드 만들기 (python)</a>
 <ul>
-<li><a href="#org84e00b7">1.1. 패키지 만들기</a></li>
-<li><a href="#orgd1f60f5">1.2. 노드 코드 작성</a></li>
-<li><a href="#orgc69329b">1.3. 패키지 빌드</a></li>
-<li><a href="#org1b2fcda">1.4. 패키지 노드 실행</a></li>
-<li><a href="#orgee4405f">1.5. launch file</a></li>
+<li><a href="#org49ed74b">1.1. 패키지 만들기</a></li>
+<li><a href="#orga67800c">1.2. 노드 코드 작성</a></li>
+<li><a href="#org1db6ebb">1.3. 패키지 빌드</a></li>
+<li><a href="#org9b1df2b">1.4. 패키지 노드 실행</a></li>
+<li><a href="#org1ea8988">1.5. launch file</a></li>
 </ul>
 </li>
-<li><a href="#org76f1e0b">2. joystic</a></li>
+<li><a href="#orgdf34ad9">2. keyboard 사용하여 setpoint 보내기</a></li>
+<li><a href="#org150f654">3. joystic 사용하여 setpoint 보내기</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org9a1cfb8" class="outline-2">
-<h2 id="org9a1cfb8"><span class="section-number-2">1</span> 새로운 노드 만들기 (python)</h2>
+<div id="outline-container-orgb97bfed" class="outline-2">
+<h2 id="orgb97bfed"><span class="section-number-2">1</span> 새로운 노드 만들기 (python)</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org84e00b7" class="outline-3">
-<h3 id="org84e00b7"><span class="section-number-3">1.1</span> 패키지 만들기</h3>
+<div id="outline-container-org49ed74b" class="outline-3">
+<h3 id="org49ed74b"><span class="section-number-3">1.1</span> 패키지 만들기</h3>
 <div class="outline-text-3" id="text-1-1">
 <div class="org-src-container">
 <pre class="src src-sh">$ source ~/catkin_ws/devel/setup.bash
@@ -275,12 +276,13 @@ $ catkin_create_pkg drone_control_py mavros geometry_msgs rospy
 </div>
 </div>
 
-<div id="outline-container-orgd1f60f5" class="outline-3">
-<h3 id="orgd1f60f5"><span class="section-number-3">1.2</span> 노드 코드 작성</h3>
+<div id="outline-container-orga67800c" class="outline-3">
+<h3 id="orga67800c"><span class="section-number-3">1.2</span> 노드 코드 작성</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 <code>~/catkin_ws/src/drone_control_py/scripts/offb_node.py</code>
 </p>
+
 <div class="org-src-container">
 <pre class="src src-c++">#<span style="color: #85DDFF; font-weight: bold;">!</span>/usr/bin/env python
 
@@ -289,12 +291,12 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 from mavros_msgs.msg import State
 from mavros_msgs.srv import CommandBool, CommandBoolRequest
-<span style="color: #35CDAF;">from</span> <span style="color: #85DDFF;">mavros_msgs</span>.srv import SetMode, <span style="color: #35CDAF;">SetModeRequest</span>
+<span style="color: #35CDAF;">from</span> <span style="color: #85DDFF; font-weight: bold;">mavros_msgs</span>.srv import SetMode, <span style="color: #35CDAF;">SetModeRequest</span>
 
-<span style="color: #85DDFF;">current_state</span> = State()
+<span style="color: #85DDFF; font-weight: bold;">current_state</span> = State()
 <span style="color: #35CDAF;">def</span> <span style="color: #D9DAA2;">state_cb</span>(msg):
     global <span style="color: #35CDAF;">current_state</span>
-    <span style="color: #85DDFF;">current_state</span> = msg
+    <span style="color: #85DDFF; font-weight: bold;">current_state</span> = msg
 
 def offboard_node():
 
@@ -308,7 +310,7 @@ def offboard_node():
     arming_client = rospy.ServiceProxy(<span style="color: #DB8E73;">"mavros/cmd/arming"</span>, CommandBool)
     set_mode_client = rospy.ServiceProxy(<span style="color: #DB8E73;">"mavros/set_mode"</span>, SetMode)
 
-    <span style="color: #339CDB;">while</span> <span style="color: #339CDB;">not</span> rospy.is_shutdown() <span style="color: #339CDB;">and</span> <span style="color: #339CDB;">not</span> current_state.connected:
+    <span style="color: #6959ce;">while</span> <span style="color: #6959ce;">not</span> rospy.is_shutdown() <span style="color: #6959ce;">and</span> <span style="color: #6959ce;">not</span> current_state.connected:
         r.sleep()
 
     pose = PoseStamped()
@@ -316,12 +318,12 @@ def offboard_node():
     pose.pose.position.y = 0
     pose.pose.position.z = 2
 
-    <span style="color: #339CDB;">for</span> i in range(100):
+    <span style="color: #6959ce;">for</span> i in range(100):
         local_pos_pub.publish(pose)
         r.sleep()
 
-        <span style="color: #339CDB;">if</span> rospy.is_shutdown():
-            <span style="color: #339CDB;">break</span>
+        <span style="color: #6959ce;">if</span> rospy.is_shutdown():
+            <span style="color: #6959ce;">break</span>
 
     offb_set_mode = SetModeRequest()
     offb_set_mode.custom_mode = <span style="color: #DB8E73;">"OFFBOARD"</span>
@@ -331,26 +333,26 @@ def offboard_node():
 
     last_request = rospy.Time.now()
 
-    <span style="color: #339CDB;">while</span> <span style="color: #339CDB;">not</span> rospy.is_shutdown():
-        <span style="color: #339CDB;">if</span> current_state.mode != <span style="color: #DB8E73;">"OFFBOARD"</span> \
-              <span style="color: #339CDB;">and</span> (rospy.Time.now() - last_request &gt; rospy.Duration(5)):
+    <span style="color: #6959ce;">while</span> <span style="color: #6959ce;">not</span> rospy.is_shutdown():
+        <span style="color: #6959ce;">if</span> current_state.mode != <span style="color: #DB8E73;">"OFFBOARD"</span> \
+              <span style="color: #6959ce;">and</span> (rospy.Time.now() - last_request &gt; rospy.Duration(5)):
 
-            <span style="color: #339CDB;">try</span>:
+            <span style="color: #6959ce;">try</span>:
                 offb_set_mode_resp = set_mode_client(offb_set_mode)
-                <span style="color: #339CDB;">if</span> offb_set_mode_resp.mode_sent:
+                <span style="color: #6959ce;">if</span> offb_set_mode_resp.mode_sent:
                     rospy.loginfo(<span style="color: #DB8E73;">"Offboard enabled"</span>)
             <span style="color: #35CDAF;">except</span> <span style="color: #D9DAA2;">rospy</span>.ServiceException as e:
                 rospy.logwarn(e)
 
             last_request = rospy.Time.now()
 
-        <span style="color: #339CDB;">else</span>:
-          <span style="color: #339CDB;">if</span> <span style="color: #339CDB;">not</span> current_state.armed \
-                <span style="color: #339CDB;">and</span> (rospy.Time.now() - last_request &gt; rospy.Duration(5)):
+        <span style="color: #6959ce;">else</span>:
+          <span style="color: #6959ce;">if</span> <span style="color: #6959ce;">not</span> current_state.armed \
+                <span style="color: #6959ce;">and</span> (rospy.Time.now() - last_request &gt; rospy.Duration(5)):
 
-            <span style="color: #339CDB;">try</span>:
+            <span style="color: #6959ce;">try</span>:
                 arm_cmd_resp = arming_client(arm_cmd)
-                <span style="color: #339CDB;">if</span> arm_cmd_resp.success:
+                <span style="color: #6959ce;">if</span> arm_cmd_resp.success:
                     rospy.loginfo(<span style="color: #DB8E73;">"Vehicle armed"</span>)
             <span style="color: #35CDAF;">except</span> <span style="color: #D9DAA2;">rospy</span>.ServiceException as e:
                 rospy.logwarn(e)
@@ -360,10 +362,10 @@ def offboard_node():
         local_pos_pub.publish(pose)
         r.sleep()
 
-<span style="color: #339CDB;">if</span> __name__ == <span style="color: #DB8E73;">"__main__"</span>:
-    <span style="color: #339CDB;">try</span>:
+<span style="color: #6959ce;">if</span> __name__ == <span style="color: #DB8E73;">"__main__"</span>:
+    <span style="color: #6959ce;">try</span>:
         offboard_node()
-    <span style="color: #35CDAF;">except</span> <span style="color: #85DDFF;">rospy</span>.ROSInterruptException:
+    <span style="color: #35CDAF;">except</span> <span style="color: #85DDFF; font-weight: bold;">rospy</span>.ROSInterruptException:
         pass
 </pre>
 </div>
@@ -388,8 +390,8 @@ $ chmod +x offb_node.py
 </div>
 </div>
 
-<div id="outline-container-orgc69329b" class="outline-3">
-<h3 id="orgc69329b"><span class="section-number-3">1.3</span> 패키지 빌드</h3>
+<div id="outline-container-org1db6ebb" class="outline-3">
+<h3 id="org1db6ebb"><span class="section-number-3">1.3</span> 패키지 빌드</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="org-src-container">
 <pre class="src src-sh">$ cd ~/catkin_ws
@@ -399,8 +401,8 @@ $ catkin build
 </div>
 </div>
 
-<div id="outline-container-org1b2fcda" class="outline-3">
-<h3 id="org1b2fcda"><span class="section-number-3">1.4</span> 패키지 노드 실행</h3>
+<div id="outline-container-org9b1df2b" class="outline-3">
+<h3 id="org9b1df2b"><span class="section-number-3">1.4</span> 패키지 노드 실행</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 <code>drone_control_py</code> 패키지의 <code>offb_node</code> 노드 실행
@@ -412,8 +414,8 @@ $ catkin build
 </div>
 </div>
 
-<div id="outline-container-orgee4405f" class="outline-3">
-<h3 id="orgee4405f"><span class="section-number-3">1.5</span> launch file</h3>
+<div id="outline-container-org1ea8988" class="outline-3">
+<h3 id="org1ea8988"><span class="section-number-3">1.5</span> launch file</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 <code>~/catkin_ws/src/drone_control_py/launch/offb_node.launch</code>
@@ -436,20 +438,156 @@ $ catkin build
 </div>
 </div>
 
-<div id="outline-container-org76f1e0b" class="outline-2">
-<h2 id="org76f1e0b"><span class="section-number-2">2</span> joystic</h2>
+
+<div id="outline-container-orgdf34ad9" class="outline-2">
+<h2 id="orgdf34ad9"><span class="section-number-2">2</span> keyboard 사용하여 setpoint 보내기</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-mavros extras mavteleop
-Logitech Wireless Gamepad F710 (DirectInput Mode)
-</p>
-
-
-<p>
-<a href="https://github.com/nasa-jpl/osr-rover-code/blob/master/ROS/osr/src/joystick.py">https://github.com/nasa-jpl/osr-rover-code/blob/master/ROS/osr/src/joystick.py</a>
+<code>~catkin_ws/src/drone_control_py/scripts/mavteleop_key.py</code> 추가
 </p>
 
 <pre class="example">
+#!/usr/bin/env python
+
+import rospy
+import curses
+from std_srvs.srv import *
+
+from geometry_msgs.msg import Vector3, TwistStamped
+
+rospy.init_node('mavros_teleop_key', anonymous=True)
+vel_pub = rospy.Publisher("mavros/setpoint_velocity/cmd_vel",
+                                 TwistStamped,
+                                 queue_size=10)
+
+
+stdscr = curses.initscr()
+curses.cbreak()
+stdscr.keypad(1)
+
+stdscr.addstr(0,10,"Hit 'x' to quit")
+stdscr.refresh()
+
+key = ''
+throttle = 0
+rotation = [0,0,0]
+
+while True:
+    key = stdscr.getch()
+
+    if key == ord('x'):
+        break
+
+    dirty = False
+
+    if key == ord('z'):
+        throttle = 0
+        rotation = [0,0,0]
+        dirty = True
+
+    stdscr.refresh()
+    if key == curses.KEY_UP:
+        throttle = throttle + 0.1 #0.1
+        dirty = True
+    elif key == curses.KEY_DOWN:
+        throttle = throttle - 0.1
+        dirty = True
+    elif key == ord('w'):
+        rotation[1] = rotation[1] + 0.05
+        dirty = True
+    elif key == ord('s'):
+        rotation[1] = rotation[1] - 0.05
+        dirty = True
+    elif key == ord('d'):
+        rotation[0] = rotation[0] + 0.05
+        dirty = True
+    elif key == ord('a'):
+        rotation[0] = rotation[0] - 0.05
+        dirty = True
+    elif key == ord('q'):
+        rotation[2] = rotation[2] + 0.05
+        dirty = True
+    elif key == ord('e'):
+        rotation[2] = rotation[2] - 0.05
+        dirty = True
+
+    for i in range(0, len(rotation)):
+        rotation[i] = round(rotation[i], 4)
+    throttle = round(throttle, 4)
+
+
+    twist = TwistStamped()
+    twist.twist.linear = Vector3(x=rotation[0], y=rotation[1], z=throttle)
+    twist.twist.angular = Vector3(z=rotation[2])
+
+    stdscr.addstr(2, 10, "v z: " + str(throttle) + "   ")
+    stdscr.addstr(3, 10, "v x:  " + str(rotation[0]) + "   ")
+    stdscr.addstr(4, 10, "v y: " + str(rotation[1]) + "   ")
+    stdscr.addstr(5, 10, "v yaw:   " + str(rotation[2]) + "   ")
+
+    if dirty:
+        vel_pub.publish(twist)
+        dirty = False
+
+curses.endwin()
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org150f654" class="outline-2">
+<h2 id="org150f654"><span class="section-number-2">3</span> joystic 사용하여 setpoint 보내기</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+mavros extras mavteleop
+</p>
+
+<p>
+Logitech Wireless Gamepad F710 (DirectInput Mode)
+</p>
+
+<p>
+<code>~/catkin_ws/src/mavros/mavros_extras/launch/teleop.launch</code> <code>teleop_args</code> 수정
+</p>
+<pre class="example">
+&lt;!--arg name="teleop_args" default="-att" /&gt; --&gt;
+&lt;arg name="teleop_args" default="-vel" /&gt;
+</pre>
+
+<p>
+<code>~/catkin_ws/src/mavros/mavros_extras/scripts/mavteleop</code> 파일의 <code>velocity_setpoint_control</code> 함수 수정
+</p>
+<pre class="example">
+def velocity_setpoint_control(args):
+    rospy.loginfo("MAV-Teleop: Velocity setpoint control type.")
+
+    vel_pub = rospy.Publisher("/mavros/setpoint_velocity/cmd_vel",
+                                     TwistStamped,
+                                     queue_size=10)
+
+    def joy_cb(joy):
+        # MODE 2
+        yaw = joy.axes[0]
+        throttle = joy.axes[1]
+        roll = joy.axes[2]
+        pitch = joy.axes[3]
+
+        rospy.logdebug("RPYT: %f, %f, %f, %f", roll, pitch, yaw, throttle)
+
+        # Based on QGC UAS joystickinput_settargets branch
+        # not shure that it really need inegrating, as it done in QGC.
+        twist = TwistStamped(header=Header(stamp=rospy.get_rostime()))
+        twist.twist.linear = Vector3(x=roll, y=pitch, z=throttle)
+        twist.twist.angular = Vector3(z=yaw)
+
+        vel_pub.publish(twist)
+
+
+    jsub = rospy.Subscriber("joy", Joy, joy_cb)
+    rospy.spin()
+
+</pre>
+<pre class="example">
+cd ~/Firmware
 roslaunch px4 mavros_posix_sitl.launch
 </pre>
 
@@ -461,13 +599,21 @@ roslaunch mavros_extras teleop.launch
 
 <pre class="example">
 rosrun mavros mavsys mode -c OFFBOARD
+rosrun mavros mavsafety arm
 </pre>
+
+<p>
+참고:
+</p>
+<ul class="org-ul">
+<li><a href="https://github.com/nasa-jpl/osr-rover-code/blob/master/ROS/osr/src/joystick.py">https://github.com/nasa-jpl/osr-rover-code/blob/master/ROS/osr/src/joystick.py</a></li>
+</ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2020-08-05 Wed 09:25</p>
+<p class="date">Created: 2020-08-06 목 08:14</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

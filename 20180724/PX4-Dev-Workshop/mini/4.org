@@ -12,6 +12,7 @@ $ catkin_create_pkg drone_control_py mavros geometry_msgs rospy
 *** 노드 코드 작성
 
 ~~/catkin_ws/src/drone_control_py/scripts/offb_node.py~
+
 #+begin_src c++
 #!/usr/bin/env python
 
@@ -137,15 +138,142 @@ $ rosrun drone_control_py offb_node.py
 
 [[https://i.imgur.com/F2iCEwH.png]]
 
-** joystic
 
-mavros extras mavteleop
-Logitech Wireless Gamepad F710 (DirectInput Mode)
+** keyboard 사용하여 setpoint 보내기
 
-
-https://github.com/nasa-jpl/osr-rover-code/blob/master/ROS/osr/src/joystick.py
+~~catkin_ws/src/drone_control_py/scripts/mavteleop_key.py~ 추가
 
 #+begin_src
+#!/usr/bin/env python
+
+import rospy
+import curses
+from std_srvs.srv import *
+
+from geometry_msgs.msg import Vector3, TwistStamped
+
+rospy.init_node('mavros_teleop_key', anonymous=True)
+vel_pub = rospy.Publisher("mavros/setpoint_velocity/cmd_vel",
+                                 TwistStamped,
+                                 queue_size=10)
+
+
+stdscr = curses.initscr()
+curses.cbreak()
+stdscr.keypad(1)
+
+stdscr.addstr(0,10,"Hit 'x' to quit")
+stdscr.refresh()
+
+key = ''
+throttle = 0
+rotation = [0,0,0]
+
+while True:
+    key = stdscr.getch()
+
+    if key == ord('x'):
+        break
+
+    dirty = False
+
+    if key == ord('z'):
+        throttle = 0
+        rotation = [0,0,0]
+        dirty = True
+
+    stdscr.refresh()
+    if key == curses.KEY_UP:
+        throttle = throttle + 0.1 #0.1
+        dirty = True
+    elif key == curses.KEY_DOWN:
+        throttle = throttle - 0.1
+        dirty = True
+    elif key == ord('w'):
+        rotation[1] = rotation[1] + 0.05
+        dirty = True
+    elif key == ord('s'):
+        rotation[1] = rotation[1] - 0.05
+        dirty = True
+    elif key == ord('d'):
+        rotation[0] = rotation[0] + 0.05
+        dirty = True
+    elif key == ord('a'):
+        rotation[0] = rotation[0] - 0.05
+        dirty = True
+    elif key == ord('q'):
+        rotation[2] = rotation[2] + 0.05
+        dirty = True
+    elif key == ord('e'):
+        rotation[2] = rotation[2] - 0.05
+        dirty = True
+
+    for i in range(0, len(rotation)):
+        rotation[i] = round(rotation[i], 4)
+    throttle = round(throttle, 4)
+
+
+    twist = TwistStamped()
+    twist.twist.linear = Vector3(x=rotation[0], y=rotation[1], z=throttle)
+    twist.twist.angular = Vector3(z=rotation[2])
+
+    stdscr.addstr(2, 10, "v z: " + str(throttle) + "   ")
+    stdscr.addstr(3, 10, "v x:  " + str(rotation[0]) + "   ")
+    stdscr.addstr(4, 10, "v y: " + str(rotation[1]) + "   ")
+    stdscr.addstr(5, 10, "v yaw:   " + str(rotation[2]) + "   ")
+
+    if dirty:
+        vel_pub.publish(twist)
+        dirty = False
+
+curses.endwin()
+#+end_src
+
+** joystic 사용하여 setpoint 보내기
+
+mavros extras mavteleop
+
+Logitech Wireless Gamepad F710 (DirectInput Mode)
+
+~~/catkin_ws/src/mavros/mavros_extras/launch/teleop.launch~ ~teleop_args~ 수정
+#+begin_src
+        <!--arg name="teleop_args" default="-att" /> -->
+        <arg name="teleop_args" default="-vel" />
+#+end_src
+
+~~/catkin_ws/src/mavros/mavros_extras/scripts/mavteleop~ 파일의 ~velocity_setpoint_control~ 함수 수정
+#+begin_src
+def velocity_setpoint_control(args):
+    rospy.loginfo("MAV-Teleop: Velocity setpoint control type.")
+
+    vel_pub = rospy.Publisher("/mavros/setpoint_velocity/cmd_vel",
+                                     TwistStamped,
+                                     queue_size=10)
+
+    def joy_cb(joy):
+        # MODE 2
+        yaw = joy.axes[0]
+        throttle = joy.axes[1]
+        roll = joy.axes[2]
+        pitch = joy.axes[3]
+
+        rospy.logdebug("RPYT: %f, %f, %f, %f", roll, pitch, yaw, throttle)
+
+        # Based on QGC UAS joystickinput_settargets branch
+        # not shure that it really need inegrating, as it done in QGC.
+        twist = TwistStamped(header=Header(stamp=rospy.get_rostime()))
+        twist.twist.linear = Vector3(x=roll, y=pitch, z=throttle)
+        twist.twist.angular = Vector3(z=yaw)
+
+        vel_pub.publish(twist)
+
+
+    jsub = rospy.Subscriber("joy", Joy, joy_cb)
+    rospy.spin()
+
+#+end_src
+#+begin_src
+cd ~/Firmware
 roslaunch px4 mavros_posix_sitl.launch
 #+end_src
 
@@ -157,4 +285,8 @@ roslaunch mavros_extras teleop.launch
 
 #+begin_src
 rosrun mavros mavsys mode -c OFFBOARD
+rosrun mavros mavsafety arm
 #+end_src
+
+참고:
+ - https://github.com/nasa-jpl/osr-rover-code/blob/master/ROS/osr/src/joystick.py
