@@ -1,0 +1,160 @@
+
+** 새로운 노드 만들기 (python)
+
+*** 패키지 만들기
+
+#+begin_src sh
+$ source ~/catkin_ws/devel/setup.bash
+$ cd ~/catkin_ws/src
+$ catkin_create_pkg drone_control_py mavros geometry_msgs rospy
+#+end_src
+
+*** 노드 코드 작성
+
+~~/catkin_ws/src/drone_control_py/scripts/offb_node.py~
+#+begin_src c++
+#!/usr/bin/env python
+
+import rospy
+
+from geometry_msgs.msg import PoseStamped
+from mavros_msgs.msg import State
+from mavros_msgs.srv import CommandBool, CommandBoolRequest
+from mavros_msgs.srv import SetMode, SetModeRequest
+
+current_state = State()
+def state_cb(msg):
+    global current_state
+    current_state = msg
+
+def offboard_node():
+
+    rospy.init_node("offb_node")
+    r = rospy.Rate(20)
+
+    rospy.Subscriber("mavros/state", State, state_cb)
+    local_pos_pub = rospy.Publisher("mavros/setpoint_position/local",
+                                     PoseStamped,
+                                     queue_size=10)
+    arming_client = rospy.ServiceProxy("mavros/cmd/arming", CommandBool)
+    set_mode_client = rospy.ServiceProxy("mavros/set_mode", SetMode)
+
+    while not rospy.is_shutdown() and not current_state.connected:
+        r.sleep()
+
+    pose = PoseStamped()
+    pose.pose.position.x = 0
+    pose.pose.position.y = 0
+    pose.pose.position.z = 2
+
+    for i in range(100):
+        local_pos_pub.publish(pose)
+        r.sleep()
+
+        if rospy.is_shutdown():
+            break
+
+    offb_set_mode = SetModeRequest()
+    offb_set_mode.custom_mode = "OFFBOARD"
+
+    arm_cmd = CommandBoolRequest()
+    arm_cmd.value = True
+
+    last_request = rospy.Time.now()
+
+    while not rospy.is_shutdown():
+        if current_state.mode != "OFFBOARD" \
+              and (rospy.Time.now() - last_request > rospy.Duration(5)):
+
+            try:
+                offb_set_mode_resp = set_mode_client(offb_set_mode)
+                if offb_set_mode_resp.mode_sent:
+                    rospy.loginfo("Offboard enabled")
+            except rospy.ServiceException as e:
+                rospy.logwarn(e)
+
+            last_request = rospy.Time.now()
+
+        else:
+          if not current_state.armed \
+                and (rospy.Time.now() - last_request > rospy.Duration(5)):
+
+            try:
+                arm_cmd_resp = arming_client(arm_cmd)
+                if arm_cmd_resp.success:
+                    rospy.loginfo("Vehicle armed")
+            except rospy.ServiceException as e:
+                rospy.logwarn(e)
+
+            last_request = rospy.Time.now()
+
+        local_pos_pub.publish(pose)
+        r.sleep()
+
+if __name__ == "__main__":
+    try:
+        offboard_node()
+    except rospy.ROSInterruptException:
+        pass
+#+end_src
+
+실행 권한 추가
+
+#+begin_src py
+$ cd ~/catkin_ws/src/drone_control_py/scripts
+$ chmod +x offb_node.py
+#+end_src
+
+환경 변수 다시 로드!
+#+begin_src sh
+$ source ~/catkin_ws/devel/setup.bash
+#+end_src
+
+*** 패키지 빌드
+
+#+begin_src sh
+$ cd ~/catkin_ws
+$ catkin build
+#+end_src
+
+*** 패키지 노드 실행
+
+~drone_control_py~ 패키지의 ~offb_node~ 노드 실행
+#+begin_src sh
+$ rosrun drone_control_py offb_node.py
+#+end_src
+
+*** launch file
+~~/catkin_ws/src/drone_control_py/launch/offb_node.launch~
+#+begin_src
+<launch>
+    <node name="offb_node" pkg="drone_control_py" type="offb_node.py"/>
+    <include file="$(find px4)/launch/mavros_posix_sitl.launch">
+      <arg name="vehicle" value="iris"/>
+    </include>
+</launch>
+#+end_src
+
+[[https://i.imgur.com/F2iCEwH.png]]
+
+** joystic
+
+mavros extras mavteleop
+Logitech Wireless Gamepad F710 (DirectInput Mode)
+
+
+https://github.com/nasa-jpl/osr-rover-code/blob/master/ROS/osr/src/joystick.py
+
+#+begin_src
+roslaunch px4 mavros_posix_sitl.launch
+#+end_src
+
+#+begin_src
+sudo apt-get install ros-melodic-joy
+cd ~/catkin_ws
+roslaunch mavros_extras teleop.launch
+#+end_src
+
+#+begin_src
+rosrun mavros mavsys mode -c OFFBOARD
+#+end_src

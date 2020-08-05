@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-08-05 Wed 09:25 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PX4 and ROS Programming Day 3</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Donghee Park" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">PX4 and ROS Programming Day 3</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org98128e0">1. 수업</a></li>
+<li><a href="#org2755fbf">2. 수업 진행</a></li>
+<li><a href="#org949ddbc">3. 수업 자료</a>
+<ul>
+<li><a href="#orgecd6bcc">3.1. Gazebo에 카메라 추가</a></li>
+<li><a href="#org0b4cb1c">3.2. Gazebo 실행</a></li>
+<li><a href="#org1ccfe80">3.3. Gazebo의 카메라 영상을 ROS image<sub>raw</sub> 토픽으로 보기</a></li>
+</ul>
+</li>
+<li><a href="#orgcc0a0b7">4. 참고</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org98128e0" class="outline-2">
+<h2 id="org98128e0"><span class="section-number-2">1</span> 수업</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>목표: 컴퓨터 비전을 시뮬레이터에서 테스트할 수 있는 환경을 만들 수 있다.</li>
+<li>교재: <a href="https://learn.dronemap.io/">https://learn.dronemap.io/</a></li>
+<li>코치: 박동희 dongheepark@gmail.com</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2755fbf" class="outline-2">
+<h2 id="org2755fbf"><span class="section-number-2">2</span> 수업 진행</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>Gazebo에 카메라 추가</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org949ddbc" class="outline-2">
+<h2 id="org949ddbc"><span class="section-number-2">3</span> 수업 자료</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgecd6bcc" class="outline-3">
+<h3 id="orgecd6bcc"><span class="section-number-3">3.1</span> Gazebo에 카메라 추가</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/NlL3bhA.png" alt="NlL3bhA.png" />
+</p>
+</div>
+
+<p>
+Gazebo 에서 드론에 부착된 카메라를 이용한 컴퓨터 비전을 시뮬레이션 하기 위해서는 기체에 카메라를 부착해야 한다.
+</p>
+
+<p>
+<code>px4_sitl</code> px4 sitl 개발시 사용되는 기체(iris)에 카메라를 부착해보자. 
+</p>
+
+<ol class="org-ol">
+<li>카메라 부착된 기체 모델 생성.</li>
+</ol>
+
+<p>
+px4에서 사용하는 iris 모델을 수정하여 카메라를 부착하여 보자.
+</p>
+
+<pre class="example">
+cd ~/Firmware/Tools/sitl_gazebo/models/rotors_description/urdf
+</pre>
+
+<ol class="org-ol">
+<li>카메라 추가</li>
+</ol>
+
+<p>
+<code>iris_base.xacro</code> 파일에서 다음 내용을 '&lt;!&#x2013; Mount an ADIS16448 IMU &#x2013;&gt;' 전에 추가
+</p>
+
+<pre class="example">
+
+&lt;!-- Mount a camera --&gt;
+&lt;xacro:camera_macro
+namespace="${namespace}"
+parent_link="base_link"
+camera_suffix="red_iris"
+frame_rate="30.0"
+horizontal_fov="1.3962634"
+image_width="800"
+image_height="800"
+image_format="R8G8B8"
+min_distance="0.02"
+max_distance="300"
+noise_mean="0.0"
+noise_stddev="0.007"
+enable_visual="1"
+&gt;
+&lt;box size="0.05 0.05 0.05" /&gt;
+&lt;origin xyz="0 0 -0.05" rpy="0 1.57079 0"/&gt;
+&lt;/xacro:camera_macro&gt;
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0b4cb1c" class="outline-3">
+<h3 id="org0b4cb1c"><span class="section-number-3">3.2</span> Gazebo 실행</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+모델 확인
+</p>
+<pre class="example">
+cd ~/Firmware
+make clean 
+DONT_RUN=1 make px4_sitl gazebo
+make px4_sitl gazebo
+</pre>
+
+<p>
+카메라를 ROS 토픽으로 연결 하여 gazebo 실행
+</p>
+<pre class="example">
+source ~/catkin_ws/devel/setup.bash
+source Tools/setup_gazebo.bash $(pwd) $(pwd)/build/px4_sitl_default
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)/Tools/sitl_gazebo
+roslaunch px4 posix_sitl.launch
+# roslaunch px4 mavros_posix_sitl.launch
+</pre>
+
+<p>
+Error
+</p>
+
+<pre class="example">
+[Err] [Plugin.hh:178] Failed to load plugin libgazebo_ros_camera.so: libCameraPlugin.so: cannot open shared object file: No such file or directory
+source /usr/share/gazebo-9/setup.sh
+
+# SITL: Preflight Fail : Compass #0 uncalibrated
+rm ~/.ros/eeprom/parameters
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-org1ccfe80" class="outline-3">
+<h3 id="org1ccfe80"><span class="section-number-3">3.3</span> Gazebo의 카메라 영상을 ROS image<sub>raw</sub> 토픽으로 보기</h3>
+<div class="outline-text-3" id="text-3-3">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/PSvUDWs.png" alt="PSvUDWs.png" />
+</p>
+</div>
+
+<p>
+<code>image_raw</code> 토픽 확인
+</p>
+<pre class="example">
+rostopic list | grep camera
+
+rostopic echo /iris/camera_red_iris/image_raw
+
+rosrun image_view image_view image:=/iris/camera_red_iris/image_raw
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcc0a0b7" class="outline-2">
+<h2 id="orgcc0a0b7"><span class="section-number-2">4</span> 참고</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li><a href="https://github.com/spmallick/learnopencv">https://github.com/spmallick/learnopencv</a></li>
+<li><a href="http://gazebosim.org/tutorials?tut=add_laser">http://gazebosim.org/tutorials?tut=add_laser</a>  Gazebo에 카메라 추가하기</li>
+<li><a href="https://blog.naver.com/PostView.nhn?blogId=dnddnjs11&amp;logNo=220852140714&amp;parentCategoryNo=&amp;categoryNo=17&amp;viewDate=&amp;isShowPopularPosts=false&amp;from=postView">https://blog.naver.com/PostView.nhn?blogId=dnddnjs11&amp;logNo=220852140714&amp;parentCategoryNo=&amp;categoryNo=17&amp;viewDate=&amp;isShowPopularPosts=false&amp;from=postView</a></li>
+<li><a href="http://ros-developer.com/2017/04/23/aruco-ros/">http://ros-developer.com/2017/04/23/aruco-ros/</a> 6dof ros</li>
+<li><a href="https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/edit">https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/edit</a></li>
+<li><a href="https://www.youtube.com/watch?v=U0ul4WIQFUM">https://www.youtube.com/watch?v=U0ul4WIQFUM</a></li>
+<li><a href="https://github.com/pineland/px4/wiki/01.3.1-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0-%EB%85%B8%ED%95%98%EC%9A%B0">https://github.com/pineland/px4/wiki/01.3.1-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0-%EB%85%B8%ED%95%98%EC%9A%B0</a> modudculab<sub>ros</sub> 에러 해결</li>
+<li>Accurate Landing of Unmanned Aerial Vehicles Using Ground Pattern Recognition Jamie
+<ul class="org-ul">
+<li><a href="https://res.mdpi.com/d_attachment/electronics/electronics-08-01532/article_deploy/electronics-08-01532.pdf">https://res.mdpi.com/d_attachment/electronics/electronics-08-01532/article_deploy/electronics-08-01532.pdf</a></li>
+<li><a href="https://github.com/dewub/vision_drone">https://github.com/dewub/vision_drone</a></li>
+</ul></li>
+<li><a href="https://www.youtube.com/watch?v=snLynAu2lO8">https://www.youtube.com/watch?v=snLynAu2lO8</a> precision landing</li>
+<li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6874798/#!po=4.31034">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6874798/#!po=4.31034</a></li>
+<li><a href="https://pub.tik.ee.ethz.ch/students/2018-FS/SA-2018-21.pdf">https://pub.tik.ee.ethz.ch/students/2018-FS/SA-2018-21.pdf</a> drone precision landing using vision</li>
+<li><a href="https://github.com/mwryu88/ARUCO">https://github.com/mwryu88/ARUCO</a> Aruco model for gazebo</li>
+<li><a href="https://github.com/AerialRobotics-IITK/aruco_detection_gazebo/blob/master/tf-library/offboard/src/offb_node.cpp">https://github.com/AerialRobotics-IITK/aruco_detection_gazebo/blob/master/tf-library/offboard/src/offb_node.cpp</a></li>
+<li>gazebo에서 ctrl+t 누르면 가제보 토픽 메세지</li>
+<li><a href="https://github.com/AbdulrahmanGoian/victim_localization/blob/8be58d929a1c68232e2beef964b4026cb92c5c68/urdf/iris/iris_with_sensors.xacro">https://github.com/AbdulrahmanGoian/victim_localization/blob/8be58d929a1c68232e2beef964b4026cb92c5c68/urdf/iris/iris_with_sensors.xacro</a></li>
+</ul>
+
+<p>
+<a href="https://pdfs.semanticscholar.org/b562/b5a97fc85c574d6baaa803122e35686e047e.pdf?_ga=2.88187419.1227225162.1596473043-1633752812.1596473043">https://pdfs.semanticscholar.org/b562/b5a97fc85c574d6baaa803122e35686e047e.pdf?_ga=2.88187419.1227225162.1596473043-1633752812.1596473043</a>
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Donghee Park</p>
+<p class="date">Created: 2020-08-05 Wed 09:25</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

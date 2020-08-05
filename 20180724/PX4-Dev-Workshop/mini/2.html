@@ -1,0 +1,1241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-08-05 Wed 09:25 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PX4 and ROS Programming Day 2</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Donghee Park" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">PX4 and ROS Programming Day 2</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5bd5910">1. 수업</a></li>
+<li><a href="#org90ee85f">2. 수업 진행</a></li>
+<li><a href="#orgb6a85d5">3. 수업 자료</a>
+<ul>
+<li><a href="#orgaebaef7">3.1. OpenCV 소개</a></li>
+<li><a href="#org2a4b3fe">3.2. OpenCV 설치</a>
+<ul>
+<li><a href="#org3675e9d">3.2.1. C++ (OpenCV-3.4.4)</a></li>
+<li><a href="#org8cde7b4">3.2.2. 예제</a></li>
+</ul>
+</li>
+<li><a href="#org13d24d0">3.3. OpenCV 소개</a>
+<ul>
+<li><a href="#org4159efc">3.3.1. Mat: 이미지 타입</a></li>
+<li><a href="#org70cdbf7">3.3.2. Mat: 이미지 읽기</a></li>
+<li><a href="#orgc73a633">3.3.3. Mat: 복사</a></li>
+<li><a href="#org9cd109e">3.3.4. Filter: Sharpen</a></li>
+<li><a href="#org3f7aab9">3.3.5. Python (OpenCV-3.4.4)</a></li>
+</ul>
+</li>
+<li><a href="#org64fd52f">3.4. 실습</a></li>
+<li><a href="#org30000c3">3.5. ROS 이미지 메시지</a></li>
+<li><a href="#org7302cab">3.6. <code>cv_bridge</code></a>
+<ul>
+<li><a href="#org7949a12">3.6.1. CvImage</a></li>
+</ul>
+</li>
+<li><a href="#org079313b">3.7. 예시: <code>image_converter</code></a></li>
+<li><a href="#org4be405a">3.8. 예시: <code>image_converter</code> 노드 실행</a>
+<ul>
+<li><a href="#org6783bd9">3.8.1. 구독 <code>/cv_camera/image_raw</code> 이미지 보기</a></li>
+<li><a href="#orgf5dfa67">3.8.2. 발행 <code>/image_converter/output_video</code> 이미지 보기</a></li>
+<li><a href="#org35c68f8">3.8.3. 실습</a></li>
+</ul>
+</li>
+<li><a href="#org19ea784">3.9. 예시: object detection: <code>dnn_detect</code></a></li>
+<li><a href="#orgc487bd4">3.10. 예시: tag detection: aruco</a></li>
+<li><a href="#orgaed5f0e">3.11. 예시: position estimation using aruco</a>
+<ul>
+<li><a href="#orgf24c63f">3.11.1. Camera Calibration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org690efcf">4. 참고</a>
+<ul>
+<li><a href="#org21bc57e">4.1. TF</a>
+<ul>
+<li><a href="#org5ba6043">4.1.1. TF?</a></li>
+<li><a href="#orge6bfaa8">4.1.2. TF의 xyz ?</a></li>
+</ul>
+</li>
+<li><a href="#orge2b9ed6">4.2. TF의 lookupTransform</a>
+<ul>
+<li><a href="#org34d68d6">4.2.1. TF 실습</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org5d8a429">5. 참고</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5bd5910" class="outline-2">
+<h2 id="org5bd5910"><span class="section-number-2">1</span> 수업</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>목표: 컴퓨터 비전: OpenCV, Maker Detect, Pose Estimation 에 대해서 이해하고 관련 패키지를 사용할 수 있다.</li>
+<li>교재: <a href="https://learn.dronemap.io/">https://learn.dronemap.io/</a></li>
+<li>코치: 박동희 dongheepark@gmail.com</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org90ee85f" class="outline-2">
+<h2 id="org90ee85f"><span class="section-number-2">2</span> 수업 진행</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>컴퓨터 비전 소개</li>
+<li>OpenCV</li>
+<li><code>cv_bridge</code></li>
+<li>Object detection</li>
+<li>Tag detection</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb6a85d5" class="outline-2">
+<h2 id="orgb6a85d5"><span class="section-number-2">3</span> 수업 자료</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgaebaef7" class="outline-3">
+<h3 id="orgaebaef7"><span class="section-number-3">3.1</span> OpenCV 소개</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>1999 Gary Bradsky 개발 시작</li>
+<li>2005 Stanley, 2005 DARPA Grand Challenge</li>
+<li>OpenCV-3.4.4 2018년 11월 20일 릴리즈</li>
+<li><a href="https://opencv.org/">https://opencv.org/</a></li>
+<li>튜토리얼: <a href="https://docs.opencv.org/3.4.4/">https://docs.opencv.org/3.4.4/</a></li>
+<li>예제: <a href="https://docs.opencv.org/3.4.4/examples.html">https://docs.opencv.org/3.4.4/examples.html</a></li>
+<li>OpenCV 프로젝트 목표</li>
+</ul>
+
+<blockquote>
+<p>
+Advance vision research by providing not only open but also optimized code for basic vision infrastructure. <b>No more reinventing the wheel.</b>
+</p>
+
+<p>
+Disseminate vision knowledge by providing a <b>common infrastructure that developers could build on</b>, so that code would be more readily readable and transferable.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org2a4b3fe" class="outline-3">
+<h3 id="org2a4b3fe"><span class="section-number-3">3.2</span> OpenCV 설치</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="outline-container-org3675e9d" class="outline-4">
+<h4 id="org3675e9d"><span class="section-number-4">3.2.1</span> C++ (OpenCV-3.4.4)</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<ul class="org-ul">
+<li>C++11, CMake 3.5.1</li>
+<li>QR code detector</li>
+</ul>
+
+<p>
+OpenCV 설치 스크립트(20분 정도)
+</p>
+
+<p>
+<a href="https://gist.github.com/donghee/15d7272885ac3505e0f20a63678e7ba3">https://gist.github.com/donghee/15d7272885ac3505e0f20a63678e7ba3</a>
+</p>
+
+<p>
+실습: build error 해결
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8cde7b4" class="outline-4">
+<h4 id="org8cde7b4"><span class="section-number-4">3.2.2</span> 예제</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<ul class="org-ul">
+<li>/home/donghee/installation/OpenCV-3.4.4/share/OpenCV/samples</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org13d24d0" class="outline-3">
+<h3 id="org13d24d0"><span class="section-number-3">3.3</span> OpenCV 소개</h3>
+<div class="outline-text-3" id="text-3-3">
+</div>
+<div id="outline-container-org4159efc" class="outline-4">
+<h4 id="org4159efc"><span class="section-number-4">3.3.1</span> Mat: 이미지 타입</h4>
+<div class="outline-text-4" id="text-3-3-1">
+
+<div class="figure">
+<p><img src="https://blog.iwanhae.ga/content/images/2015/10/b6df115410caafea291ceb011f19cc4a19ae6c2c.png" alt="b6df115410caafea291ceb011f19cc4a19ae6c2c.png" />
+</p>
+</div>
+
+<p>
+BGR 순으로 저장.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #579C4C;">// </span><span style="color: #579C4C;">2x2 &#54665;&#47148;, 8&#48708;&#53944; &#51200;&#51109;, &#44592;&#48376;&#44050;&#51008; &#48744;&#44036;&#49353;</span>
+<span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">M</span>(2,2, CV_8UC3, Scalar(0,0,255));
+cout &lt;&lt; <span style="color: #DB8E73;">"M = "</span> &lt;&lt; endl &lt;&lt; <span style="color: #DB8E73;">" "</span> &lt;&lt; M &lt;&lt; endl &lt;&lt; endl;
+imshow(<span style="color: #DB8E73;">"Mat"</span>, M);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="https://blog.iwanhae.ga/content/images/2015/10/MatBasicContainerOut1.png" alt="MatBasicContainerOut1.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/vWalF0u.png" alt="vWalF0u.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org70cdbf7" class="outline-4">
+<h4 id="org70cdbf7"><span class="section-number-4">3.3.2</span> Mat: 이미지 읽기</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">image</span>;
+image = imread(<span style="color: #DB8E73;">"qrcode.png"</span>);
+imshow(<span style="color: #DB8E73;">"Read image"</span>, image);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #85DDFF; font-weight: bold;">#include</span> <span style="color: #DB8E73;">"opencv2/highgui/highgui.hpp"</span>
+
+<span style="color: #339CDB;">using</span> <span style="color: #339CDB;">namespace</span> <span style="color: #339CDB;">cv</span>;
+
+<span style="color: #35CDAF;">int</span> <span style="color: #D9DAA2;">main</span>( <span style="color: #35CDAF;">int</span> <span style="color: #85DDFF;">argc</span>, <span style="color: #35CDAF;">char</span>** <span style="color: #85DDFF;">argv</span> ) {
+  <span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">img</span> = imread( argv[1], -1 );
+  <span style="color: #339CDB;">if</span>( img.empty() ) <span style="color: #339CDB;">return</span> -1;
+  namedWindow( <span style="color: #DB8E73;">"Example2"</span>, WINDOW_AUTOSIZE );
+  imshow( <span style="color: #DB8E73;">"Example2"</span>, img );
+  waitKey(0);
+  destroyWindow( <span style="color: #DB8E73;">"Example2"</span> );
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc73a633" class="outline-4">
+<h4 id="orgc73a633"><span class="section-number-4">3.3.3</span> Mat: 복사</h4>
+<div class="outline-text-4" id="text-3-3-3">
+<p>
+B는 A의 refernce(헤더만 복사)
+C는 A의 clone(헤더, 데이터를 복사)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">A</span>, <span style="color: #85DDFF;">C</span>;                          <span style="color: #579C4C;">// </span><span style="color: #579C4C;">Mat&#53364;&#47000;&#49828; A&#50752; C&#47484; &#49440;&#50616;</span>
+A = imread(<span style="color: #DB8E73;">"qrcode.png"</span>, IMREAD_COLOR); <span style="color: #579C4C;">// </span><span style="color: #579C4C;">imread&#54632;&#49688;&#47196; &#51060;&#48120;&#51648;"qrcode.png"&#47484; &#48520;&#47084;&#50740;</span>
+<span style="color: #35CDAF;">Mat</span> <span style="color: #D9DAA2;">B</span>(A);                                 <span style="color: #579C4C;">// </span><span style="color: #579C4C;">B&#47484; &#49440;&#50616;&#54616;&#44256; A&#47484; &#48373;&#49324;&#54644;&#50740;</span>
+C = A.clone();                                    <span style="color: #579C4C;">// </span><span style="color: #579C4C;">A&#51032; &#54756;&#45908;, &#45936;&#51060;&#53552;&#47484; &#52852;&#54588;(&#53364;&#47200;)&#54616;&#50668; C&#50640; &#51200;&#51109;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9cd109e" class="outline-4">
+<h4 id="org9cd109e"><span class="section-number-4">3.3.4</span> Filter: Sharpen</h4>
+<div class="outline-text-4" id="text-3-3-4">
+<p>
+선명하게(Sharpen) 필터: 현재 위치(i,j)를 변형. 현재 위치 픽셀에 5배 곱하여 더하고, 주변(4방)은 1배 곱하여 뺀다. 현재 위치에 저장.
+</p>
+
+
+<div class="figure">
+<p><img src="https://blog.iwanhae.ga/content/images/2015/10/7c2c71b792e6560be979d359e8f3f3b34c7938ff.png" alt="7c2c71b792e6560be979d359e8f3f3b34c7938ff.png" />
+</p>
+</div>
+
+<p>
+좌표
+</p>
+
+
+<div class="figure">
+<p><img src="https://blog.iwanhae.ga/content/images/2015/10/mat.png" alt="mat.png" />
+</p>
+</div>
+
+<p>
+cam.cpp
+</p>
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #85DDFF; font-weight: bold;">#include</span> <span style="color: #DB8E73;">&lt;opencv2/core/core.hpp&gt;</span>
+<span style="color: #85DDFF; font-weight: bold;">#include</span> <span style="color: #DB8E73;">&lt;opencv2/highgui/highgui.hpp&gt;</span>
+<span style="color: #85DDFF; font-weight: bold;">#include</span> <span style="color: #DB8E73;">&lt;iostream&gt;</span>
+
+<span style="color: #339CDB;">using</span> <span style="color: #339CDB;">namespace</span> <span style="color: #339CDB;">cv</span>;
+<span style="color: #339CDB;">using</span> <span style="color: #339CDB;">namespace</span> <span style="color: #339CDB;">std</span>;
+
+<span style="color: #35CDAF;">int</span> <span style="color: #D9DAA2;">main</span>(<span style="color: #35CDAF;">int</span> <span style="color: #85DDFF;">argc</span>, <span style="color: #35CDAF;">char</span>** <span style="color: #85DDFF;">argv</span>)
+{
+    <span style="color: #35CDAF;">VideoCapture</span> <span style="color: #85DDFF;">vc</span>(0); <span style="color: #579C4C;">//</span><span style="color: #579C4C;">0&#48264;&#50937;&#52896; &#52488;&#44592;&#54868;</span>
+    <span style="color: #339CDB;">if</span> (<span style="color: #85DDFF; font-weight: bold;">!</span>vc.isOpened()) <span style="color: #339CDB;">return</span> 0; <span style="color: #579C4C;">// </span><span style="color: #579C4C;">&#50672;&#44208;&#49892;&#54056;</span>
+
+    <span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">img</span>; <span style="color: #579C4C;">//</span><span style="color: #579C4C;">img&#49440;&#50616;</span>
+    <span style="color: #339CDB;">while</span> (1) {
+        vc &gt;&gt; img; <span style="color: #579C4C;">//</span><span style="color: #579C4C;">0&#48264;&#50937;&#52896;&#50640;&#49436; &#48155;&#51008; &#45936;&#51060;&#53552;&#47484; img&#50640; &#51200;&#51109;</span>
+        <span style="color: #339CDB;">if</span> (img.empty()) <span style="color: #339CDB;">break</span>; <span style="color: #579C4C;">//</span><span style="color: #579C4C;">&#48155;&#51008;&#44144; &#50630;&#51004;&#47732; &#51333;&#47308;</span>
+        imshow(<span style="color: #DB8E73;">"cam"</span>, img);  <span style="color: #579C4C;">//</span><span style="color: #579C4C;">&#54868;&#47732;&#50640; &#46916;&#50864;&#44592;</span>
+        <span style="color: #339CDB;">if</span> (waitKey(10) == 27) <span style="color: #339CDB;">break</span>; <span style="color: #579C4C;">//</span><span style="color: #579C4C;">ESC&#53412; &#45580;&#47532;&#47732; &#51333;&#47308;</span>
+    }
+    destroyAllWindows();
+    <span style="color: #339CDB;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+sharpen.cpp
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #85DDFF; font-weight: bold;">#include</span> <span style="color: #DB8E73;">&lt;opencv2/core/core.hpp&gt;</span>
+<span style="color: #85DDFF; font-weight: bold;">#include</span> <span style="color: #DB8E73;">&lt;opencv2/highgui/highgui.hpp&gt;</span>
+<span style="color: #85DDFF; font-weight: bold;">#include</span> <span style="color: #DB8E73;">&lt;opencv2/imgproc/imgproc.hpp&gt;</span>
+<span style="color: #85DDFF; font-weight: bold;">#include</span> <span style="color: #DB8E73;">&lt;iostream&gt;</span>
+
+<span style="color: #339CDB;">using</span> <span style="color: #339CDB;">namespace</span> <span style="color: #339CDB;">cv</span>;
+<span style="color: #339CDB;">using</span> <span style="color: #339CDB;">namespace</span> <span style="color: #339CDB;">std</span>;
+
+<span style="color: #35CDAF;">void</span> <span style="color: #D9DAA2;">Sharpen</span>(<span style="color: #339CDB;">const</span> <span style="color: #35CDAF;">Mat</span>&amp; <span style="color: #85DDFF;">myImage</span>, <span style="color: #35CDAF;">Mat</span>&amp; <span style="color: #85DDFF;">Result</span>)
+{
+  CV_Assert(myImage.depth() == CV_8U);
+
+  Result.create(myImage.size(), myImage.type());
+  <span style="color: #339CDB;">const</span> <span style="color: #35CDAF;">int</span> <span style="color: #85DDFF;">nChannels</span> = myImage.channels();
+
+  <span style="color: #339CDB;">for</span> (<span style="color: #35CDAF;">int</span> <span style="color: #85DDFF;">j</span> = 1; j &lt; myImage.rows - 1; ++j)
+  {
+    <span style="color: #339CDB;">const</span> <span style="color: #35CDAF;">uchar</span>* <span style="color: #85DDFF;">previous</span> = myImage.ptr&lt;<span style="color: #35CDAF;">uchar</span>&gt;(j - 1);
+    <span style="color: #339CDB;">const</span> <span style="color: #35CDAF;">uchar</span>* <span style="color: #85DDFF;">current</span> = myImage.ptr&lt;<span style="color: #35CDAF;">uchar</span>&gt;(j);
+    <span style="color: #339CDB;">const</span> <span style="color: #35CDAF;">uchar</span>* <span style="color: #85DDFF;">next</span> = myImage.ptr&lt;<span style="color: #35CDAF;">uchar</span>&gt;(j + 1);
+
+    <span style="color: #35CDAF;">uchar</span>* <span style="color: #85DDFF;">output</span> = Result.ptr&lt;<span style="color: #35CDAF;">uchar</span>&gt;(j);
+
+    <span style="color: #339CDB;">for</span> (<span style="color: #35CDAF;">int</span> <span style="color: #85DDFF;">i</span> = nChannels; i &lt; nChannels * (myImage.cols - 1); ++i)
+    {
+      *output++ = saturate_cast&lt;<span style="color: #35CDAF;">uchar</span>&gt;(5 * current[i]
+          - current[i - nChannels] - current[i + nChannels] - previous[i] - next[i]);
+    }
+  }
+
+  Result.row(0).setTo(Scalar(0));
+  Result.row(Result.rows - 1).setTo(Scalar(0));
+  Result.col(0).setTo(Scalar(0));
+  Result.col(Result.cols - 1).setTo(Scalar(0));
+}
+<span style="color: #35CDAF;">int</span> <span style="color: #D9DAA2;">main</span>(<span style="color: #35CDAF;">int</span> <span style="color: #85DDFF;">argc</span>, <span style="color: #35CDAF;">char</span>** <span style="color: #85DDFF;">argv</span>)
+{
+  <span style="color: #35CDAF;">VideoCapture</span> <span style="color: #85DDFF;">vc</span>(0);
+
+  <span style="color: #339CDB;">if</span> (<span style="color: #85DDFF; font-weight: bold;">!</span>vc.isOpened()) <span style="color: #339CDB;">return</span> 0; <span style="color: #579C4C;">// </span><span style="color: #579C4C;">&#50672;&#44208;&#49892;&#54056;</span>
+
+  <span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">img</span>;
+  <span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">output</span>;
+  <span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">kern</span> = (Mat_&lt;<span style="color: #35CDAF;">char</span>&gt;(3, 3) &lt;&lt; 0, -1, 0,
+      -1, 5, -1,
+      0, -1, 0);
+
+  <span style="color: #339CDB;">while</span> (1) {
+    vc &gt;&gt; img;
+
+    <span style="color: #339CDB;">if</span> (img.empty()) <span style="color: #339CDB;">break</span>;
+    imshow(<span style="color: #DB8E73;">"cam"</span>, img);
+    <span style="color: #339CDB;">if</span> (waitKey(10) == 27) <span style="color: #339CDB;">break</span>; <span style="color: #579C4C;">//</span><span style="color: #579C4C;">ESC</span>
+
+    Sharpen(img, output);       <span style="color: #579C4C;">//</span><span style="color: #579C4C;">&#50948;&#51901;&#51032; &#49885;&#51012; &#51201;&#50857;&#49884;&#53416; &#53076;&#46300;</span>
+    imshow(<span style="color: #DB8E73;">"output"</span>, output);
+
+    filter2D(img, output, img.depth(), kern); <span style="color: #579C4C;">//</span><span style="color: #579C4C;">&#50500;&#47000;&#51901; &#49885;&#51012; &#51201;&#50857;&#49884;&#53416; &#53076;&#46300;</span>
+    imshow(<span style="color: #DB8E73;">"output2"</span>, output);
+  }
+
+
+  destroyAllWindows();
+  <span style="color: #339CDB;">return</span> 0;
+}
+
+</pre>
+</div>
+
+<p>
+-&#x2014;
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3f7aab9" class="outline-4">
+<h4 id="org3f7aab9"><span class="section-number-4">3.3.5</span> Python (OpenCV-3.4.4)</h4>
+<div class="outline-text-4" id="text-3-3-5">
+<p>
+OpenCV 설치 (Python)
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">pip install opencv-python --user
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-py">import cv2
+exit()
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>camera 읽기</li>
+</ol>
+
+<p>
+cat &gt; cam.py
+</p>
+
+<div class="org-src-container">
+<pre class="src src-py">import cv2
+cap = cv2.VideoCapture(0)
+
+print 'width: {0}, height: {1}'.format(cap.get(3),cap.get(4))
+cap.set(3,320)
+cap.set(4,240)
+
+while(True):
+    ret, frame = cap.read()
+
+    if (ret):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow('frame', gray)
+        if cv2.waitKey(1) &amp; 0xFF == ord('q'):
+            break
+
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org64fd52f" class="outline-3">
+<h3 id="org64fd52f"><span class="section-number-3">3.4</span> 실습</h3>
+<div class="outline-text-3" id="text-3-4">
+</div>
+<ol class="org-ol">
+<li><a id="orgebfa571"></a>face detect (힌트 haarcascade)<br /></li>
+</ol>
+</div>
+
+<div id="outline-container-org30000c3" class="outline-3">
+<h3 id="org30000c3"><span class="section-number-3">3.5</span> ROS 이미지 메시지</h3>
+<div class="outline-text-3" id="text-3-5">
+<ul class="org-ul">
+<li>OpenCV <code>cv::Mat</code></li>
+<li>ROS <code>sensor_msgs/Image</code> <a href="http://docs.ros.org/api/sensor_msgs/html/msg/Image.html">http://docs.ros.org/api/sensor_msgs/html/msg/Image.html</a></li>
+</ul>
+<pre class="example">
+rosmsg info sensor_msgs/Image
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7302cab" class="outline-3">
+<h3 id="org7302cab"><span class="section-number-3">3.6</span> <code>cv_bridge</code></h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+ROS에서의 OpenCV 인터페이스
+</p>
+
+
+<div class="figure">
+<p><img src="http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeCppHydro?action=AttachFile&amp;do=get&amp;target=cvbridge4.png" alt="UsingCvBridgeCppHydro?action=AttachFile&amp;do=get&amp;target=cvbridge4.png" />
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7949a12" class="outline-4">
+<h4 id="org7949a12"><span class="section-number-4">3.6.1</span> CvImage</h4>
+<div class="outline-text-4" id="text-3-6-1">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #339CDB;">namespace</span> <span style="color: #339CDB;">cv_bridge</span> {
+
+<span style="color: #339CDB;">class</span> <span style="color: #35CDAF;">CvImage</span>
+{
+<span style="color: #339CDB;">public</span>:
+  <span style="color: #339CDB;">std_msgs</span>::<span style="color: #35CDAF;">Header</span> <span style="color: #85DDFF;">header</span>;
+  <span style="color: #339CDB;">std</span>::<span style="color: #35CDAF;">string</span> <span style="color: #85DDFF;">encoding</span>;
+  <span style="color: #339CDB;">cv</span>::<span style="color: #35CDAF;">Mat</span> <span style="color: #85DDFF;">image</span>;
+};
+
+<span style="color: #339CDB;">typedef</span> <span style="color: #339CDB;">boost</span>::<span style="color: #35CDAF;">shared_ptr</span>&lt;<span style="color: #35CDAF;">CvImage</span>&gt; <span style="color: #35CDAF;">CvImagePtr</span>;
+<span style="color: #339CDB;">typedef</span> <span style="color: #339CDB;">boost</span>::<span style="color: #35CDAF;">shared_ptr</span>&lt;<span style="color: #35CDAF;">CvImage</span> <span style="color: #339CDB;">const</span>&gt; <span style="color: #35CDAF;">CvImageConstPtr</span>;
+
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org079313b" class="outline-3">
+<h3 id="org079313b"><span class="section-number-3">3.7</span> 예시: <code>image_converter</code></h3>
+<div class="outline-text-3" id="text-3-7">
+<pre class="example">
+cd ~/catkin_ws/src
+catkin_create_pkg cv_test sensor_msgs cv_bridge roscpp rospy std_msgs image_transport
+</pre>
+
+<pre class="example">
+cd cv_test/src
+</pre>
+
+<p>
+cat &gt; <code>image_converter.cpp</code>
+</p>
+<pre class="example">
+#include &lt;ros/ros.h&gt;
+#include &lt;image_transport/image_transport.h&gt;
+#include &lt;cv_bridge/cv_bridge.h&gt;
+#include &lt;sensor_msgs/image_encodings.h&gt;
+#include &lt;opencv2/imgproc/imgproc.hpp&gt;
+#include &lt;opencv2/highgui/highgui.hpp&gt;
+
+static const std::string OPENCV_WINDOW = "Image window";
+
+class ImageConverter
+{
+  ros::NodeHandle nh_;
+  image_transport::ImageTransport it_;
+  image_transport::Subscriber image_sub_;
+  image_transport::Publisher image_pub_;
+
+public:
+  ImageConverter()
+    : it_(nh_)
+  {
+    // Subscrive to input video feed and publish output video feed
+    image_sub_ = it_.subscribe("/cv_camera/image_raw", 1,
+      &amp;ImageConverter::imageCb, this);
+    image_pub_ = it_.advertise("/image_converter/output_video", 1);
+
+    cv::namedWindow(OPENCV_WINDOW);
+  }
+
+  ~ImageConverter()
+  {
+    cv::destroyWindow(OPENCV_WINDOW);
+  }
+
+  void imageCb(const sensor_msgs::ImageConstPtr&amp; msg)
+  {
+    cv_bridge::CvImagePtr cv_ptr;
+    try
+    {
+      cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    }
+    catch (cv_bridge::Exception&amp; e)
+    {
+      ROS_ERROR("cv_bridge exception: %s", e.what());
+      return;
+    }
+
+    // Draw an example circle on the video stream
+    if (cv_ptr-&gt;image.rows &gt; 60 &amp;&amp; cv_ptr-&gt;image.cols &gt; 60)
+      cv::circle(cv_ptr-&gt;image, cv::Point(50, 50), 10, CV_RGB(255,0,0));
+
+    // Update GUI Window
+    cv::imshow(OPENCV_WINDOW, cv_ptr-&gt;image);
+    cv::waitKey(3);
+
+    // Output modified video stream
+    image_pub_.publish(cv_ptr-&gt;toImageMsg());
+  }
+};
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "image_converter");
+  ImageConverter ic;
+  ros::spin();
+  return 0;
+}
+</pre>
+
+<p>
+<code>~/catkin_ws/src/cv_test/CMakeLists.txt</code> 에 다음 내용 추가
+</p>
+<ul class="org-ul">
+<li><code>image_converter</code> 노드 컴파일 추가</li>
+<li>OpenCV 라이브러리 추가</li>
+</ul>
+
+<pre class="example">
+set(OpenCV_DIR /home/donghee/installation/OpenCV-3.4.4/share/OpenCV/)
+find_package( OpenCV REQUIRED )
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+include_directories(include ${OpenCV_INCLUDE_DIRS})
+
+include_directories(include ${catkin_INCLUDE_DIRS})
+add_executable(image_converter src/image_converter.cpp)
+target_link_libraries(image_converter ${catkin_LIBRARIES})
+
+target_link_libraries(image_converter ${OpenCV_LIBS})
+</pre>
+
+<pre class="example">
+cd ~/catkin_ws
+catkin build cv_test
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org4be405a" class="outline-3">
+<h3 id="org4be405a"><span class="section-number-3">3.8</span> 예시: <code>image_converter</code> 노드 실행</h3>
+<div class="outline-text-3" id="text-3-8">
+<p>
+<b>cv-camera, image-view 설치</b>
+</p>
+
+<pre class="example">
+sudo apt-get install ros-melodic-cv-camera
+sudo apt-get install ros-melodic-image-view
+</pre>
+
+<p>
+<b>ros master node 실행</b>
+</p>
+<pre class="example">
+roscore
+</pre>
+
+<p>
+<b><code>cv_camera_node</code> 실행</b>
+</p>
+<pre class="example">
+rosrun cv_camera cv_camera_node
+</pre>
+
+<p>
+<b><code>image_converter</code> 실행</b>
+</p>
+<pre class="example">
+rosrun cv_test image_converter
+</pre>
+
+<p>
+<b>토픽 목록 보기</b>
+</p>
+<pre class="example">
+rostopic list -v
+</pre>
+</div>
+
+<div id="outline-container-org6783bd9" class="outline-4">
+<h4 id="org6783bd9"><span class="section-number-4">3.8.1</span> 구독 <code>/cv_camera/image_raw</code> 이미지 보기</h4>
+<div class="outline-text-4" id="text-3-8-1">
+<p>
+image converter 에서 구독(subscribe) 하는 토픽 이미지 확인
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++">rosrun image_view <span style="color: #35CDAF;">image_view</span> <span style="color: #85DDFF;">image</span>:=/cv_camera/image_raw
+<span style="color: #579C4C;">// </span><span style="color: #579C4C;">or using rqt</span>
+rqt_image_view /cv_camera/image_raw
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf5dfa67" class="outline-4">
+<h4 id="orgf5dfa67"><span class="section-number-4">3.8.2</span> 발행 <code>/image_converter/output_video</code> 이미지 보기</h4>
+<div class="outline-text-4" id="text-3-8-2">
+<p>
+image converter 에서 publish 하는 토픽 이미지 확인
+</p>
+
+<pre class="example">
+rosrun image_view image_view image:=/image_converter/output_video
+// or using rqt
+rqt_image_view /image_converter/output_video
+</pre>
+
+<p>
+<b>rviz</b>
+</p>
+
+<pre class="example">
+rviz
+</pre>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/jsulKek.png" alt="jsulKek.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org35c68f8" class="outline-4">
+<h4 id="org35c68f8"><span class="section-number-4">3.8.3</span> 실습</h4>
+<div class="outline-text-4" id="text-3-8-3">
+<ul class="org-ul">
+<li><code>/image_converter/output_video</code> 토픽의 이미지에 circle 좌표(x,y)를 표시해보자.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org19ea784" class="outline-3">
+<h3 id="org19ea784"><span class="section-number-3">3.9</span> 예시: object detection: <code>dnn_detect</code></h3>
+<div class="outline-text-3" id="text-3-9">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/GKDEe3r.png" alt="GKDEe3r.png" />
+</p>
+</div>
+
+<p>
+MobileNet-SSD detection: 딥러닝
+</p>
+
+<p>
+ros kinetic 버전에서만 동작
+</p>
+
+<pre class="example">
+sudo apt install ros-kinetic-dnn-detect
+</pre>
+
+<pre class="example">
+roscore
+rosrun cv_camera cv_camera_node
+roslaunch dnn_detect dnn_detect.launch camera:=/cv_camera image:=image_raw
+rostopic echo /dnn_objects
+rosrun image_view image_view image:=/dnn_images
+</pre>
+
+<pre class="example">
+rostopic list -v
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc487bd4" class="outline-3">
+<h3 id="orgc487bd4"><span class="section-number-3">3.10</span> 예시: tag detection: aruco</h3>
+<div class="outline-text-3" id="text-3-10">
+<p>
+aruco: library for detect marker <a href="https://sourceforge.net/projects/aruco/">https://sourceforge.net/projects/aruco/</a>
+</p>
+<ol class="org-ol">
+<li>detect marker</li>
+<li>position estimation</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/pa6a5HY.png" alt="pa6a5HY.png" />
+</p>
+</div>
+
+<p>
+<b>aruco-ros 설치</b> ros melodic 버전
+</p>
+<pre class="example">
+cd ~/catkin_ws/src/
+git clone https://github.com/pal-robotics/aruco_ros
+cd ~/catkin_ws
+catkin build aruco_ros
+</pre>
+
+<p>
+<b>ros-kinetic-aruco-ros 설치</b> ros kinetic 버전
+</p>
+<pre class="example">
+sudo apt-get install ros-kinetic-aruco-ros
+</pre>
+
+<p>
+<code>aruco_test.launch</code> 작성
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #D9DAA2;">launch</span>&gt;
+
+&lt;<span style="color: #D9DAA2;">arg</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"markerId"</span> <span style="color: #85DDFF;">default</span>=<span style="color: #DB8E73;">"701"</span>/&gt;
+&lt;<span style="color: #D9DAA2;">arg</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"markerSize"</span> <span style="color: #85DDFF;">default</span>=<span style="color: #DB8E73;">"0.05"</span>/&gt; <span style="color: #579C4C;">&lt;!-- </span><span style="color: #579C4C;">in meter </span><span style="color: #579C4C;">--&gt;</span>
+&lt;<span style="color: #D9DAA2;">arg</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"eye"</span> <span style="color: #85DDFF;">default</span>=<span style="color: #DB8E73;">"left"</span>/&gt;
+&lt;<span style="color: #D9DAA2;">arg</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"marker_frame"</span> <span style="color: #85DDFF;">default</span>=<span style="color: #DB8E73;">"marker_frame"</span>/&gt;
+&lt;<span style="color: #D9DAA2;">arg</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"ref_frame"</span> <span style="color: #85DDFF;">default</span>=<span style="color: #DB8E73;">""</span>/&gt; <span style="color: #579C4C;">&lt;!-- </span><span style="color: #579C4C;">leave empty and the pose will be published wrt param parent_name </span><span style="color: #579C4C;">--&gt;</span>
+&lt;<span style="color: #D9DAA2;">arg</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"corner_refinement"</span> <span style="color: #85DDFF;">default</span>=<span style="color: #DB8E73;">"LINES"</span> /&gt; <span style="color: #579C4C;">&lt;!-- </span><span style="color: #579C4C;">NONE, HARRIS, LINES, SUBPIX </span><span style="color: #579C4C;">--&gt;</span>
+
+&lt;<span style="color: #D9DAA2;">node</span> <span style="color: #85DDFF;">pkg</span>=<span style="color: #DB8E73;">"aruco_ros"</span> <span style="color: #85DDFF;">type</span>=<span style="color: #DB8E73;">"single"</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"aruco_single"</span>&gt;
+&lt;<span style="color: #D9DAA2;">remap</span> <span style="color: #85DDFF;">from</span>=<span style="color: #DB8E73;">"/camera_info"</span> <span style="color: #85DDFF;">to</span>=<span style="color: #DB8E73;">"/cv_camera/camera_info"</span> /&gt;
+&lt;<span style="color: #D9DAA2;">remap</span> <span style="color: #85DDFF;">from</span>=<span style="color: #DB8E73;">"/image"</span> <span style="color: #85DDFF;">to</span>=<span style="color: #DB8E73;">"/cv_camera/image_raw"</span> /&gt;
+&lt;<span style="color: #D9DAA2;">param</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"image_is_rectified"</span> <span style="color: #85DDFF;">value</span>=<span style="color: #DB8E73;">"True"</span>/&gt;
+&lt;<span style="color: #D9DAA2;">param</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"marker_size"</span> <span style="color: #85DDFF;">value</span>=<span style="color: #DB8E73;">"$(arg markerSize)"</span>/&gt;
+&lt;<span style="color: #D9DAA2;">param</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"marker_id"</span> <span style="color: #85DDFF;">value</span>=<span style="color: #DB8E73;">"$(arg markerId)"</span>/&gt;
+&lt;<span style="color: #D9DAA2;">param</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"reference_frame"</span> <span style="color: #85DDFF;">value</span>=<span style="color: #DB8E73;">"$(arg ref_frame)"</span>/&gt; <span style="color: #579C4C;">&lt;!-- </span><span style="color: #579C4C;">frame in which the marker pose will be refered </span><span style="color: #579C4C;">--&gt;</span>
+&lt;<span style="color: #D9DAA2;">param</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"camera_frame"</span> <span style="color: #85DDFF;">value</span>=<span style="color: #DB8E73;">"base_link"</span>/&gt;
+&lt;<span style="color: #D9DAA2;">param</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"marker_frame"</span> <span style="color: #85DDFF;">value</span>=<span style="color: #DB8E73;">"$(arg marker_frame)"</span> /&gt;
+&lt;<span style="color: #D9DAA2;">param</span> <span style="color: #85DDFF;">name</span>=<span style="color: #DB8E73;">"corner_refinement"</span> <span style="color: #85DDFF;">value</span>=<span style="color: #DB8E73;">"$(arg corner_refinement)"</span> /&gt;
+<span style="color: #579C4C;">&lt;!-- </span><span style="color: #579C4C;">&lt;param name="calibration_file" type="string" value="/tmp/ost.yaml"/&gt; </span><span style="color: #579C4C;">--&gt;</span>
+&lt;/<span style="color: #D9DAA2;">node</span>&gt;
+
+&lt;/<span style="color: #D9DAA2;">launch</span>&gt;
+</pre>
+</div>
+
+<p>
+<b>aruco 노드 실행</b>
+</p>
+<pre class="example">
+roslaunch aruco_test.launch
+</pre>
+
+<p>
+<b>마커 결과 확인</b>
+</p>
+<pre class="example">
+rosrun image_view image_view image:=/aruco_single/result
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgaed5f0e" class="outline-3">
+<h3 id="orgaed5f0e"><span class="section-number-3">3.11</span> 예시: position estimation using aruco</h3>
+<div class="outline-text-3" id="text-3-11">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/arFC1S0.png" alt="arFC1S0.png" />
+</p>
+</div>
+
+<p>
+<b>마커 위치/자세 확인</b>
+</p>
+<pre class="example">
+rostopic echo /aruco_single/pose
+</pre>
+</div>
+
+<div id="outline-container-orgf24c63f" class="outline-4">
+<h4 id="orgf24c63f"><span class="section-number-4">3.11.1</span> Camera Calibration</h4>
+<div class="outline-text-4" id="text-3-11-1">
+<p>
+<a href="http://wiki.ros.org/camera_calibration">http://wiki.ros.org/camera_calibration</a>
+<a href="http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration">http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration</a>
+</p>
+
+<p>
+<b>camera calibration 실행</b>
+</p>
+<pre class="example">
+rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/cv_camera/image_raw camera:=/cv_camera
+</pre>
+
+<p>
+calibration 후 commit 버튼 클릭
+</p>
+
+<p>
+<code>cv_camera_node</code> 다시 실행하여 camera calibration 데이터 적용
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org690efcf" class="outline-2">
+<h2 id="org690efcf"><span class="section-number-2">4</span> 참고</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li><a href="http://wiki.ros.org/vision_opencv">http://wiki.ros.org/vision_opencv</a></li>
+<li><a href="http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages">http://wiki.ros.org/cv_bridge/Tutorials/UsingCvBridgeToConvertBetweenROSImagesAndOpenCVImages</a>
+<ul class="org-ul">
+<li><a href="http://wiki.ros.org/image_transport/Tutorials/PublishingImages">http://wiki.ros.org/image_transport/Tutorials/PublishingImages</a></li>
+<li><a href="http://wiki.ros.org/image_transport/Tutorials/SubscribingToImages">http://wiki.ros.org/image_transport/Tutorials/SubscribingToImages</a></li>
+</ul></li>
+<li>ArUco Library Documentation <a href="https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/">https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/</a></li>
+<li>aruco maker generator <a href="http://chev.me/arucogen/">http://chev.me/arucogen/</a></li>
+<li><a href="http://wiki.ros.org/dnn_detect">http://wiki.ros.org/dnn_detect</a>
+<ul class="org-ul">
+<li>mobilenet-ssd <a href="https://github.com/weiliu89/caffe/tree/ssd">https://github.com/weiliu89/caffe/tree/ssd</a></li>
+</ul></li>
+</ul>
+
+<p>
+-&#x2014;
+</p>
+</div>
+<div id="outline-container-org21bc57e" class="outline-3">
+<h3 id="org21bc57e"><span class="section-number-3">4.1</span> TF</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+TF(TransForm 프레임 변환)
+</p>
+
+<p>
+왜? 카메라에서 나오는 x<sub>offset</sub>, y<sub>offset</sub> 좌표를 드론의 BODY(local position) 좌표계로 변경 필요
+</p>
+</div>
+
+<div id="outline-container-org5ba6043" class="outline-4">
+<h4 id="org5ba6043"><span class="section-number-4">4.1.1</span> TF?</h4>
+<div class="outline-text-4" id="text-4-1-1">
+
+<div class="figure">
+<p><img src="http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF?action=AttachFile&amp;do=get&amp;target=simple_robot.png" alt="TF?action=AttachFile&amp;do=get&amp;target=simple_robot.png" />
+</p>
+</div>
+
+<p>
+Listener: /tf 토픽을 읽음
+Publisher: 좌표간의 <b>변환</b> 을 /tf에 방송(publish)
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge6bfaa8" class="outline-4">
+<h4 id="orge6bfaa8"><span class="section-number-4">4.1.2</span> TF의 xyz ?</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+x - forward
+y - left
+z - pointing up
+</p>
+
+<p>
+출처: <a href="http://www.ros.org/reps/rep-0103.html">http://www.ros.org/reps/rep-0103.html</a>
+</p>
+
+<p>
+<b>PX4 local position은 NED</b>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge2b9ed6" class="outline-3">
+<h3 id="orge2b9ed6"><span class="section-number-3">4.2</span> TF의 lookupTransform</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/gsHe8gx.png" alt="gsHe8gx.png" />
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org34d68d6" class="outline-4">
+<h4 id="org34d68d6"><span class="section-number-4">4.2.1</span> TF 실습</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+터틀심의 /turtle1을 따라다니는 turtle2를 만들어 보자
+</p>
+
+<p>
+<a href="http://wiki.ros.org/tf2/Tutorials">http://wiki.ros.org/tf2/Tutorials</a>
+</p>
+
+<p>
+따라하기
+</p>
+
+<p>
+<a href="https://www.youtube.com/watch?v=aCH259ggKb0">https://www.youtube.com/watch?v=aCH259ggKb0</a>
+</p>
+
+<p>
+참고
+</p>
+<ul class="org-ul">
+<li><a href="http://wiki.ros.org/tf">http://wiki.ros.org/tf</a></li>
+<li><a href="http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF">http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF</a></li>
+<li><a href="https://github.com/claymation/lander/">https://github.com/claymation/lander/</a></li>
+<li><a href="http://web.ics.purdue.edu/~rvoyles/Classes/ROSprogramming/Lectures/TF%20(transform)">http://web.ics.purdue.edu/~rvoyles/Classes/ROSprogramming/Lectures/TF%20(transform)</a>%20in%20ROS.pdf</li>
+<li><a href="https://www.ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2017/lecture3.pdf">https://www.ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2017/lecture3.pdf</a></li>
+</ul>
+
+<p>
+-&#x2014;
+</p>
+
+<p>
+<a href="https://github.com/CopterExpress/clover/tree/master/aruco_pose">https://github.com/CopterExpress/clover/tree/master/aruco_pose</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5d8a429" class="outline-2">
+<h2 id="org5d8a429"><span class="section-number-2">5</span> 참고</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li><a href="https://clover.coex.tech/en">https://clover.coex.tech/en</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Donghee Park</p>
+<p class="date">Created: 2020-08-05 Wed 09:25</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
