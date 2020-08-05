@@ -320,7 +320,7 @@ Turtle
 1. 환경 변수 설정
 
 #+begin_src sh
-$ source /opt/ros/melodic/setup.bash
+source /opt/ros/melodic/setup.bash
 #+end_src
 
 2. roscore 실행
@@ -330,12 +330,12 @@ $ source /opt/ros/melodic/setup.bash
   - parameter server: 파라미터 저장 서버
 
 #+begin_src sh
-$ roscore
+roscore
 #+end_src
 
 3. turtlesim 패키지의 ~turtlesim_node~ 실행
 #+begin_src sh
-$ rosrun turtlesim turtlesim_node
+rosrun turtlesim turtlesim_node
 #+end_src
 
 4. turtlesim 패키지의 ~turtle_teleop_key~ 실행
@@ -453,10 +453,11 @@ source devel/setup.bash
 rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"
 #+end_src
 
-~mavros_node~ 실행 (다른 방법)
+~mavros_node~ 실행 (roslaunch 사용하는 방법)
 #+begin_src sh
-# px4.launch 이용하여 mavros node 실행. fcu ip주소는 192.168.0.xxx
-roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.0.xxx:14557" _gcs_url:"udp://@127.0.0.1"
+# px4.launch 이용하여 mavros node 실행. fcu ip주소는 127.0.0.1 ip주소를 바꾸면 다른 컴퓨터의 fcu도 연결 가능.
+cd ~/catkin_ws
+roslaunch mavros px4.launch fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:"udp://@127.0.0.1"
 #+end_src
 
 ** Gazebo 실행
@@ -477,15 +478,14 @@ make posix_sitl gazebo
 
 **** ROS Core 노드 실행
 #+begin_src sh
-$ roscore
+roscore
 #+end_src
 
 **** MAVROS 노드 실행
 #+begin_src sh
-$ roslaunch mavros px4.launch
+roslaunch mavros px4.launch
 
-# roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.88.53:14557" gcs_url:="udp://@192.168.88.53"
-# roslaunch mavros px4.launch fcu_url:="/dev/ttyTHS1:921600" gcs_url:="udp://@192.168.88.53"
+rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"
 #+end_src
 
 # J120 UART2에 PX4 telemetry 2 연결
@@ -493,14 +493,14 @@ $ roslaunch mavros px4.launch
 
 **** 토픽 목록
 #+begin_src sh
-$ rostopic list
+rostopic list
 #+end_src
 
 **** 토픽 내용 보기
 
 ***** 메시지 타입 보기
 #+begin_src sh
-$ rostopic info /mavros/state
+rostopic info /mavros/state
 #+end_src
 
 타입 내부 보기
@@ -510,20 +510,20 @@ rostopic type /mavros/state | rosmsg show
 
 ***** 메시지 내용
 #+begin_src sh
-$ rostopic echo /mavros/state
+rostopic echo /mavros/state
 #+end_src
 
 ***** 토픽 publish 주기 보기
 #+begin_src sh
-$ rostopic hz /mavros/state
+rostopic hz /mavros/state
 #+end_src
 
 ***** 실행 노드 확인
 #+begin_src sh
-$ rqt_graph
+rqt_graph
 #+end_src
 
-** ROS 노드 토픽 명령 실행하기. (MAVROS 위주)
+** ROS 노드 명령 실행하기. (MAVROS 위주)
 
 http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics
 
@@ -535,16 +535,24 @@ rostopic echo [topic]
 
 **** ~STATE~
 #+begin_src sh
-$ rostopic echo /mavros/state
+rostopic echo /mavros/state
 #+end_src
 
 **** ~LOCAL_POSITION~ 확인
 
 #+begin_src sh
-$ rostopic echo /mavros/local_position/pose
+rostopic echo /mavros/local_position/pose
 #+end_src
 
 *** Services
+
+**** 서비스 목록
+
+#+begin_src sh
+rosservice listp
+#+end_src
+
+**** 서비스 실행(call)
 
 #+begin_src sh
 rosservice call [topic] [msg_type] [args]
@@ -613,7 +621,7 @@ pose:
 OFFBOARD 모드에서 동작
 
 #+begin_src sh
-$ rostopic pub -r 10 /mavros/setpoint_velocity/cmd_vel geometry_msgs/TwistStamped "{header: auto, twist: {linear: {x: 10.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}}"
+rostopic pub -r 10 /mavros/setpoint_velocity/cmd_vel geometry_msgs/TwistStamped "{header: auto, twist: {linear: {x: 10.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}}"
 #+end_src
 
 *** 실습
@@ -621,8 +629,8 @@ $ rostopic pub -r 10 /mavros/setpoint_velocity/cmd_vel geometry_msgs/TwistStampe
 준비: 순서대로 실행
   - Gazebo 실행: ~cd ~/Firmware; make posix_sitl gazebo~
   - PC의 MAVROS를 PC(127.0.0.1)의 Gazebo와 연결 ~rosrun mavros mavros_node _fcu_url:="udp://:14540@127.0.0.1:14557" _gcs_url:="udp://@127.0.0.1"~ \\
-    또는 Raspberry PI의 MAVROS를 PC(192.168.88.53)의 Gazebo와 연결 ~roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.88.53:14557" gcs_url:="udp://@192.168.88.53"~
-  - QGroundControl 실행: PX4 Parameter ~COM_OF_LOSS_T~ 파라미터 30초로 바꾸기. Failsafe timeout을 30초로 바꾸어야 커맨드라인에서 드론을 조정하기 편하다.
+    또는 Raspberry PI의 MAVROS를 PC(192.168.88.53)의 Gazebo와 연결. Raspberry PI에서 다음 명령을 실행 ~roslaunch mavros px4.launch fcu_url:="udp://:14540@192.168.88.53:14557" gcs_url:="udp://@192.168.88.53"~
+  - QGroundControl 실행: PX4 Parameter ~COM_OF_LOSS_T~ 파라미터 15초로 바꾸기. Failsafe timeout을 15초로 바꾸어야 커맨드라인에서 드론을 조정하기 편하다.
 
 \\
 
@@ -733,9 +741,9 @@ rqt_bag
 *** 패키지 만들기
 
 #+begin_src sh
-$ source ~/catkin_ws/devel/setup.bash
-$ cd ~/catkin_ws/src
-$ catkin_create_pkg drone_control mavros sensor_msgs roscpp
+source ~/catkin_ws/devel/setup.bash
+cd ~/catkin_ws/src
+catkin_create_pkg drone_control mavros sensor_msgs roscpp
 #+end_src
 
 *** 노드 코드 작성
@@ -772,21 +780,21 @@ target_link_libraries(drone_state ${catkin_LIBRARIES})
 
 환경 변수 다시 로드!
 #+begin_src sh
-$ source ~/catkin_ws/devel/setup.bash
+source ~/catkin_ws/devel/setup.bash
 #+end_src
 
 *** 패키지 빌드
 
 #+begin_src sh
-$ cd ~/catkin_ws
-$ catkin build
+cd ~/catkin_ws
+catkin build
 #+end_src
 
 *** 패키지 노드 실행
 
 ~drone_control~ 패키지의 ~drone_state~ 노드 실행
 #+begin_src sh
-$ rosrun drone_control drone_state
+rosrun drone_control drone_state
 #+end_src
 
 
