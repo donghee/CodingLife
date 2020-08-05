@@ -4,10 +4,10 @@
  - 채팅: https://discord.gg/2HkV6a
 
 # 순서
- - [1일차](https://raw.githack.com/donghee/CodingLife/master/20180724/PX4-Dev-Workshop/kumoh/1.html) 드론 제어 소프트웨어 소개 및 설치, ROS 프로그래밍
- - [2일차](https://raw.githack.com/donghee/CodingLife/master/20180724/PX4-Dev-Workshop/kumoh/2.html) 컴퓨터 비전: OpenCV, Maker Detect, Pose Estimation
+ - [1일차](https://raw.githack.com/donghee/CodingLife/master/20180724/PX4-Dev-Workshop/mini/1.html) 드론 제어 소프트웨어 소개 및 설치, ROS 프로그래밍
+ - [2일차](https://raw.githack.com/donghee/CodingLife/master/20180724/PX4-Dev-Workshop/min/2.html) 컴퓨터 비전: OpenCV, Maker Detect, Pose Estimation
  - 3일차 드론 조립 및 비행
- - [+차수](https://raw.githack.com/donghee/CodingLife/master/20180724/PX4-Dev-Workshop/kumoh/3.html) 컴퓨터 비전 시뮬레이터 개발 환경 구성
+ - [+차수](https://raw.githack.com/donghee/CodingLife/master/20180724/PX4-Dev-Workshop/mini/3.html) 컴퓨터 비전 시뮬레이터 개발 환경 구성
 
 # 드론 제어하는 ROS 프로그래밍
 
