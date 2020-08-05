@@ -36,6 +36,63 @@
  - PX4 shell 사용하기
  - hello-skyworld
 
+* Linux 사용하기
+ - Ubuntu 18.04 설치
+ - 주요 명령어 소개(파일 조작, 프로그램설치, 쉘스크립트, git)
+
+ls: 파일 또는 디렉토리의 목록을 출력
+#+BEGIN_SRC
+ls
+ls -al
+#+END_SRC
+
+cd: 디렉토리 이동
+#+BEGIN_SRC
+cd ~
+cd ~/Downloads
+#+END_SRC
+
+pwd: 현재 디렉토리 출력
+#+BEGIN_SRC
+pwd
+#+END_SRC
+
+mkdir: 디렉토리 생성
+#+BEGIN_SRC
+mkdir tmp
+#+END_SRC
+
+rm: 파일 또는 디렉토리 지우기
+#+BEGIN_SRC
+rm -rf tmp
+#+END_SRC
+
+cat: 파일 입력 또는 출력
+#+BEGIN_SRC
+cat ~/.bashrc
+cat > ~/.hello.c
+#+END_SRC
+
+cp: 파일 또는 디렉토리 복사
+#+BEGIN_SRC
+cp hello.c world.c
+#+END_SRC
+
+chmod: 파일의 퍼미션 지정
+#+BEGIN_SRC
+chmod +x hello
+#+END_SRC
+
+wget: url에서 파일 다운로드
+#+BEGIN_SRC
+wget https://google.com
+#+END_SRC
+
+source: 현재 쉘에서 파일을 읽고 실행
+#+BEGIN_SRC
+source ~/.bashrc
+#+END_SRC
+
 
 * PX4 개발환경 구성 (+ROS)
 
@@ -84,9 +141,6 @@ chmod +x ./QGroundControl.AppImage
 ./QGroundControl.AppImage
 #+END_SRC
 
-* Linux 사용하기
- - Ubuntu 18.04 설치
- - 주요 명령어 소개(파일 조작, 프로그램설치, 쉘스크립트, git)
 
 * ROS 프로그래밍
 
