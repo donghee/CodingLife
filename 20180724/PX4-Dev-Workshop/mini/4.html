@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-06 목 14:19 -->
+<!-- 2020-08-06 목 16:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&lrm;</title>
+<title>PX4 and ROS Programming: python ros node</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Donghee Park" />
 <style type="text/css">
@@ -193,6 +193,8 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
+<link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -242,45 +244,39 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
+<h1 class="title">PX4 and ROS Programming: python ros node</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7790bd0">1. 새로운 노드 만들기 (python)</a>
+<li><a href="#orgb8bc564">1. 새로운 노드 만들기 (python)</a>
 <ul>
-<li><a href="#org4f9046d">1.1. 패키지 만들기</a></li>
-<li><a href="#org4a51e61">1.2. 노드 코드 작성</a></li>
-<li><a href="#org966e516">1.3. 패키지 빌드</a></li>
-<li><a href="#orgcdb68a3">1.4. 패키지 노드 실행</a></li>
-<li><a href="#org6a47e4e">1.5. launch file</a></li>
+<li><a href="#org03a1902">1.1. 노드 코드 작성</a></li>
+<li><a href="#org7c5063b">1.2. 패키지 빌드</a></li>
+<li><a href="#org7a702bc">1.3. 패키지 노드 실행</a></li>
+<li><a href="#orgf4af6b6">1.4. launch file</a></li>
 </ul>
 </li>
-<li><a href="#org76e3c15">2. keyboard 사용하여 setpoint 보내기</a></li>
-<li><a href="#org797edb5">3. joystic 사용하여 setpoint 보내기</a></li>
+<li><a href="#org837bf8c">2. keyboard 사용하여 setpoint 보내기</a>
+<ul>
+<li><a href="#org18ca6a0">2.1. 패키지 빌드</a></li>
+<li><a href="#orgc143d42">2.2. 패키지 노드 실행</a></li>
 </ul>
-</div>
-</div>
-<div id="outline-container-org7790bd0" class="outline-2">
-<h2 id="org7790bd0"><span class="section-number-2">1</span> 새로운 노드 만들기 (python)</h2>
-<div class="outline-text-2" id="text-1">
-</div>
-<div id="outline-container-org4f9046d" class="outline-3">
-<h3 id="org4f9046d"><span class="section-number-3">1.1</span> 패키지 만들기</h3>
-<div class="outline-text-3" id="text-1-1">
-<div class="org-src-container">
-<pre class="src src-sh">$ source ~/catkin_ws/devel/setup.bash
-$ cd ~/catkin_ws/src
-$ catkin_create_pkg drone_control_py mavros geometry_msgs rospy
-</pre>
-</div>
+</li>
+<li><a href="#orgb35f7da">3. joystic 사용하여 setpoint 보내기</a></li>
+</ul>
 </div>
 </div>
 
-<div id="outline-container-org4a51e61" class="outline-3">
-<h3 id="org4a51e61"><span class="section-number-3">1.2</span> 노드 코드 작성</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-orgb8bc564" class="outline-2">
+<h2 id="orgb8bc564"><span class="section-number-2">1</span> 새로운 노드 만들기 (python)</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org03a1902" class="outline-3">
+<h3 id="org03a1902"><span class="section-number-3">1.1</span> 노드 코드 작성</h3>
+<div class="outline-text-3" id="text-1-1">
 <p>
-<code>~/catkin_ws/src/drone_control_py/scripts/offb_node.py</code>
+<code>~/catkin_ws/src/drone_control/scripts/offb_node.py</code>
 </p>
 
 <div class="org-src-container">
@@ -375,7 +371,7 @@ def offboard_node():
 </p>
 
 <div class="org-src-container">
-<pre class="src src-py">$ cd ~/catkin_ws/src/drone_control_py/scripts
+<pre class="src src-py">$ cd ~/catkin_ws/src/drone_control/scripts
 $ chmod +x offb_node.py
 </pre>
 </div>
@@ -390,9 +386,9 @@ $ chmod +x offb_node.py
 </div>
 </div>
 
-<div id="outline-container-org966e516" class="outline-3">
-<h3 id="org966e516"><span class="section-number-3">1.3</span> 패키지 빌드</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-org7c5063b" class="outline-3">
+<h3 id="org7c5063b"><span class="section-number-3">1.2</span> 패키지 빌드</h3>
+<div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
 <pre class="src src-sh">$ cd ~/catkin_ws
 $ catkin build
@@ -401,28 +397,28 @@ $ catkin build
 </div>
 </div>
 
-<div id="outline-container-orgcdb68a3" class="outline-3">
-<h3 id="orgcdb68a3"><span class="section-number-3">1.4</span> 패키지 노드 실행</h3>
-<div class="outline-text-3" id="text-1-4">
+<div id="outline-container-org7a702bc" class="outline-3">
+<h3 id="org7a702bc"><span class="section-number-3">1.3</span> 패키지 노드 실행</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
-<code>drone_control_py</code> 패키지의 <code>offb_node</code> 노드 실행
+<code>drone_control</code> 패키지의 <code>offb_node</code> 노드 실행
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">$ rosrun drone_control_py offb_node.py
+<pre class="src src-sh">$ rosrun drone_control offb_node.py
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6a47e4e" class="outline-3">
-<h3 id="org6a47e4e"><span class="section-number-3">1.5</span> launch file</h3>
-<div class="outline-text-3" id="text-1-5">
+<div id="outline-container-orgf4af6b6" class="outline-3">
+<h3 id="orgf4af6b6"><span class="section-number-3">1.4</span> launch file</h3>
+<div class="outline-text-3" id="text-1-4">
 <p>
-<code>~/catkin_ws/src/drone_control_py/launch/offb_node.launch</code>
+<code>~/catkin_ws/src/drone_control/launch/offb_node.launch</code>
 </p>
 <pre class="example">
 &lt;launch&gt;
-    &lt;node name="offb_node" pkg="drone_control_py" type="offb_node.py"/&gt;
+    &lt;node name="offb_node" pkg="drone_control" type="offb_node.py"/&gt;
     &lt;include file="$(find px4)/launch/mavros_posix_sitl.launch"&gt;
       &lt;arg name="vehicle" value="iris"/&gt;
     &lt;/include&gt;
@@ -439,11 +435,11 @@ $ catkin build
 </div>
 
 
-<div id="outline-container-org76e3c15" class="outline-2">
-<h2 id="org76e3c15"><span class="section-number-2">2</span> keyboard 사용하여 setpoint 보내기</h2>
+<div id="outline-container-org837bf8c" class="outline-2">
+<h2 id="org837bf8c"><span class="section-number-2">2</span> keyboard 사용하여 setpoint 보내기</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-<code>~catkin_ws/src/drone_control_py/scripts/mavteleop_key.py</code> 추가
+<code>~catkin_ws/src/drone_control/scripts/mavteleop_key.py</code> 추가
 </p>
 
 <pre class="example">
@@ -537,8 +533,9 @@ while True:
 curses.endwin()
 </pre>
 
+
 <p>
-<code>~catkin_ws/src/drone_control_py/src/offb_teleop.cpp</code> 추가
+<code>~catkin_ws/src/drone_control/src/offb_teleop.cpp</code> 추가
 </p>
 <pre class="example">
 /**
@@ -644,11 +641,63 @@ int main(int argc, char **argv)
     return 0;
 }
 </pre>
+
+
+
+<p>
+파이썬 스크립트 실행 권한 추가
+</p>
+
+<div class="org-src-container">
+<pre class="src src-py">$ cd ~/catkin_ws/src/drone_control/scripts
+$ chmod +x mavteleop_key.py
+</pre>
+</div>
+
+<p>
+환경 변수 다시 로드!
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">$ source ~/catkin_ws/devel/setup.bash
+</pre>
 </div>
 </div>
 
-<div id="outline-container-org797edb5" class="outline-2">
-<h2 id="org797edb5"><span class="section-number-2">3</span> joystic 사용하여 setpoint 보내기</h2>
+<div id="outline-container-org18ca6a0" class="outline-3">
+<h3 id="org18ca6a0"><span class="section-number-3">2.1</span> 패키지 빌드</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-sh">$ cd ~/catkin_ws
+$ catkin build
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc143d42" class="outline-3">
+<h3 id="orgc143d42"><span class="section-number-3">2.2</span> 패키지 노드 실행</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+<code>drone_control</code> 패키지의 <code>mavteleop_key</code> 노드 실행
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">$ rosrun drone_control mavteleop_key.py
+</pre>
+</div>
+
+<p>
+<code>drone_control</code> 패키지의 <code>offb_teleop</code> 노드 실행
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">$ rosrun drone_control offb_teleop
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb35f7da" class="outline-2">
+<h2 id="orgb35f7da"><span class="section-number-2">3</span> joystic 사용하여 setpoint 보내기</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 mavros extras mavteleop
@@ -726,7 +775,7 @@ rosrun mavros mavsafety arm
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2020-08-06 목 14:19</p>
+<p class="date">Created: 2020-08-06 목 16:15</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

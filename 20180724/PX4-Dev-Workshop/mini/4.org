@@ -1,17 +1,17 @@
 
+#+STARTUP: showeverything
+#+AUTHOR:    Donghee Park
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+TITLE: PX4 and ROS Programming: python ros node
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
+
 ** 새로운 노드 만들기 (python)
-
-*** 패키지 만들기
-
-#+begin_src sh
-$ source ~/catkin_ws/devel/setup.bash
-$ cd ~/catkin_ws/src
-$ catkin_create_pkg drone_control_py mavros geometry_msgs rospy
-#+end_src
 
 *** 노드 코드 작성
 
-~~/catkin_ws/src/drone_control_py/scripts/offb_node.py~
+~~/catkin_ws/src/drone_control/scripts/offb_node.py~
 
 #+begin_src c++
 #!/usr/bin/env python
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 실행 권한 추가
 
 #+begin_src py
-$ cd ~/catkin_ws/src/drone_control_py/scripts
+$ cd ~/catkin_ws/src/drone_control/scripts
 $ chmod +x offb_node.py
 #+end_src
 
@@ -120,16 +120,16 @@ $ catkin build
 
 *** 패키지 노드 실행
 
-~drone_control_py~ 패키지의 ~offb_node~ 노드 실행
+~drone_control~ 패키지의 ~offb_node~ 노드 실행
 #+begin_src sh
-$ rosrun drone_control_py offb_node.py
+$ rosrun drone_control offb_node.py
 #+end_src
 
 *** launch file
-~~/catkin_ws/src/drone_control_py/launch/offb_node.launch~
+~~/catkin_ws/src/drone_control/launch/offb_node.launch~
 #+begin_src
 <launch>
-    <node name="offb_node" pkg="drone_control_py" type="offb_node.py"/>
+    <node name="offb_node" pkg="drone_control" type="offb_node.py"/>
     <include file="$(find px4)/launch/mavros_posix_sitl.launch">
       <arg name="vehicle" value="iris"/>
     </include>
@@ -141,7 +141,7 @@ $ rosrun drone_control_py offb_node.py
 
 ** keyboard 사용하여 setpoint 보내기
 
-~~catkin_ws/src/drone_control_py/scripts/mavteleop_key.py~ 추가
+~~catkin_ws/src/drone_control/scripts/mavteleop_key.py~ 추가
 
 #+begin_src
 #!/usr/bin/env python
@@ -234,7 +234,8 @@ while True:
 curses.endwin()
 #+end_src
 
-~~catkin_ws/src/drone_control_py/src/offb_teleop.cpp~ 추가
+
+~~catkin_ws/src/drone_control/src/offb_teleop.cpp~ 추가
 #+begin_src
 /**
  * @file offb_teleop.cpp
@@ -338,6 +339,39 @@ int main(int argc, char **argv)
 
     return 0;
 }
+#+end_src
+
+
+
+파이썬 스크립트 실행 권한 추가
+
+#+begin_src py
+$ cd ~/catkin_ws/src/drone_control/scripts
+$ chmod +x mavteleop_key.py
+#+end_src
+
+환경 변수 다시 로드!
+#+begin_src sh
+$ source ~/catkin_ws/devel/setup.bash
+#+end_src
+
+*** 패키지 빌드
+
+#+begin_src sh
+$ cd ~/catkin_ws
+$ catkin build
+#+end_src
+
+*** 패키지 노드 실행
+
+~drone_control~ 패키지의 ~mavteleop_key~ 노드 실행
+#+begin_src sh
+$ rosrun drone_control mavteleop_key.py
+#+end_src
+
+~drone_control~ 패키지의 ~offb_teleop~ 노드 실행
+#+begin_src sh
+$ rosrun drone_control offb_teleop
 #+end_src
 
 ** joystic 사용하여 setpoint 보내기
