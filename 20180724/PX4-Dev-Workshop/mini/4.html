@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-06 목 08:14 -->
+<!-- 2020-08-06 목 14:19 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -246,26 +246,26 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb97bfed">1. 새로운 노드 만들기 (python)</a>
+<li><a href="#org7790bd0">1. 새로운 노드 만들기 (python)</a>
 <ul>
-<li><a href="#org49ed74b">1.1. 패키지 만들기</a></li>
-<li><a href="#orga67800c">1.2. 노드 코드 작성</a></li>
-<li><a href="#org1db6ebb">1.3. 패키지 빌드</a></li>
-<li><a href="#org9b1df2b">1.4. 패키지 노드 실행</a></li>
-<li><a href="#org1ea8988">1.5. launch file</a></li>
+<li><a href="#org4f9046d">1.1. 패키지 만들기</a></li>
+<li><a href="#org4a51e61">1.2. 노드 코드 작성</a></li>
+<li><a href="#org966e516">1.3. 패키지 빌드</a></li>
+<li><a href="#orgcdb68a3">1.4. 패키지 노드 실행</a></li>
+<li><a href="#org6a47e4e">1.5. launch file</a></li>
 </ul>
 </li>
-<li><a href="#orgdf34ad9">2. keyboard 사용하여 setpoint 보내기</a></li>
-<li><a href="#org150f654">3. joystic 사용하여 setpoint 보내기</a></li>
+<li><a href="#org76e3c15">2. keyboard 사용하여 setpoint 보내기</a></li>
+<li><a href="#org797edb5">3. joystic 사용하여 setpoint 보내기</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgb97bfed" class="outline-2">
-<h2 id="orgb97bfed"><span class="section-number-2">1</span> 새로운 노드 만들기 (python)</h2>
+<div id="outline-container-org7790bd0" class="outline-2">
+<h2 id="org7790bd0"><span class="section-number-2">1</span> 새로운 노드 만들기 (python)</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org49ed74b" class="outline-3">
-<h3 id="org49ed74b"><span class="section-number-3">1.1</span> 패키지 만들기</h3>
+<div id="outline-container-org4f9046d" class="outline-3">
+<h3 id="org4f9046d"><span class="section-number-3">1.1</span> 패키지 만들기</h3>
 <div class="outline-text-3" id="text-1-1">
 <div class="org-src-container">
 <pre class="src src-sh">$ source ~/catkin_ws/devel/setup.bash
@@ -276,8 +276,8 @@ $ catkin_create_pkg drone_control_py mavros geometry_msgs rospy
 </div>
 </div>
 
-<div id="outline-container-orga67800c" class="outline-3">
-<h3 id="orga67800c"><span class="section-number-3">1.2</span> 노드 코드 작성</h3>
+<div id="outline-container-org4a51e61" class="outline-3">
+<h3 id="org4a51e61"><span class="section-number-3">1.2</span> 노드 코드 작성</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 <code>~/catkin_ws/src/drone_control_py/scripts/offb_node.py</code>
@@ -390,8 +390,8 @@ $ chmod +x offb_node.py
 </div>
 </div>
 
-<div id="outline-container-org1db6ebb" class="outline-3">
-<h3 id="org1db6ebb"><span class="section-number-3">1.3</span> 패키지 빌드</h3>
+<div id="outline-container-org966e516" class="outline-3">
+<h3 id="org966e516"><span class="section-number-3">1.3</span> 패키지 빌드</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="org-src-container">
 <pre class="src src-sh">$ cd ~/catkin_ws
@@ -401,8 +401,8 @@ $ catkin build
 </div>
 </div>
 
-<div id="outline-container-org9b1df2b" class="outline-3">
-<h3 id="org9b1df2b"><span class="section-number-3">1.4</span> 패키지 노드 실행</h3>
+<div id="outline-container-orgcdb68a3" class="outline-3">
+<h3 id="orgcdb68a3"><span class="section-number-3">1.4</span> 패키지 노드 실행</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 <code>drone_control_py</code> 패키지의 <code>offb_node</code> 노드 실행
@@ -414,8 +414,8 @@ $ catkin build
 </div>
 </div>
 
-<div id="outline-container-org1ea8988" class="outline-3">
-<h3 id="org1ea8988"><span class="section-number-3">1.5</span> launch file</h3>
+<div id="outline-container-org6a47e4e" class="outline-3">
+<h3 id="org6a47e4e"><span class="section-number-3">1.5</span> launch file</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 <code>~/catkin_ws/src/drone_control_py/launch/offb_node.launch</code>
@@ -439,8 +439,8 @@ $ catkin build
 </div>
 
 
-<div id="outline-container-orgdf34ad9" class="outline-2">
-<h2 id="orgdf34ad9"><span class="section-number-2">2</span> keyboard 사용하여 setpoint 보내기</h2>
+<div id="outline-container-org76e3c15" class="outline-2">
+<h2 id="org76e3c15"><span class="section-number-2">2</span> keyboard 사용하여 setpoint 보내기</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <code>~catkin_ws/src/drone_control_py/scripts/mavteleop_key.py</code> 추가
@@ -456,7 +456,12 @@ from std_srvs.srv import *
 from geometry_msgs.msg import Vector3, TwistStamped
 
 rospy.init_node('mavros_teleop_key', anonymous=True)
-vel_pub = rospy.Publisher("mavros/setpoint_velocity/cmd_vel",
+
+#vel_pub = rospy.Publisher("mavros/setpoint_velocity/cmd_vel",
+#                                 TwistStamped,
+#                                 queue_size=10)
+
+vel_pub = rospy.Publisher("drone_control/cmd_vel",
                                  TwistStamped,
                                  queue_size=10)
 
@@ -465,7 +470,7 @@ stdscr = curses.initscr()
 curses.cbreak()
 stdscr.keypad(1)
 
-stdscr.addstr(0,10,"Hit 'x' to quit")
+stdscr.addstr(0, 10, "Hit 'x' to quit")
 stdscr.refresh()
 
 key = ''
@@ -520,10 +525,10 @@ while True:
     twist.twist.linear = Vector3(x=rotation[0], y=rotation[1], z=throttle)
     twist.twist.angular = Vector3(z=rotation[2])
 
-    stdscr.addstr(2, 10, "v z: " + str(throttle) + "   ")
-    stdscr.addstr(3, 10, "v x:  " + str(rotation[0]) + "   ")
-    stdscr.addstr(4, 10, "v y: " + str(rotation[1]) + "   ")
-    stdscr.addstr(5, 10, "v yaw:   " + str(rotation[2]) + "   ")
+    stdscr.addstr(2, 10, "vz: " + str(throttle) + "   ")
+    stdscr.addstr(3, 10, "vx:  " + str(rotation[0]) + "   ")
+    stdscr.addstr(4, 10, "vy: " + str(rotation[1]) + "   ")
+    stdscr.addstr(5, 10, "vyaw:   " + str(rotation[2]) + "   ")
 
     if dirty:
         vel_pub.publish(twist)
@@ -531,11 +536,119 @@ while True:
 
 curses.endwin()
 </pre>
+
+<p>
+<code>~catkin_ws/src/drone_control_py/src/offb_teleop.cpp</code> 추가
+</p>
+<pre class="example">
+/**
+ * @file offb_teleop.cpp
+ * @brief Offboard control example node, written with MAVROS version 0.19.x, PX4 Pro Flight
+ * Stack and tested in Gazebo SITL
+ */
+
+#include &lt;ros/ros.h&gt;
+#include &lt;geometry_msgs/PoseStamped.h&gt;
+#include &lt;geometry_msgs/TwistStamped.h&gt;
+#include &lt;mavros_msgs/CommandBool.h&gt;
+#include &lt;mavros_msgs/SetMode.h&gt;
+#include &lt;mavros_msgs/State.h&gt;
+
+mavros_msgs::State current_state;
+geometry_msgs::TwistStamped cmd_vel;
+
+void state_cb(const mavros_msgs::State::ConstPtr&amp; msg){
+    current_state = *msg;
+}
+
+void cmd_vel_cb(const geometry_msgs::TwistStamped::ConstPtr&amp; msg){
+    cmd_vel = *msg;
+}
+
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "offb_teleop");
+    ros::NodeHandle nh;
+
+    ros::Subscriber state_sub = nh.subscribe&lt;mavros_msgs::State&gt;
+            ("mavros/state", 10, state_cb);
+
+    ros::Subscriber cmd_vel_sub = nh.subscribe&lt;geometry_msgs::TwistStamped&gt;
+            ("drone_control/cmd_vel", 10, cmd_vel_cb);
+
+    ros::Publisher local_vel_pub = nh.advertise&lt;geometry_msgs::TwistStamped&gt;
+            ("mavros/setpoint_velocity/cmd_vel", 10);
+
+    ros::Publisher local_pos_pub = nh.advertise&lt;geometry_msgs::PoseStamped&gt;
+            ("mavros/setpoint_position/local", 10);
+    ros::ServiceClient arming_client = nh.serviceClient&lt;mavros_msgs::CommandBool&gt;
+            ("mavros/cmd/arming");
+    ros::ServiceClient set_mode_client = nh.serviceClient&lt;mavros_msgs::SetMode&gt;
+            ("mavros/set_mode");
+
+    //the setpoint publishing rate MUST be faster than 2Hz
+    ros::Rate rate(20.0);
+
+    // wait for FCU connection
+    while(ros::ok() &amp;&amp; !current_state.connected){
+        ros::spinOnce();
+        rate.sleep();
+    }
+
+    geometry_msgs::PoseStamped pose;
+    pose.pose.position.x = 0;
+    pose.pose.position.y = 0;
+    pose.pose.position.z = 2;
+
+    //send a few setpoints before starting
+    for(int i = 100; ros::ok() &amp;&amp; i &gt; 0; --i){
+        local_pos_pub.publish(pose);
+        ros::spinOnce();
+        rate.sleep();
+    }
+
+    mavros_msgs::SetMode offb_set_mode;
+    offb_set_mode.request.custom_mode = "OFFBOARD";
+
+    mavros_msgs::CommandBool arm_cmd;
+    arm_cmd.request.value = true;
+
+    ros::Time last_request = ros::Time::now();
+
+    while(ros::ok()){
+        if( current_state.mode != "OFFBOARD" &amp;&amp;
+            (ros::Time::now() - last_request &gt; ros::Duration(5.0))){
+            if( set_mode_client.call(offb_set_mode) &amp;&amp;
+                offb_set_mode.response.mode_sent){
+                ROS_INFO("Offboard enabled");
+            }
+            last_request = ros::Time::now();
+        } else {
+            if( !current_state.armed &amp;&amp;
+                (ros::Time::now() - last_request &gt; ros::Duration(5.0))){
+                if( arming_client.call(arm_cmd) &amp;&amp;
+                    arm_cmd.response.success){
+                    ROS_INFO("Vehicle armed");
+                }
+                last_request = ros::Time::now();
+            }
+        }
+
+        //local_pos_pub.publish(pose);
+        local_vel_pub.publish(cmd_vel);
+
+        ros::spinOnce();
+        rate.sleep();
+    }
+
+    return 0;
+}
+</pre>
 </div>
 </div>
 
-<div id="outline-container-org150f654" class="outline-2">
-<h2 id="org150f654"><span class="section-number-2">3</span> joystic 사용하여 setpoint 보내기</h2>
+<div id="outline-container-org797edb5" class="outline-2">
+<h2 id="org797edb5"><span class="section-number-2">3</span> joystic 사용하여 setpoint 보내기</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 mavros extras mavteleop
@@ -613,7 +726,7 @@ rosrun mavros mavsafety arm
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Donghee Park</p>
-<p class="date">Created: 2020-08-06 목 08:14</p>
+<p class="date">Created: 2020-08-06 목 14:19</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
