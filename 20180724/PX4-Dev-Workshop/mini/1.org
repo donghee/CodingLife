@@ -468,6 +468,7 @@ export PX4_HOME_LAT=35.9012382
 export PX4_HOME_LON=128.854495337
 export PX4_HOME_ALT=71
 
+cd ~/Firmware
 make px4_sitl gazebo
 #+end_src
 
