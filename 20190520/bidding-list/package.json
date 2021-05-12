@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "node-cron": "^2.0.3",
-    "nodemailer": "^6.1.1",
+    "nodemailer": "^6.4.16",
     "puppeteer": "^1.16.0"
   },
   "name": "bidding-list",
