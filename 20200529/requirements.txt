@@ -5,7 +5,7 @@ PyQt5 == 5.12.2
 # https://packages.ubuntu.com/bionic/python3-numpy
 # Last version of numpy has problems with some modules when using pyinstaller
 # https://stackoverflow.com/questions/57264427/in-pyinstaller-why-wont-numpy-random-common-load-as-a-module
-numpy == 1.16.2
+numpy == 1.22.0
 
 aiogrpc==1.7
 altgraph==0.17
