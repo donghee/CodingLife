@@ -1,3 +1,0 @@
-wget https://s3-us-west-2.amazonaws.com/qgroundcontrol/builds/master/QGroundControl.AppImage
-chmod +x QGroundControl.AppImage
-./QGroundControl.AppImage
