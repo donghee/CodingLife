@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>commander_before_v1.0.cpp</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>commander_before_v1.0.cpp</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="cm">/****************************************************************************</span>
+<span class="cm"> *</span>
+<span class="cm"> *   Copyright (C) 2012 PX4 Development Team. All rights reserved.</span>
+<span class="cm"> *   Author: @author Petri Tanskanen &lt;petri.tanskanen@inf.ethz.ch&gt;</span>
+<span class="cm"> *           @author Lorenz Meier &lt;lm@inf.ethz.ch&gt;</span>
+<span class="cm"> *           @author Thomas Gubler &lt;thomasgubler@student.ethz.ch&gt;</span>
+<span class="cm"> *           @author Julian Oes &lt;joes@student.ethz.ch&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> *</span>
+<span class="cm"> * Redistribution and use in source and binary forms, with or without</span>
+<span class="cm"> * modification, are permitted provided that the following conditions</span>
+<span class="cm"> * are met:</span>
+<span class="cm"> *</span>
+<span class="cm"> * 1. Redistributions of source code must retain the above copyright</span>
+<span class="cm"> *    notice, this list of conditions and the following disclaimer.</span>
+<span class="cm"> * 2. Redistributions in binary form must reproduce the above copyright</span>
+<span class="cm"> *    notice, this list of conditions and the following disclaimer in</span>
+<span class="cm"> *    the documentation and/or other materials provided with the</span>
+<span class="cm"> *    distribution.</span>
+<span class="cm"> * 3. Neither the name PX4 nor the names of its contributors may be</span>
+<span class="cm"> *    used to endorse or promote products derived from this software</span>
+<span class="cm"> *    without specific prior written permission.</span>
+<span class="cm"> *</span>
+<span class="cm"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</span>
+<span class="cm"> * &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT</span>
+<span class="cm"> * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS</span>
+<span class="cm"> * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE</span>
+<span class="cm"> * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,</span>
+<span class="cm"> * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,</span>
+<span class="cm"> * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS</span>
+<span class="cm"> * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED</span>
+<span class="cm"> * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT</span>
+<span class="cm"> * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN</span>
+<span class="cm"> * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="cm"> * POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="cm"> *</span>
+<span class="cm"> ****************************************************************************/</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @file commander.c</span>
+<span class="cm"> * Main system state machine implementation.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;commander.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;nuttx/config.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdbool.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fcntl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;errno.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;debug.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/prctl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;v1.0/common/mavlink.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;arch/board/drv_led.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;arch/board/up_hrt.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;arch/board/drv_tone_alarm.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;arch/board/up_hrt.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;state_machine_helper.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;systemlib/systemlib.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;poll.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;uORB/uORB.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;uORB/topics/sensor_combined.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;uORB/topics/rc_channels.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;uORB/topics/vehicle_gps_position.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;uORB/topics/vehicle_command.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mavlink/mavlink_log.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;systemlib/systemlib.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;arch/board/up_cpuload.h&gt;</span><span class="cp"></span>
+<span class="k">extern</span> <span class="k">struct</span> <span class="n">system_load_s</span> <span class="n">system_load</span><span class="p">;</span>
+
+<span class="cm">/* Decouple update interval and hysteris counters, all depends on intervals */</span>
+<span class="cp">#define COMMANDER_MONITORING_INTERVAL 50000</span>
+<span class="cp">#define COMMANDER_MONITORING_LOOPSPERMSEC (1/(COMMANDER_MONITORING_INTERVAL/1000.0f))</span>
+<span class="cp">#define LOW_VOLTAGE_BATTERY_COUNTER_LIMIT (LOW_VOLTAGE_BATTERY_HYSTERESIS_TIME_MS*COMMANDER_MONITORING_LOOPSPERMSEC)</span>
+<span class="cp">#define CRITICAL_VOLTAGE_BATTERY_COUNTER_LIMIT (CRITICAL_VOLTAGE_BATTERY_HYSTERESIS_TIME_MS*COMMANDER_MONITORING_LOOPSPERMSEC)</span>
+
+<span class="cp">#define STICK_ON_OFF_LIMIT 7500</span>
+<span class="cp">#define STICK_ON_OFF_HYSTERESIS_TIME_MS 1000</span>
+<span class="cp">#define STICK_ON_OFF_COUNTER_LIMIT (STICK_ON_OFF_HYSTERESIS_TIME_MS*COMMANDER_MONITORING_LOOPSPERMSEC)</span>
+
+<span class="cp">#define GPS_FIX_TYPE_2D 2</span>
+<span class="cp">#define GPS_FIX_TYPE_3D 3</span>
+<span class="cp">#define GPS_QUALITY_GOOD_COUNTER_LIMIT 50</span>
+
+<span class="cm">/* File descriptors */</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">leds</span><span class="p">;</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">buzzer</span><span class="p">;</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">mavlink_fd</span><span class="p">;</span>
+<span class="k">static</span> <span class="kt">bool</span> <span class="n">commander_initialized</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="k">static</span> <span class="k">struct</span> <span class="n">vehicle_status_s</span> <span class="n">current_status</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="p">.</span><span class="n">state_machine</span> <span class="o">=</span> <span class="n">SYSTEM_STATE_PREFLIGHT</span><span class="p">,</span>
+	<span class="p">.</span><span class="n">mode</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">};</span> <span class="cm">/**&lt; Main state machine */</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">stat_pub</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="kt">uint16_t</span> <span class="n">nofix_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">static</span> <span class="kt">uint16_t</span> <span class="n">gotfix_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">handle_command</span><span class="p">(</span><span class="kt">int</span> <span class="n">status_pub</span><span class="p">,</span> <span class="k">struct</span> <span class="n">vehicle_status_s</span> <span class="o">*</span><span class="n">current_status</span><span class="p">,</span> <span class="k">struct</span> <span class="n">vehicle_command_s</span> <span class="o">*</span><span class="n">cmd</span><span class="p">);</span>
+
+<span class="cm">/* pthread loops */</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="nf">command_handling_loop</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">);</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>static void <em>subsystem_info_loop(void </em>arg);</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">__EXPORT</span> <span class="kt">int</span> <span class="nf">commander_main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]);</span>
+
+<span class="cp">#ifdef CONFIG_TONE_ALARM</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">buzzer_init</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">buzzer_deinit</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">buzzer_init</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">buzzer</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="s">&quot;/dev/tone_alarm&quot;</span><span class="p">,</span> <span class="n">O_WRONLY</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">buzzer</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] Buzzer: open fail</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">ERROR</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">buzzer_deinit</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">close</span><span class="p">(</span><span class="n">buzzer</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">led_init</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">led_deinit</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">led_toggle</span><span class="p">(</span><span class="kt">int</span> <span class="n">led</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">led_on</span><span class="p">(</span><span class="kt">int</span> <span class="n">led</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">led_off</span><span class="p">(</span><span class="kt">int</span> <span class="n">led</span><span class="p">);</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">led_init</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">leds</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="s">&quot;/dev/led&quot;</span><span class="p">,</span> <span class="n">O_RDONLY</span> <span class="o">|</span> <span class="n">O_NONBLOCK</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">leds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] LED: open fail</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">ERROR</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">ioctl</span><span class="p">(</span><span class="n">leds</span><span class="p">,</span> <span class="n">LED_ON</span><span class="p">,</span> <span class="n">LED_BLUE</span><span class="p">)</span> <span class="o">||</span> <span class="n">ioctl</span><span class="p">(</span><span class="n">leds</span><span class="p">,</span> <span class="n">LED_ON</span><span class="p">,</span> <span class="n">LED_AMBER</span><span class="p">))</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] LED: ioctl fail</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">ERROR</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">led_deinit</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">close</span><span class="p">(</span><span class="n">leds</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">led_toggle</span><span class="p">(</span><span class="kt">int</span> <span class="n">led</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="kt">int</span> <span class="n">last_blue</span> <span class="o">=</span> <span class="n">LED_ON</span><span class="p">;</span>
+	<span class="k">static</span> <span class="kt">int</span> <span class="n">last_amber</span> <span class="o">=</span> <span class="n">LED_ON</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">led</span> <span class="o">==</span> <span class="n">LED_BLUE</span><span class="p">)</span> <span class="n">last_blue</span> <span class="o">=</span> <span class="p">(</span><span class="n">last_blue</span> <span class="o">==</span> <span class="n">LED_ON</span><span class="p">)</span> <span class="o">?</span> <span class="nl">LED_OFF</span> <span class="p">:</span> <span class="n">LED_ON</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">led</span> <span class="o">==</span> <span class="n">LED_AMBER</span><span class="p">)</span> <span class="n">last_amber</span> <span class="o">=</span> <span class="p">(</span><span class="n">last_amber</span> <span class="o">==</span> <span class="n">LED_ON</span><span class="p">)</span> <span class="o">?</span> <span class="nl">LED_OFF</span> <span class="p">:</span> <span class="n">LED_ON</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="n">ioctl</span><span class="p">(</span><span class="n">leds</span><span class="p">,</span> <span class="p">((</span><span class="n">led</span> <span class="o">==</span> <span class="n">LED_BLUE</span><span class="p">)</span> <span class="o">?</span> <span class="nl">last_blue</span> <span class="p">:</span> <span class="n">last_amber</span><span class="p">),</span> <span class="n">led</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">led_on</span><span class="p">(</span><span class="kt">int</span> <span class="n">led</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">ioctl</span><span class="p">(</span><span class="n">leds</span><span class="p">,</span> <span class="n">LED_ON</span><span class="p">,</span> <span class="n">led</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">led_off</span><span class="p">(</span><span class="kt">int</span> <span class="n">led</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">ioctl</span><span class="p">(</span><span class="n">leds</span><span class="p">,</span> <span class="n">LED_OFF</span><span class="p">,</span> <span class="n">led</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="n">AUDIO_PATTERN</span> <span class="p">{</span>
+	<span class="n">AUDIO_PATTERN_ERROR</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="n">AUDIO_PATTERN_NOTIFY_POSITIVE</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+	<span class="n">AUDIO_PATTERN_NOTIFY_NEUTRAL</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+	<span class="n">AUDIO_PATTERN_NOTIFY_NEGATIVE</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+	<span class="n">AUDIO_PATTERN_TETRIS</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">trigger_audio_alarm</span><span class="p">(</span><span class="kt">uint8_t</span> <span class="n">old_mode</span><span class="p">,</span> <span class="kt">uint8_t</span> <span class="n">old_state</span><span class="p">,</span> <span class="kt">uint8_t</span> <span class="n">new_mode</span><span class="p">,</span> <span class="kt">uint8_t</span> <span class="n">new_state</span><span class="p">)</span> <span class="p">{</span>
+
+	<span class="cm">/* Trigger alarm if going into any error state */</span>
+	<span class="k">if</span> <span class="p">(((</span><span class="n">new_state</span> <span class="o">==</span> <span class="n">SYSTEM_STATE_GROUND_ERROR</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">old_state</span> <span class="o">!=</span> <span class="n">SYSTEM_STATE_GROUND_ERROR</span><span class="p">))</span> <span class="o">||</span>
+		<span class="p">((</span><span class="n">new_state</span> <span class="o">==</span> <span class="n">SYSTEM_STATE_MISSION_ABORT</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">old_state</span> <span class="o">!=</span> <span class="n">SYSTEM_STATE_MISSION_ABORT</span><span class="p">)))</span> <span class="p">{</span>
+		<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+		<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="n">AUDIO_PATTERN_ERROR</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* Trigger neutral on arming / disarming */</span>
+	<span class="k">if</span> <span class="p">(((</span><span class="n">new_state</span> <span class="o">==</span> <span class="n">SYSTEM_STATE_GROUND_READY</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">old_state</span> <span class="o">!=</span> <span class="n">SYSTEM_STATE_GROUND_READY</span><span class="p">)))</span> <span class="p">{</span>
+		<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+		<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="n">AUDIO_PATTERN_NOTIFY_NEUTRAL</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* Trigger Tetris on being bored */</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">do_gyro_calibration</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+
+	<span class="k">const</span> <span class="kt">int</span> <span class="n">calibration_count</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">;</span>
+
+	<span class="kt">int</span> <span class="n">sub_sensor_combined</span> <span class="o">=</span> <span class="n">orb_subscribe</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">sensor_combined</span><span class="p">));</span>
+	<span class="k">struct</span> <span class="n">sensor_combined_s</span> <span class="n">raw</span><span class="p">;</span>
+
+	<span class="kt">int</span> <span class="n">calibration_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">gyro_offset</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+
+	<span class="k">while</span> <span class="p">(</span><span class="n">calibration_counter</span> <span class="o">&lt;</span> <span class="n">calibration_count</span><span class="p">)</span> <span class="p">{</span>
+
+		<span class="cm">/* wait blocking for new data */</span>
+		<span class="k">struct</span> <span class="n">pollfd</span> <span class="n">fds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">{</span> <span class="p">.</span><span class="n">fd</span> <span class="o">=</span> <span class="n">sub_sensor_combined</span><span class="p">,</span> <span class="p">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">POLLIN</span> <span class="p">}</span> <span class="p">};</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">poll</span><span class="p">(</span><span class="n">fds</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span> <span class="p">{</span>
+			<span class="n">orb_copy</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">sensor_combined</span><span class="p">),</span> <span class="n">sub_sensor_combined</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">raw</span><span class="p">);</span>
+			<span class="n">gyro_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">raw</span><span class="p">.</span><span class="n">gyro_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+			<span class="n">gyro_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">raw</span><span class="p">.</span><span class="n">gyro_raw</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+			<span class="n">gyro_offset</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">raw</span><span class="p">.</span><span class="n">gyro_raw</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+			<span class="n">calibration_counter</span><span class="o">++</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="n">gyro_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">gyro_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">calibration_count</span><span class="p">;</span>
+	<span class="n">gyro_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">gyro_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">calibration_count</span><span class="p">;</span>
+	<span class="n">gyro_offset</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">gyro_offset</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">calibration_count</span><span class="p">;</span>
+
+	<span class="n">global_data_parameter_storage</span><span class="o">-&gt;</span><span class="n">pm</span><span class="p">.</span><span class="n">param_values</span><span class="p">[</span><span class="n">PARAM_SENSOR_GYRO_XOFFSET</span><span class="p">]</span> <span class="o">=</span> <span class="n">gyro_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+	<span class="n">global_data_parameter_storage</span><span class="o">-&gt;</span><span class="n">pm</span><span class="p">.</span><span class="n">param_values</span><span class="p">[</span><span class="n">PARAM_SENSOR_GYRO_YOFFSET</span><span class="p">]</span> <span class="o">=</span> <span class="n">gyro_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+	<span class="n">global_data_parameter_storage</span><span class="o">-&gt;</span><span class="n">pm</span><span class="p">.</span><span class="n">param_values</span><span class="p">[</span><span class="n">PARAM_SENSOR_GYRO_ZOFFSET</span><span class="p">]</span> <span class="o">=</span> <span class="n">gyro_offset</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+	<span class="kt">char</span> <span class="n">offset_output</span><span class="p">[</span><span class="mi">50</span><span class="p">];</span>
+	<span class="n">sprintf</span><span class="p">(</span><span class="n">offset_output</span><span class="p">,</span> <span class="s">&quot;[commander] gyro calibration finished, offsets: x:%d, y:%d, z:%d&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">gyro_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">gyro_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">gyro_offset</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+	<span class="n">mavlink_log_info</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="n">offset_output</span><span class="p">);</span>
+
+	<span class="n">close</span><span class="p">(</span><span class="n">sub_sensor_combined</span><span class="p">);</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>XXX Add a parameter changed broadcast notification</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="p">}</span>
+
+
+
+<span class="kt">void</span> <span class="nf">handle_command</span><span class="p">(</span><span class="kt">int</span> <span class="n">status_pub</span><span class="p">,</span> <span class="k">struct</span> <span class="n">vehicle_status_s</span> <span class="o">*</span><span class="n">current_vehicle_status</span><span class="p">,</span> <span class="k">struct</span> <span class="n">vehicle_command_s</span> <span class="o">*</span><span class="n">cmd</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="cm">/* result of the command */</span>
+	<span class="kt">uint8_t</span> <span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_UNSUPPORTED</span><span class="p">;</span>
+
+
+	<span class="cm">/* supported command handling start */</span>
+
+	<span class="cm">/* request to set different system mode */</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">command</span><span class="p">)</span> <span class="p">{</span>
+
+
+		<span class="k">case</span> <span class="nl">MAV_CMD_DO_SET_MODE</span><span class="p">:</span>
+		<span class="p">{</span>
+			<span class="n">update_state_machine_mode_request</span><span class="p">(</span><span class="n">status_pub</span><span class="p">,</span> <span class="n">current_vehicle_status</span><span class="p">,</span> <span class="p">(</span><span class="kt">uint8_t</span><span class="p">)</span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">param1</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">break</span><span class="p">;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <pre><code>case MAV_CMD_COMPONENT_ARM_DISARM:
+{
+    /* request to arm */
+    if (cmd-&gt;param1 == 1.0f) {
+        if (0 == update_state_machine_custom_mode_request(status_pub, current_vehicle_status, SYSTEM_STATE_ARMED))
+            result = MAV_RESULT_ACCEPTED;
+    /* request to disarm */
+    } else if (cmd-&gt;param1 == 0.0f) {
+        if (0 == update_state_machine_custom_mode_request(status_pub, current_vehicle_status, SYSTEM_STATE_STANDBY))
+            result = MAV_RESULT_ACCEPTED;
+    }
+}
+break;
+
+/* request for an autopilot reboot */
+case MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN:
+{
+    if (cmd-&gt;param1 == 1.0f) {
+        if (0 == update_state_machine_custom_mode_request(status_pub, current_vehicle_status, SYSTEM_STATE_HALT)) {
+            result = MAV_RESULT_ACCEPTED;//TODO: this has no effect
+        }
+    }
+
+}
+break;
+
+/* request to land */
+case MAV_CMD_NAV_LAND:
+ {
+        //TODO: add check if landing possible
+        //TODO: add landing maneuver
+
+        if (0 == update_state_machine_custom_mode_request(status_pub, current_vehicle_status, SYSTEM_STATE_ARMED)) {
+            result = MAV_RESULT_ACCEPTED;
+}       }
+break;
+
+/* request to takeoff */
+case MAV_CMD_NAV_TAKEOFF:
+{
+    //TODO: add check if takeoff possible
+    //TODO: add takeoff maneuver
+
+    if (0 == update_state_machine_custom_mode_request(status_pub, current_vehicle_status, SYSTEM_STATE_AUTO)) {
+        result = MAV_RESULT_ACCEPTED;
+    }
+}
+break;
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="cm">/* preflight calibration */</span>
+	<span class="k">case</span> <span class="nl">MAV_CMD_PREFLIGHT_CALIBRATION</span><span class="p">:</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">param1</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">)</span>	<span class="p">{</span>
+				<span class="n">mavlink_log_info</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] starting gyro calibration&quot;</span><span class="p">);</span>
+				<span class="n">do_gyro_calibration</span><span class="p">();</span>
+				<span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_ACCEPTED</span><span class="p">;</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] refusing unsupported calibration request</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+				<span class="n">mavlink_log_critical</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] refusing unsupported calibration request&quot;</span><span class="p">);</span>
+				<span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_UNSUPPORTED</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">break</span><span class="p">;</span>
+
+		<span class="cm">/* preflight parameter load / store */</span>
+	<span class="k">case</span> <span class="nl">MAV_CMD_PREFLIGHT_STORAGE</span><span class="p">:</span> <span class="p">{</span>
+			<span class="cm">/* Read all parameters from EEPROM to RAM */</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">param1</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)</span>	<span class="p">{</span>
+
+				<span class="k">if</span> <span class="p">(</span><span class="n">OK</span> <span class="o">==</span> <span class="n">get_params_from_eeprom</span><span class="p">(</span><span class="n">global_data_parameter_storage</span><span class="p">))</span> <span class="p">{</span>
+					<span class="n">printf</span><span class="p">(</span><span class="s">&quot;[commander] Loaded EEPROM params in RAM</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+					<span class="n">mavlink_log_info</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] Loaded EEPROM params in RAM&quot;</span><span class="p">);</span>
+					<span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_ACCEPTED</span><span class="p">;</span>
+
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR loading EEPROM params in RAM</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+					<span class="n">mavlink_log_critical</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR loading EEPROM params in RAM&quot;</span><span class="p">);</span>
+					<span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_FAILED</span><span class="p">;</span>
+				<span class="p">}</span>
+
+				<span class="cm">/* Write all parameters from RAM to EEPROM */</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">param1</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">)</span>	<span class="p">{</span>
+
+				<span class="k">if</span> <span class="p">(</span><span class="n">OK</span> <span class="o">==</span> <span class="n">store_params_in_eeprom</span><span class="p">(</span><span class="n">global_data_parameter_storage</span><span class="p">))</span> <span class="p">{</span>
+					<span class="n">printf</span><span class="p">(</span><span class="s">&quot;[commander] RAM params written to EEPROM</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+					<span class="n">mavlink_log_info</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] RAM params written to EEPROM&quot;</span><span class="p">);</span>
+					<span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_ACCEPTED</span><span class="p">;</span>
+
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR writing RAM params to EEPROM</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+					<span class="n">mavlink_log_critical</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR writing RAM params to EEPROM&quot;</span><span class="p">);</span>
+					<span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_FAILED</span><span class="p">;</span>
+				<span class="p">}</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] refusing unsupported storage request</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+				<span class="n">mavlink_log_critical</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] refusing unsupported storage request&quot;</span><span class="p">);</span>
+				<span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_UNSUPPORTED</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">break</span><span class="p">;</span>
+
+	<span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+			<span class="n">mavlink_log_critical</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] refusing unsupported command&quot;</span><span class="p">);</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">MAV_RESULT_UNSUPPORTED</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* supported command handling stop */</span>
+
+
+	<span class="cm">/* send any requested ACKs */</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">confirmation</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="cm">/* send acknowledge command */</span>
+		<span class="n">mavlink_message_t</span> <span class="n">msg</span><span class="p">;</span>
+		<span class="n">mavlink_msg_command_ack_pack</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span> <span class="n">cmd</span><span class="o">-&gt;</span><span class="n">command</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>global_data_send_mavlink_message_out(&amp;msg);</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="p">}</span>
+
+<span class="p">}</span>
+
+
+<span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="nf">command_handling_loop</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span>  <span class="c1">//handles commands which come from the mavlink app</span>
+<span class="p">{</span>
+	<span class="cm">/* Set thread name */</span>
+	<span class="n">prctl</span><span class="p">(</span><span class="n">PR_SET_NAME</span><span class="p">,</span> <span class="s">&quot;commander cmd handler&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+
+	<span class="cm">/* Subscribe to command topic */</span>
+	<span class="kt">int</span> <span class="n">cmd_sub</span> <span class="o">=</span> <span class="n">orb_subscribe</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">vehicle_command</span><span class="p">));</span>
+	<span class="k">struct</span> <span class="n">vehicle_command_s</span> <span class="n">cmd</span><span class="p">;</span>
+
+	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">struct</span> <span class="n">pollfd</span> <span class="n">fds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">{</span> <span class="p">.</span><span class="n">fd</span> <span class="o">=</span> <span class="n">cmd_sub</span><span class="p">,</span> <span class="p">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">POLLIN</span> <span class="p">}</span> <span class="p">};</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">poll</span><span class="p">(</span><span class="n">fds</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="cm">/* timeout, but this is no problem */</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="cm">/* got command */</span>
+			<span class="n">orb_copy</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">vehicle_command</span><span class="p">),</span> <span class="n">cmd_sub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cmd</span><span class="p">);</span>
+
+			<span class="cm">/* handle it */</span>
+			<span class="n">handle_command</span><span class="p">(</span><span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cmd</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>static void <em>subsystem_info_loop(void </em>arg)  //handles status information coming from subsystems (present, enabled, health), these values do not indicate the quality (variance) of the signal
+{
+    /<em> Set thread name </em>/
+    prctl(PR_SET_NAME, "commander subsys", getpid());</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <pre><code>uint8_t current_info_local = SUBSYSTEM_INFO_BUFFER_SIZE;
+uint16_t total_counter = 0;
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <pre><code>while (1) {
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <pre><code>    if (0 == global_data_wait(&amp;global_data_subsystem_info-&gt;access_conf)) {
+</code></pre>
+<p>//              printf("got subsystem_info\n");</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <pre><code>        while (current_info_local != global_data_subsystem_info-&gt;current_info) {
+</code></pre>
+<p>//                  printf("current_info_local = %d, current_info = %d \n", current_info_local, global_data_subsystem_info-&gt;current_info);</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <pre><code>            current_info_local++;
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <pre><code>            if (current_info_local &gt;= SUBSYSTEM_INFO_BUFFER_SIZE)
+                current_info_local = 0;
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <pre><code>            /* Handle the new subsystem info and write updated version of global_data_sys_status */
+            subsystem_info_t *info = &amp;(global_data_subsystem_info-&gt;info[current_info_local]);
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>//                  printf("Commander got subsystem info: %d %d %d\n", info-&gt;present, info-&gt;enabled, info-&gt;health);</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <pre><code>            if (info-&gt;present != 0) {
+                update_state_machine_subsystem_present(stat_pub, &amp;current_status, &amp;info-&gt;subsystem_type);
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <pre><code>            } else {
+                update_state_machine_subsystem_notpresent(stat_pub, &amp;current_status, &amp;info-&gt;subsystem_type);
+            }
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <pre><code>            if (info-&gt;enabled != 0) {
+                update_state_machine_subsystem_enabled(stat_pub, &amp;current_status, &amp;info-&gt;subsystem_type);
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <pre><code>            } else {
+                update_state_machine_subsystem_disabled(stat_pub, &amp;current_status, &amp;info-&gt;subsystem_type);
+            }
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <pre><code>            if (info-&gt;health != 0) {
+                update_state_machine_subsystem_healthy(stat_pub, &amp;current_status, &amp;info-&gt;subsystem_type);
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <pre><code>            } else {
+                update_state_machine_subsystem_unhealthy(stat_pub, &amp;current_status, &amp;info-&gt;subsystem_type);
+            }
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <pre><code>            total_counter++;
+        }
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <pre><code>        if (global_data_subsystem_info-&gt;counter - total_counter &gt; SUBSYSTEM_INFO_BUFFER_SIZE) {
+            printf("[commander] Warning: Too many subsystem status updates, subsystem_info buffer full\n"); //TODO: add to error queue
+            global_data_subsystem_info-&gt;counter = total_counter; //this makes sure we print the warning only once
+        }
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <pre><code>        global_data_unlock(&amp;global_data_subsystem_info-&gt;access_conf);
+    }
+}
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <pre><code>return NULL;
+</code></pre>
+<p>}</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">enum</span> <span class="n">BAT_CHEM</span> <span class="p">{</span>
+	<span class="n">BAT_CHEM_LITHIUM_POLYMERE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Provides a coarse estimate of remaining battery power.</span>
+<span class="cm"> *</span>
+<span class="cm"> * The estimate is very basic and based on decharging voltage curves.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @return the estimated remaining capacity in 0..1</span>
+<span class="cm"> */</span>
+<span class="kt">float</span> <span class="nf">battery_remaining_estimate_voltage</span><span class="p">(</span><span class="kt">int</span> <span class="n">cells</span><span class="p">,</span> <span class="kt">int</span> <span class="n">chemistry</span><span class="p">,</span> <span class="kt">float</span> <span class="n">voltage</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>XXX do this properly
+XXX rebase on parameters</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">const</span> <span class="kt">float</span> <span class="n">chemistry_voltage_empty</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">3.2f</span><span class="p">};</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">chemistry_voltage_full</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">4.05f</span><span class="p">};</span>
+
+	<span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">voltage</span> <span class="o">-</span> <span class="n">cells</span> <span class="o">*</span> <span class="n">chemistry_voltage_empty</span><span class="p">[</span><span class="n">chemistry</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">cells</span> <span class="o">*</span> <span class="p">(</span><span class="n">chemistry_voltage_full</span><span class="p">[</span><span class="n">chemistry</span><span class="p">]</span> <span class="o">-</span> <span class="n">chemistry_voltage_empty</span><span class="p">[</span><span class="n">chemistry</span><span class="p">]));</span>
+
+	<span class="cm">/* limit to sane values */</span>
+	<span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">ret</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">ret</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/****************************************************************************</span>
+<span class="cm"> * Name: commander</span>
+<span class="cm"> ****************************************************************************/</span>
+
+<span class="kt">int</span> <span class="nf">commander_main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+	<span class="cm">/* not yet initialized */</span>
+	<span class="n">commander_initialized</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="cm">/* welcome user */</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;[commander] I am in command now!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+	<span class="cm">/* Pthreads */</span>
+	<span class="n">pthread_t</span> <span class="n">command_handling_thread</span><span class="p">;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>pthread_t subsystem_info_thread;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="cm">/* initialize */</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">led_init</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR: Failed to initialize leds</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">buzzer_init</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR: Failed to initialize buzzer</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="n">mavlink_fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">MAVLINK_LOG_DEVICE</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">mavlink_fd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR: Failed to open MAVLink log stream, start mavlink app first.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* advertise to ORB */</span>
+	<span class="n">stat_pub</span> <span class="o">=</span> <span class="n">orb_advertise</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">vehicle_status</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">stat_pub</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;[commander] ERROR: orb_advertise failed.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* make sure we are in preflight state */</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>do_state_update(stat_pub, &amp;current_status, (commander_state_machine_t)SYSTEM_STATE_PREFLIGHT);</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">mavlink_log_info</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] system is running&quot;</span><span class="p">);</span>
+
+	<span class="cm">/* load EEPROM parameters */</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">OK</span> <span class="o">==</span> <span class="n">get_params_from_eeprom</span><span class="p">(</span><span class="n">global_data_parameter_storage</span><span class="p">))</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;[commander] Loaded EEPROM params in RAM</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="n">mavlink_log_info</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] Loaded EEPROM params in RAM&quot;</span><span class="p">);</span>
+
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR loading EEPROM params in RAM</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="n">mavlink_log_critical</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] ERROR loading EEPROM params in RAM&quot;</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* create pthreads */</span>
+	<span class="n">pthread_attr_t</span> <span class="n">command_handling_attr</span><span class="p">;</span>
+	<span class="n">pthread_attr_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">command_handling_attr</span><span class="p">);</span>
+	<span class="n">pthread_attr_setstacksize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">command_handling_attr</span><span class="p">,</span> <span class="mi">3072</span><span class="p">);</span>
+	<span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">command_handling_thread</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">command_handling_attr</span><span class="p">,</span> <span class="n">command_handling_loop</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>pthread_attr_t subsystem_info_attr;
+pthread_attr_init(&amp;subsystem_info_attr);
+pthread_attr_setstacksize(&amp;subsystem_info_attr, 2048);
+pthread_create(&amp;subsystem_info_thread, &amp;subsystem_info_attr, subsystem_info_loop, NULL);</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="cm">/* Start monitoring loop */</span>
+	<span class="kt">uint16_t</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">uint8_t</span> <span class="n">flight_env</span><span class="p">;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>uint8_t fix_type;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="cm">/* Initialize to 3.0V to make sure the low-pass loads below valid threshold */</span>
+	<span class="kt">float</span> <span class="n">battery_voltage</span> <span class="o">=</span> <span class="n">VOLTAGE_BATTERY_HIGH_VOLTS</span><span class="p">;</span>
+	<span class="kt">bool</span> <span class="n">battery_voltage_valid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="kt">bool</span> <span class="n">low_battery_voltage_actions_done</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="kt">bool</span> <span class="n">critical_battery_voltage_actions_done</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="kt">uint8_t</span> <span class="n">low_voltage_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">uint16_t</span> <span class="n">critical_voltage_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">int16_t</span> <span class="n">mode_switch_rc_value</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">bat_remain</span> <span class="o">=</span> <span class="mf">1.0f</span><span class="p">;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>bool arm_done = false;
+bool disarm_done = false;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="kt">uint16_t</span> <span class="n">stick_off_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">uint16_t</span> <span class="n">stick_on_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="kt">float</span> <span class="n">hdop</span> <span class="o">=</span> <span class="mf">65535.0f</span><span class="p">;</span>
+
+	<span class="kt">int</span> <span class="n">gps_quality_good_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="cm">/* Subscribe to RC data */</span>
+	<span class="kt">int</span> <span class="n">rc_sub</span> <span class="o">=</span> <span class="n">orb_subscribe</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">rc_channels</span><span class="p">));</span>
+	<span class="k">struct</span> <span class="n">rc_channels_s</span> <span class="n">rc</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+	<span class="kt">int</span> <span class="n">gps_sub</span> <span class="o">=</span> <span class="n">orb_subscribe</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">vehicle_gps_position</span><span class="p">));</span>
+	<span class="k">struct</span> <span class="n">vehicle_gps_position_s</span> <span class="n">gps</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+	<span class="kt">int</span> <span class="n">sensor_sub</span> <span class="o">=</span> <span class="n">orb_subscribe</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">sensor_combined</span><span class="p">));</span>
+	<span class="k">struct</span> <span class="n">sensor_combined_s</span> <span class="n">sensors</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+	<span class="kt">uint8_t</span> <span class="n">vehicle_state_previous</span> <span class="o">=</span> <span class="n">current_status</span><span class="p">.</span><span class="n">state_machine</span><span class="p">;</span>
+
+	<span class="kt">uint64_t</span> <span class="n">last_idle_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="cm">/* now initialized */</span>
+	<span class="n">commander_initialized</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+	<span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//TODO: this while loop needs cleanup, split into sub-functions</span>
+
+		<span class="cm">/* Get current values */</span>
+		<span class="n">orb_copy</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">rc_channels</span><span class="p">),</span> <span class="n">rc_sub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rc</span><span class="p">);</span>
+		<span class="n">orb_copy</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">vehicle_gps_position</span><span class="p">),</span> <span class="n">gps_sub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">gps</span><span class="p">);</span>
+		<span class="n">orb_copy</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">sensor_combined</span><span class="p">),</span> <span class="n">sensor_sub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sensors</span><span class="p">);</span>
+
+		<span class="n">battery_voltage</span> <span class="o">=</span> <span class="n">sensors</span><span class="p">.</span><span class="n">battery_voltage_v</span><span class="p">;</span>
+		<span class="n">battery_voltage_valid</span> <span class="o">=</span> <span class="n">sensors</span><span class="p">.</span><span class="n">battery_voltage_valid</span><span class="p">;</span>
+		<span class="n">bat_remain</span> <span class="o">=</span> <span class="n">battery_remaining_estimate_voltage</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">BAT_CHEM_LITHIUM_POLYMERE</span><span class="p">,</span> <span class="n">battery_voltage</span><span class="p">);</span>
+
+		<span class="n">flight_env</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint8_t</span><span class="p">)(</span><span class="n">global_data_parameter_storage</span><span class="o">-&gt;</span><span class="n">pm</span><span class="p">.</span><span class="n">param_values</span><span class="p">[</span><span class="n">PARAM_FLIGHT_ENV</span><span class="p">]);</span>
+
+		<span class="cm">/* Slow but important 5 Hz checks */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">counter</span> <span class="o">%</span> <span class="p">((</span><span class="mi">1000000</span> <span class="o">/</span> <span class="n">COMMANDER_MONITORING_INTERVAL</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="cm">/* toggle activity (blue) led at 1 Hz in standby, 10 Hz in armed mode */</span>
+			<span class="k">if</span> <span class="p">((</span><span class="n">current_status</span><span class="p">.</span><span class="n">state_machine</span> <span class="o">==</span> <span class="n">SYSTEM_STATE_GROUND_READY</span> <span class="o">||</span> <span class="n">current_status</span><span class="p">.</span><span class="n">state_machine</span> <span class="o">==</span> <span class="n">SYSTEM_STATE_AUTO</span>  <span class="o">||</span> <span class="n">current_status</span><span class="p">.</span><span class="n">state_machine</span> <span class="o">==</span> <span class="n">SYSTEM_STATE_MANUAL</span><span class="p">))</span> <span class="p">{</span>
+				<span class="cm">/* armed */</span>
+				<span class="n">led_toggle</span><span class="p">(</span><span class="n">LED_BLUE</span><span class="p">);</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">counter</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1000000</span> <span class="o">/</span> <span class="n">COMMANDER_MONITORING_INTERVAL</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+				<span class="cm">/* not armed */</span>
+				<span class="n">led_toggle</span><span class="p">(</span><span class="n">LED_BLUE</span><span class="p">);</span>
+			<span class="p">}</span>
+
+			<span class="cm">/* toggle error led at 5 Hz in HIL mode */</span>
+			<span class="k">if</span> <span class="p">((</span><span class="n">current_status</span><span class="p">.</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="n">MAV_MODE_FLAG_HIL_ENABLED</span><span class="p">))</span> <span class="p">{</span>
+				<span class="cm">/* armed */</span>
+				<span class="n">led_toggle</span><span class="p">(</span><span class="n">LED_AMBER</span><span class="p">);</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">bat_remain</span> <span class="o">&lt;</span> <span class="mf">0.3f</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">low_voltage_counter</span> <span class="o">&gt;</span> <span class="n">LOW_VOLTAGE_BATTERY_COUNTER_LIMIT</span><span class="p">))</span> <span class="p">{</span>
+				<span class="cm">/* toggle error (red) at 5 Hz on low battery or error */</span>
+				<span class="n">led_toggle</span><span class="p">(</span><span class="n">LED_AMBER</span><span class="p">);</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="cm">/* Constant error indication in standby mode without GPS */</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">flight_env</span> <span class="o">==</span> <span class="n">PX4_FLIGHT_ENVIRONMENT_OUTDOOR</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">current_status</span><span class="p">.</span><span class="n">gps_valid</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">led_on</span><span class="p">(</span><span class="n">LED_AMBER</span><span class="p">);</span>
+
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="n">led_off</span><span class="p">(</span><span class="n">LED_AMBER</span><span class="p">);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="n">counter</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1000000</span> <span class="o">/</span> <span class="n">COMMANDER_MONITORING_INTERVAL</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>compute system load</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>				<span class="kt">uint64_t</span> <span class="n">interval_runtime</span> <span class="o">=</span> <span class="n">system_load</span><span class="p">.</span><span class="n">tasks</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">total_runtime</span> <span class="o">-</span> <span class="n">last_idle_time</span><span class="p">;</span>
+
+				<span class="k">if</span> <span class="p">(</span><span class="n">last_idle_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+					<span class="n">current_status</span><span class="p">.</span><span class="n">load</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">-</span> <span class="p">(</span><span class="n">interval_runtime</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">);</span>	<span class="c1">//system load is time spent in non-idle</span>
+
+				<span class="n">last_idle_time</span> <span class="o">=</span> <span class="n">system_load</span><span class="p">.</span><span class="n">tasks</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">total_runtime</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>// XXX Export patterns and threshold to parameters</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="cm">/* Trigger audio event for low battery */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">bat_remain</span> <span class="o">&lt;</span> <span class="mf">0.1f</span> <span class="o">&amp;&amp;</span> <span class="n">battery_voltage_valid</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">counter</span> <span class="o">%</span> <span class="p">((</span><span class="mi">1000000</span> <span class="o">/</span> <span class="n">COMMANDER_MONITORING_INTERVAL</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">{</span>
+			<span class="cm">/* For less than 10%, start be really annoying at 5 Hz */</span>
+			<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+			<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">bat_remain</span> <span class="o">&lt;</span> <span class="mf">0.1f</span> <span class="o">&amp;&amp;</span> <span class="n">battery_voltage_valid</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">counter</span> <span class="o">%</span> <span class="p">((</span><span class="mi">1000000</span> <span class="o">/</span> <span class="n">COMMANDER_MONITORING_INTERVAL</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">))</span> <span class="p">{</span>
+			<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">bat_remain</span> <span class="o">&lt;</span> <span class="mf">0.2f</span> <span class="o">&amp;&amp;</span> <span class="n">battery_voltage_valid</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">counter</span> <span class="o">%</span> <span class="p">((</span><span class="mi">1000000</span> <span class="o">/</span> <span class="n">COMMANDER_MONITORING_INTERVAL</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">{</span>
+			<span class="cm">/* For less than 20%, start be slightly annoying at 1 Hz */</span>
+			<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+			<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">bat_remain</span> <span class="o">&lt;</span> <span class="mf">0.2f</span> <span class="o">&amp;&amp;</span> <span class="n">battery_voltage_valid</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">counter</span> <span class="o">%</span> <span class="p">((</span><span class="mi">1000000</span> <span class="o">/</span> <span class="n">COMMANDER_MONITORING_INTERVAL</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">))</span> <span class="p">{</span>
+			<span class="n">ioctl</span><span class="p">(</span><span class="n">buzzer</span><span class="p">,</span> <span class="n">TONE_SET_ALARM</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* Check if last transition deserved an audio event */</span>
+<span class="cp">#warning This code depends on state that is no longer? maintained</span>
+<span class="cp">#if 0</span><span class="c"></span>
+<span class="c">		trigger_audio_alarm(vehicle_mode_previous, vehicle_state_previous, current_status.mode, current_status.state_machine);</span>
+<span class="cp">#endif</span>
+
+		<span class="cm">/* only check gps fix if we are outdoor */</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <pre><code>if (flight_env == PX4_FLIGHT_ENVIRONMENT_OUTDOOR) {
+
+    hdop = (float)(gps.eph) / 100.0f;
+
+    /* check if gps fix is ok */
+    if (gps.fix_type == GPS_FIX_TYPE_3D) { //TODO: is 2d-fix ok? //see http://en.wikipedia.org/wiki/Dilution_of_precision_%28GPS%29
+
+        if (gotfix_counter &gt;= GPS_GOTFIX_COUNTER_REQUIRED) { //TODO: add also a required time?
+            update_state_machine_got_position_fix(stat_pub, &amp;current_status);
+            gotfix_counter = 0;
+        } else {
+            gotfix_counter++;
+        }
+        nofix_counter = 0;
+
+        if (hdop &lt; 5.0f) { //TODO: this should be a parameter
+            if (gps_quality_good_counter &gt; GPS_QUALITY_GOOD_COUNTER_LIMIT) {
+                current_status.gps_valid = true;//--&gt; position estimator can use the gps measurements
+            }
+
+            gps_quality_good_counter++;
+</code></pre>
+<p>//                  if(counter%10 == 0)//for testing only
+//                      printf("gps_quality_good_counter = %u\n", gps_quality_good_counter);//for testing only</p>
+<pre><code>        } else {
+            gps_quality_good_counter = 0;
+            current_status.gps_valid = false;//--&gt; position estimator can not use the gps measurements
+        }
+
+    } else {
+        gps_quality_good_counter = 0;
+        current_status.gps_valid = false;//--&gt; position estimator can not use the gps measurements
+
+        if (nofix_counter &gt; GPS_NOFIX_COUNTER_LIMIT) { //TODO: add also a timer limit?
+            update_state_machine_no_position_fix(stat_pub, &amp;current_status);
+            nofix_counter = 0;
+        } else {
+            nofix_counter++;
+        }
+        gotfix_counter = 0;
+    }
+
+}
+
+
+if (flight_env == PX4_FLIGHT_ENVIRONMENT_TESTING) //simulate position fix for quick indoor tests
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">update_state_machine_got_position_fix</span><span class="p">(</span><span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+		<span class="cm">/* end: check gps */</span>
+
+		<span class="cm">/* Check battery voltage */</span>
+		<span class="cm">/* write to sys_status */</span>
+		<span class="n">current_status</span><span class="p">.</span><span class="n">voltage_battery</span> <span class="o">=</span> <span class="n">battery_voltage</span><span class="p">;</span>
+		<span class="n">orb_publish</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">vehicle_status</span><span class="p">),</span> <span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+
+		<span class="cm">/* if battery voltage is getting lower, warn using buzzer, etc.  */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">battery_voltage_valid</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">battery_voltage</span> <span class="o">&lt;</span> <span class="n">VOLTAGE_BATTERY_LOW_VOLTS</span> <span class="o">&amp;&amp;</span> <span class="nb">false</span> <span class="o">==</span> <span class="n">low_battery_voltage_actions_done</span><span class="p">))</span> <span class="p">{</span> <span class="c1">//TODO: add filter, or call emergency after n measurements &lt; VOLTAGE_BATTERY_MINIMAL_MILLIVOLTS</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="n">low_voltage_counter</span> <span class="o">&gt;</span> <span class="n">LOW_VOLTAGE_BATTERY_COUNTER_LIMIT</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">low_battery_voltage_actions_done</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+				<span class="n">mavlink_log_critical</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] WARNING! LOW BATTERY!&quot;</span><span class="p">);</span>
+			<span class="p">}</span>
+
+			<span class="n">low_voltage_counter</span><span class="o">++</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* Critical, this is rather an emergency, kill signal to sdlog and change state machine */</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">battery_voltage_valid</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">battery_voltage</span> <span class="o">&lt;</span> <span class="n">VOLTAGE_BATTERY_CRITICAL_VOLTS</span> <span class="o">&amp;&amp;</span> <span class="nb">false</span> <span class="o">==</span> <span class="n">critical_battery_voltage_actions_done</span> <span class="o">&amp;&amp;</span> <span class="nb">true</span> <span class="o">==</span> <span class="n">low_battery_voltage_actions_done</span><span class="p">))</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">critical_voltage_counter</span> <span class="o">&gt;</span> <span class="n">CRITICAL_VOLTAGE_BATTERY_COUNTER_LIMIT</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">critical_battery_voltage_actions_done</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+				<span class="n">mavlink_log_critical</span><span class="p">(</span><span class="n">mavlink_fd</span><span class="p">,</span> <span class="s">&quot;[commander] EMERGENCY! CIRITICAL BATTERY!&quot;</span><span class="p">);</span>
+				<span class="n">state_machine_emergency</span><span class="p">(</span><span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+			<span class="p">}</span>
+
+			<span class="n">critical_voltage_counter</span><span class="o">++</span><span class="p">;</span>
+
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">low_voltage_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="n">critical_voltage_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* End battery voltage check */</span>
+
+		<span class="cm">/* Start RC state check */</span>
+
+		<span class="kt">int16_t</span> <span class="n">chan3_scale</span> <span class="o">=</span>  <span class="n">rc</span><span class="p">.</span><span class="n">chan</span><span class="p">[</span><span class="n">rc</span><span class="p">.</span><span class="n">function</span><span class="p">[</span><span class="n">YAW</span><span class="p">]].</span><span class="n">scale</span><span class="p">;</span>
+		<span class="kt">int16_t</span> <span class="n">chan2_scale</span> <span class="o">=</span>  <span class="n">rc</span><span class="p">.</span><span class="n">chan</span><span class="p">[</span><span class="n">rc</span><span class="p">.</span><span class="n">function</span><span class="p">[</span><span class="n">THROTTLE</span><span class="p">]].</span><span class="n">scale</span><span class="p">;</span>
+
+		<span class="cm">/* check if left stick is in lower left position --&gt; switch to standby state */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">chan3_scale</span> <span class="o">&gt;</span> <span class="n">STICK_ON_OFF_LIMIT</span> <span class="o">&amp;&amp;</span> <span class="n">chan2_scale</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">STICK_ON_OFF_LIMIT</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//TODO: remove hardcoded values</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">stick_off_counter</span> <span class="o">&gt;</span> <span class="n">STICK_ON_OFF_COUNTER_LIMIT</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">update_state_machine_disarm</span><span class="p">(</span><span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+				<span class="n">stick_on_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="n">stick_off_counter</span><span class="o">++</span><span class="p">;</span>
+				<span class="n">stick_on_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* check if left stick is in lower right position --&gt; arm */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">chan3_scale</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">STICK_ON_OFF_LIMIT</span> <span class="o">&amp;&amp;</span> <span class="n">chan2_scale</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">STICK_ON_OFF_LIMIT</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//TODO: remove hardcoded values</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">stick_on_counter</span> <span class="o">&gt;</span> <span class="n">STICK_ON_OFF_COUNTER_LIMIT</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">update_state_machine_arm</span><span class="p">(</span><span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+				<span class="n">stick_on_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="n">stick_on_counter</span><span class="o">++</span><span class="p">;</span>
+				<span class="n">stick_off_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* Check the value of the rc channel of the mode switch */</span>
+		<span class="n">mode_switch_rc_value</span> <span class="o">=</span> <span class="n">rc</span><span class="p">.</span><span class="n">chan</span><span class="p">[</span><span class="n">rc</span><span class="p">.</span><span class="n">function</span><span class="p">[</span><span class="n">OVERRIDE</span><span class="p">]].</span><span class="n">scale</span><span class="p">;</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">mode_switch_rc_value</span> <span class="o">&gt;</span> <span class="n">STICK_ON_OFF_LIMIT</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">update_state_machine_mode_manual</span><span class="p">(</span><span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">mode_switch_rc_value</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">STICK_ON_OFF_LIMIT</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">update_state_machine_mode_auto</span><span class="p">(</span><span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">update_state_machine_mode_stabilized</span><span class="p">(</span><span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* End mode switch */</span>
+
+		<span class="cm">/* END RC state check */</span>
+
+
+		<span class="n">current_status</span><span class="p">.</span><span class="n">counter</span><span class="o">++</span><span class="p">;</span>
+		<span class="n">current_status</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">hrt_absolute_time</span><span class="p">();</span>
+		<span class="n">orb_publish</span><span class="p">(</span><span class="n">ORB_ID</span><span class="p">(</span><span class="n">vehicle_status</span><span class="p">),</span> <span class="n">stat_pub</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">current_status</span><span class="p">);</span>
+
+
+
+		<span class="cm">/* Store old modes to detect and act on state transitions */</span>
+		<span class="n">vehicle_state_previous</span> <span class="o">=</span> <span class="n">current_status</span><span class="p">.</span><span class="n">state_machine</span><span class="p">;</span>
+
+		<span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+		<span class="n">counter</span><span class="o">++</span><span class="p">;</span>
+		<span class="n">usleep</span><span class="p">(</span><span class="n">COMMANDER_MONITORING_INTERVAL</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* wait for threads to complete */</span>
+	<span class="n">pthread_join</span><span class="p">(</span><span class="n">command_handling_thread</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>pthread_join(subsystem_info_thread, NULL);</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="cm">/* close fds */</span>
+	<span class="n">led_deinit</span><span class="p">();</span>
+	<span class="n">buzzer_deinit</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

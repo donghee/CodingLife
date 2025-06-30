@@ -1,0 +1,53 @@
+
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+TITLE:    ROS For Controlling Mavlink Drone
+#+SUBTITLE:  금오공과대학교
+#+SETUPFILE: ../../../docs/css/theme-gongzhitaao.setup
+
+
+* 워크숍 개요
+
+ - 목표: 본 워크숍 참가자가 ROS, Mavlink Drone(PX4)에 대한 구조이해하고, PX4를 이용한 어플리케이션 개발을 할 수 있다.
+ - 장소:
+ - 참가자: 박동희
+ - 일시: 2020. 7.1 ~3
+
+* 계획
+
+ - 1일차: 드론 소프트웨어 소개 및 설치
+  - PX4, Linux, ROS
+  - PX4 개발환경 설치 및 소개
+  - ROS 설치
+
+ - 2일차: 드론 프로그래밍 및 Pose Estimation
+  - PX4 OFFBOARD Programming
+  - Vision, OPENCV
+
+ - 3일차: 드론 제작 및 제어
+
+* 세부 계획
+** 1일차
+ - 워크숍, 참가자 소개
+ - PX4, Linux, ROS 소개
+
+ - PX4 Build
+  - jMavSim 사용하기
+ - Git 사용
+ - 과제
+  - dev.px4.io 질문 3
+  - 리눅스 기본 명령어 정리
+  - 컴파일 방법
+
+ - ROS 소개,
+  - ROS미들웨어,
+  - ROS 컴포넌트 라이브러리
+  - Node, Topics, Message Passing, Services
+ - Hello ROS (catkin build)
+ - 드론 관련 패키지 소개
+ - MAVROS
+
+  - Mavlink 소개
+  - Simulator를 이용하여 드론 제어
+
+* 수업 후 요구사항

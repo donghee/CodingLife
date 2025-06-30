@@ -1,0 +1,32 @@
+{
+  "name": "add-indoor-gs",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "pack": "electron-builder --dir"
+  },
+  "dependencies": {
+    "ansi-styles": "^3.2.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "serialport": "^7.1.4",
+    "source-map-support": "^0.5.10"
+  },
+  "devDependencies": {
+    "electron": "4.0.1",
+    "electron-builder": "^20.39.0",
+    "electron-webpack": "^2.6.2",
+    "foreman": "^3.0.1",
+    "webpack": "4.28.4"
+  },
+  "build": {
+    "appId": "com.dronemap.donghee",
+    "mac": {
+      "category": "Utilities"
+    }
+  }
+}

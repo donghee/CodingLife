@@ -1,0 +1,141 @@
+# Creative Commons, Share-Alike (cc)
+#+EMAIL:     dongheepark@gmail.com
+#+TITLE:    Commander 코드 분석
+#+AUTHOR:    박동희
+#+SUBTITLE: 오픈 소스 PX4 를 지원하는 비행제어장치 설계 및 시스템 분석(EA20180971)
+#+SETUPFILE: ../../../docs/log/theme-gongzhitaao.setup
+#+HTML_HEAD_EXTRA: <style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+#+OPTIONS: ^:t
+
+* 궁금점
+
+<2019-01-09 Wed>
+ - 이동현: 데이터 흐름도, SW구조, 태스크 내부 구조. 고정익기 설정하는 방법. 내부적으로 돌아가는지
+ - 성창현: sw구조, 각 모듈별 입력 및 출력. 고정익, 드론 상관없이 여러가지 모드 스위칭 될때 어떤 식으로 구조가 들어가는지
+           수동입력 데이터, 자동입력 데이터 구조, 각 모드별 제어 알고리즘 블록 구조. 비행 데이터 저장할때 어떤걸 저장하는지!
+           액츄레이터 값을 저장하는것 구조를 할 수 있는지(?)
+ - 김호준: 인터페이스, can, companion pc. 어떻게 구현하는지. 제어 변경. state estimation. 전환.
+
+
+* Guidance, Navigation, Control
+
+[[https://i.imgur.com/9AwX0Sf.png]]
+
+* PX4 모듈 구조
+
+[[https://i.imgur.com/48VZMUP.png]]
+
+* 제어기
+
+[[https://i.imgur.com/Yl5puG7.png]]
+
+제어기 성능 지표
+
+[[https://i.imgur.com/QyBcIUQ.png]]
+
+* Position controller for Multi Copter ~mc_pos_control~
+
+PX4 위치 제어기
+
+자동비행: navigator로 부터 위치를(position triplet)를 입력 받아서 자세(attitude setpoint)를 출력 한다.
+
+관련 코드:
+ - https://github.com/PX4/Firmware/tree/master/src/modules/mc_pos_control
+ - https://github.com/PX4/Firmware/blob/master/src/modules/mc_pos_control/PositionControl.cpp
+
+** 위치 제어기 컨트롤러
+
+*** PX4 전체 제어기
+
+[[https://i.imgur.com/9rmldOm.png]]
+
+*** 위치 제어기
+
+[[https://dev.px4.io/assets/diagrams/px4_mc_position_controller_diagram.png]]
+
+
+*** 제어기 토픽의 흐름
+
+[[https://i.imgur.com/ZfdwVKg.png]]
+
+
+* 용어 정리
+ - Position Control: 위치(local x,y,z, yaw)를 입력 받아서 기체를 제어.
+ - position triplet: previous, currrent, next 3개 위치.
+ - setpoint: 기체가 이동하고자 하는 위치. 타겟위치.
+ - smooth takeoff: takeoff시 와류 때문에 발생하는 기체 불안정함 때문에 takeoff 스피드를 조정.
+ - flight task: 서브 포지션 모드에따라 setpoint를 생성하는 테스크. sub position 모드의 종류는 다음과 같다. Auto, AutoFollowMe, AutoLine, AutoMapper, Failsafe, Manual, ManualAltitude, ManualAltitudeSmooth, ManualPosition, ManualPositionSmooth, ManualStabilized, Offboard, Orbit, Sport
+
+* rotation
+
+https://www.andre-gaschler.com/rotationconverter/
+
+** Euler angle
+
+[[https://i.imgur.com/1XxziOF.png]]
+
+[[https://i.imgur.com/XdnYWx2.png]]
+
+** Quaternion
+
+** 내적
+
+** 외적
+
+** ~cross_sphere_line~ 알고리즘
+
+* 코드 설명
+
+MulticopterPositionControl 클래스
+
+#+BEGIN_SRC c++
+함수명: void MulticopterPositionControl:MulticopterPositionControl();
+기능: MulticopterPositionControl 생성자. PositionControl 클래스 초기화. 파라미터 업데이트
+Caller:
+매개변수:
+소스
+
+----
+
+함수명: void MulticopterPositionControl:run();
+기능: 멀티콥더 포지션 컨트롤의 메인 루푸, vehicle_local_position 토픽에 동기화(250hz) 되어 실행
+Caller:
+매개변수:
+소스
+
+주요 실행 순서
+ 1. 토픽 구독
+ 2. 250hz 주기로 루프실행
+  3. 구독 데이터 업데이트
+  4. flight task 시작
+  5. flight task 로부터 setpoint 받음
+  6. 장애물 회피용 waypoints를 업데이트(현재 기체 상태와, setpoint를 기반으로)
+  7. smooth takeoff 실시 (0.3m전까지 smooth takeoff)
+  8. 착륙 시 throttle 줄임. (착륙 준비)
+  9. 포지션 컨트롤러 업데이트
+  10. 장애물 회피용 waypoints 실행하여 setpoint 조정.
+  11. 포지션 컨트롤러의 결과로 Thrust와 yaw Setpoint 출력
+  12. 자세 컨트롤러에 attitude와 yaw 값 publish
+
+#+END_SRC
+
+
+PositionControl 클래스
+
+#+BEGIN_SRC c++
+----
+함수명: void PositionControl:updateState(const PositionControlStates &states);
+기능: 현재 기체의 상태 업데이트.
+Caller:
+매개변수:  states 기체의 현재 상태(position, velocity, acceleration, yaw)
+소스
+----
+
+
+#+END_SRC
+
+* 참고
+ - ~mc_pos_control~ https://blog.csdn.net/weixin_37501173/article/details/80035051
+ - ~mc_att_control~ https://blog.csdn.net/qq_21842557/article/details/51439171
+- PX4 Flight Static Structure(PX4 Firmware v1.8): https://docs.google.com/drawings/d/1oJ6x8HaqiRiW7cl-WFoC24Gn1lOkpjIPyGak5cfryPw/edit

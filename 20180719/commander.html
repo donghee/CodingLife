@@ -1,0 +1,2324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-01-31 Thu 12:24 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Commander 코드 분석</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="박동희" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Commander 코드 분석
+<br />
+<span class="subtitle">오픈 소스 PX4 를 지원하는 비행제어장치 설계 및 시스템 분석(EA20180971)</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc5b97ac">1. Commander</a>
+<ul>
+<li><a href="#org15bcb98">1.1. Commander App</a></li>
+<li><a href="#orgb2a168c">1.2. 관련 토픽</a>
+<ul>
+<li><a href="#org9a4f1ab">1.2.1. Commander 에서 출판하는 토픽</a></li>
+<li><a href="#orgcc3912d">1.2.2. Commander 에서 구독하는 토픽</a></li>
+</ul>
+</li>
+<li><a href="#orgaaff513">1.3. State Mahcine</a></li>
+<li><a href="#org4f6a8d3">1.4. 주요 함수</a>
+<ul>
+<li><a href="#org85efdc7">1.4.1. Commander 클래스</a></li>
+</ul>
+</li>
+<li><a href="#orgdc3c6b3">1.5. 실행 순서대로 읽기</a>
+<ul>
+<li><a href="#orgbc416d0">1.5.1. Commander::run()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org7c529aa">2. 한줄 읽기</a>
+<ul>
+<li><a href="#org136d27a">2.1. <span class="timestamp-wrapper"><span class="timestamp">&lt;2018-07-31 Tue&gt;</span></span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc5b97ac" class="outline-2">
+<h2 id="orgc5b97ac"><span class="section-number-2">1</span> Commander</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+PX4의 비즈니스 로직. 기체의 상태와 기체 명령(ARM, 비행모드변환)에 대한 상태머신.
+</p>
+
+<p>
+Commander 모듈은 비행 명령과 비행체 정보를 모아 수행할 명령을 결정하고, 다른 모듈에게 명령을 내린다.
+</p>
+
+<p>
+관련 코드: <a href="https://github.com/PX4/Firmware/tree/master/src/modules/commander">https://github.com/PX4/Firmware/tree/master/src/modules/commander</a>
+</p>
+</div>
+
+<div id="outline-container-org15bcb98" class="outline-3">
+<h3 id="org15bcb98"><span class="section-number-3">1.1</span> Commander App</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Commander 앱에서 하는 일. 비행에 관련된 의사 결정을 한다. 기체 상태에 관한 토픽을 읽고, 명령을 내린다.
+</p>
+
+<p>
+주요 상태 및 명령
+</p>
+
+<ul class="org-ul">
+<li>비행모드 전환 및 수행지시 (상태머신으로 구현)</li>
+<li>파라미터 업데이트 (<code>parameter_update</code>)</li>
+<li>RC입력 읽기(<code>manual_control_setpoint</code>)</li>
+<li>센서값(<code>sensor_combined</code>) 읽기</li>
+<li>시스템 파워 관리: 파워를 선택</li>
+<li>Safety 스위치(<code>safety</code>) 체크</li>
+<li>기체상태 관리(<code>vehicle_status</code>)</li>
+<li>기체 위치(<code>vehicle_global_position</code>)</li>
+<li>기체 로컬 위치(<code>vehicle_local_position</code>)</li>
+<li>기체 자세(<code>vehicle_attitude</code>)</li>
+<li>기체 착륙 여부(<code>vehicle_land_detected</code>)</li>
+<li>CPU로드, 배터리 상태 체크(<code>cpuload</code>, <code>batterystatus</code>)</li>
+<li>기체 명령(<code>vehicle_command</code>)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb2a168c" class="outline-3">
+<h3 id="orgb2a168c"><span class="section-number-3">1.2</span> 관련 토픽</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Commander 에서 출판(Publish)하고 구독(Subscribe)하는 토픽
+</p>
+
+<p>
+<a href="https://dev.px4.io/en/middleware/uorb_graph.html">https://dev.px4.io/en/middleware/uorb_graph.html</a>
+</p>
+</div>
+
+<div id="outline-container-org9a4f1ab" class="outline-4">
+<h4 id="org9a4f1ab"><span class="section-number-4">1.2.1</span> Commander 에서 출판하는 토픽</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<pre class="example">
+actuator_armed_pub
+commander_state_pub
+home_pub
+led_control_pub
+mission_pub
+command_ack_pub
+control_mode_pub
+roi_pub
+status_pub
+status_pub
+vehicle_status_flags_pub
+vehicle_command_ack_pub
+power_button_state_pub
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgcc3912d" class="outline-4">
+<h4 id="orgcc3912d"><span class="section-number-4">1.2.2</span> Commander 에서 구독하는 토픽</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+다음은 Commander App에서 구독하는 토픽이다.. PX4에서 사용되는 대부분의 토픽을 구독한다.
+</p>
+
+<p>
+토픽에 대한 자세한 내용은 msg 디렉토리 참고. <a href="https://github.com/PX4/Firmware/tree/master/msg">https://github.com/PX4/Firmware/tree/master/msg</a>
+</p>
+
+<pre class="example">
+
+_VEHICLE_ATTITUDE_CONTROLS
+battery_status
+cpuload
+differential_pressure
+estimator_status
+geofence_result
+manual_control_setpoint
+mission_result
+offboard_control_mode
+parameter_update
+position_setpoint_triplet
+safety
+sensor_accel
+sensor_combined
+sensor_correction
+sensor_gyro
+sensor_mag
+sensor_preflight
+subsystem_info
+system_power
+telemetry_status
+vehicle_attitude
+vehicle_command
+vehicle_global_position
+vehicle_gps_position
+vehicle_land_detected
+vehicle_local_position
+vehicle_status
+vtol_vehicle_status
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaaff513" class="outline-3">
+<h3 id="orgaaff513"><span class="section-number-3">1.3</span> State Mahcine</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+모드 변환 의사 결정 상태머신
+</p>
+
+<pre class="example">
+set_nav_state()
+</pre>
+
+<pre class="example">
+main_state_transition()
+</pre>
+
+<pre class="example">
+arming_state_transition()
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org4f6a8d3" class="outline-3">
+<h3 id="org4f6a8d3"><span class="section-number-3">1.4</span> 주요 함수</h3>
+<div class="outline-text-3" id="text-1-4">
+<pre class="example">
+int commander_main(int argc, char *argv[])
+</pre>
+<p>
+Commander App 시작 함수.
+데몬의 상태 출력하거나 기체에 명령(arm, disarm, preflight check, takeoff, land, calibration, 모드전환)을 내릴 수 있다.
+</p>
+
+<pre class="example">
+void usage(const char *reason);
+</pre>
+<p>
+nsh 터미널에서 commander 명령 사용법 출력
+</p>
+
+<pre class="example">
+void control_status_leds(vehicle_status_s *status_local, const actuator_armed_s *actuator_armed, bool changed,
+             battery_status_s *battery_local, const cpuload_s *cpuload_local);
+</pre>
+<p>
+기체의 상태에 따라 상태 LED를 제어.
+</p>
+
+<pre class="example">
+void get_circuit_breaker_params();
+</pre>
+<p>
+서킷 브레이커에 관한 파라미터 값을 읽어 온다.
+서킷 브레이커를 사용하면, 센서나 입력신호에 대한 체크 하지 않고, 사전비행 체크(preflight check) 또는 비행 중 체크해야하는 내용을 체크하지 않고 통과할 수 있다.
+</p>
+
+<pre class="example">
+void set_control_mode();
+</pre>
+<p>
+모드 전환. 선택한 제어모드에 따라서 관련 상태 플래그를 수정한다.
+</p>
+
+<pre class="example">
+bool stabilization_required();
+</pre>
+<p>
+현재 기체 상태를 읽어, stabilizationd이 요구되는지 체크한다.
+</p>
+
+<pre class="example">
+void print_reject_mode(const char *msg);
+</pre>
+<p>
+모드 전환시. reject(거절)하는 이유를 로그로 남기고, 소리를 낸다.
+</p>
+
+<pre class="example">
+void print_reject_arm(const char *msg);
+</pre>
+<p>
+arming 할때. reject(거절)하는 이유를 로그로 남기고, 소리를 낸다.
+</p>
+
+<pre class="example">
+void print_status();
+</pre>
+<p>
+기체의 타입, USB연결 여부, 파워 상태, 위도, 경도, 고도, 홈 위치, 데이터 링크 상태, 네베게이션 상태, 암상태 등을 알려준다.
+</p>
+
+<pre class="example">
+transition_result_t arm_disarm(bool arm, orb_advert_t *mavlink_log_pub, const char *armedBy);
+</pre>
+<p>
+arming 또는 disarm 명령을 내리고 그 결과를 리턴한다.
+</p>
+
+<pre class="example">
+void *commander_low_prio_loop(void *arg);
+</pre>
+<p>
+센서 캘리브레이션 또는 파라미터 로드와 같은 우선순위 낮은 테스크를 실행하는 루프
+</p>
+
+<pre class="example">
+static void answer_command(const vehicle_command_s &amp;cmd, unsigned result, orb_advert_t &amp;command_ack_pub);
+</pre>
+<p>
+기체에 명령을 내렸을때 수행 결과 여부를 알려준다.
+</p>
+</div>
+
+<div id="outline-container-org85efdc7" class="outline-4">
+<h4 id="org85efdc7"><span class="section-number-4">1.4.1</span> Commander 클래스</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+위치: <a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/modules/commander/Commander.hpp#L69">class Commander</a>
+</p>
+
+<pre class="example">
+Commander::main()
+</pre>
+
+<p>
+Commander 클래스의 메인 함수.
+</p>
+
+<pre class="example">
+Commander::handle_command()
+</pre>
+<p>
+기체에 내려진 명령(REPOSITION, SET MODE, ARM DISARM, FLIGHT TERMINATION, SET HOME, GUIDED ENABLE, RETURN TO LAND, TAKE OFF, LAND, PRECISION LAND, MISSION START )을 수행하고 그 결과를 리턴
+</p>
+
+<pre class="example">
+Commander::run()
+</pre>
+<p>
+Commander 앱의 메인 쓰레드.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdc3c6b3" class="outline-3">
+<h3 id="orgdc3c6b3"><span class="section-number-3">1.5</span> 실행 순서대로 읽기</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Commander 클래스는 ModuleBase 템플릿 클래스를 상속하여 구현한다. 그래서 Commander 클래스 실행 순서는 ModuleBase 템플릿 클래스를
+참조하여 실행한다.
+</p>
+
+<p>
+참고:
+</p>
+<ul class="org-ul">
+<li>ModuleBase 클래스 <code>Firmware/src/platforms/px4_module.h</code> <code>Firmware/src/templates/module/module.cpp</code></li>
+<li>Commander 클래스 <code>Firmware/src/modules/commander/Commander.hpp</code> <code>Firmware/src/modules/commander/commander.cpp</code></li>
+</ul>
+<ol class="org-ol">
+<li><a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/modules/commander/commander.cpp#L266"><code>commander_main()</code></a>함수</li>
+<li><a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/modules/commander/commander.cpp#L283">Commander::main()</a> 실행, <a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/platforms/px4_module.h#L117">ModuleBase::main()</a>, <a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/platforms/px4_module.h#L181"><code>ModuleBase::start_command_base()</code></a></li>
+<li><a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/modules/commander/commander.cpp#L4001"><code>Commander::task_spawn()</code></a> 실행, <a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/platforms/px4_module.h#L152"><code>ModuleBase::run_trampoline()</code></a> 실행</li>
+<li><a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/modules/commander/commander.cpp#L1157">Commander::run()</a> 초기화
+<ul class="org-ul">
+<li><a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/modules/commander/commander.cpp#L1168">Parameter setup</a></li>
+<li><a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/modules/commander/commander.cpp#L1322">토픽 구독</a></li>
+<li>Commander에서 사용되는 변수 초기화</li>
+</ul></li>
+<li><a href="https://github.com/PX4/Firmware/blob/3293fe47f9d33fa83fdac2061695f1d20a2e09fb/src/modules/commander/commander.cpp#L1482">메인 루프</a>
+<ul class="org-ul">
+<li>파라미터 업데이트</li>
+<li>파워버튼 핸들링</li>
+<li>RC 컨트롤러 토픽 업데이트</li>
+<li>Offboard 토픽 업데이트 및 타임아웃 설정</li>
+<li>텔레메트리 상태 업데이트</li>
+<li>시스템 파워 상태 업데이트</li>
+</ul></li>
+</ol>
+</div>
+
+<div id="outline-container-orgbc416d0" class="outline-4">
+<h4 id="orgbc416d0"><span class="section-number-4">1.5.1</span> Commander::run()</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<div class="org-src-container">
+<pre class="src src-c++">
+<span style="color: #ECBE7B;">void</span>
+<span style="color: #a9a1e1;">Commander</span>::<span style="color: #c678dd;">run</span>()
+{
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">sensor_fail_tune_played</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">arm_tune_played</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">was_landed</span> = <span style="color: #a9a1e1;">true</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">was_falling</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">was_armed</span> = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#49468;&#49436; &#52488;&#44592;&#54868; &#50668;&#48512; &#54869;&#51064; &#54540;&#47000;&#44536;</span>
+    status_flags.condition_system_sensors_initialized = <span style="color: #a9a1e1;">true</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#46972;&#48120;&#53552; &#44050; &#47196;&#46300;</span>
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_sys_type</span> = param_find(<span style="color: #98be65;">"MAV_TYPE"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_system_id</span> = param_find(<span style="color: #98be65;">"MAV_SYS_ID"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_component_id</span> = param_find(<span style="color: #98be65;">"MAV_COMP_ID"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_enable_datalink_loss</span> = param_find(<span style="color: #98be65;">"NAV_DLL_ACT"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_offboard_loss_act</span> = param_find(<span style="color: #98be65;">"COM_OBL_ACT"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_offboard_loss_rc_act</span> = param_find(<span style="color: #98be65;">"COM_OBL_RC_ACT"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_enable_rc_loss</span> = param_find(<span style="color: #98be65;">"NAV_RCL_ACT"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_datalink_loss_timeout</span> = param_find(<span style="color: #98be65;">"COM_DL_LOSS_T"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_highlatencydatalink_loss_timeout</span> = param_find(<span style="color: #98be65;">"COM_HLDL_LOSS_T"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_rc_loss_timeout</span> = param_find(<span style="color: #98be65;">"COM_RC_LOSS_T"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_datalink_regain_timeout</span> = param_find(<span style="color: #98be65;">"COM_DL_REG_T"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_highlatencydatalink_regain_timeout</span> = param_find(<span style="color: #98be65;">"COM_HLDL_REG_T"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_ef_throttle_thres</span> = param_find(<span style="color: #98be65;">"COM_EF_THROT"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_ef_current2throttle_thres</span> = param_find(<span style="color: #98be65;">"COM_EF_C2T"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_ef_time_thres</span> = param_find(<span style="color: #98be65;">"COM_EF_TIME"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_rc_in_off</span> = param_find(<span style="color: #98be65;">"COM_RC_IN_MODE"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_rc_arm_hyst</span> = param_find(<span style="color: #98be65;">"COM_RC_ARM_HYST"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_min_stick_change</span> = param_find(<span style="color: #98be65;">"COM_RC_STICK_OV"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_geofence_action</span> = param_find(<span style="color: #98be65;">"GF_ACTION"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_disarm_land</span> = param_find(<span style="color: #98be65;">"COM_DISARM_LAND"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_low_bat_act</span> = param_find(<span style="color: #98be65;">"COM_LOW_BAT_ACT"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_offboard_loss_timeout</span> = param_find(<span style="color: #98be65;">"COM_OF_LOSS_T"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_arm_without_gps</span> = param_find(<span style="color: #98be65;">"COM_ARM_WO_GPS"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_arm_switch_is_button</span> = param_find(<span style="color: #98be65;">"COM_ARM_SWISBTN"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_rc_override</span> = param_find(<span style="color: #98be65;">"COM_RC_OVERRIDE"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_arm_mission_required</span> = param_find(<span style="color: #98be65;">"COM_ARM_MIS_REQ"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_flight_uuid</span> = param_find(<span style="color: #98be65;">"COM_FLIGHT_UUID"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_takeoff_finished_action</span> = param_find(<span style="color: #98be65;">"COM_TAKEOFF_ACT"</span>);
+
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_fmode_1</span> = param_find(<span style="color: #98be65;">"COM_FLTMODE1"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_fmode_2</span> = param_find(<span style="color: #98be65;">"COM_FLTMODE2"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_fmode_3</span> = param_find(<span style="color: #98be65;">"COM_FLTMODE3"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_fmode_4</span> = param_find(<span style="color: #98be65;">"COM_FLTMODE4"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_fmode_5</span> = param_find(<span style="color: #98be65;">"COM_FLTMODE5"</span>);
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_fmode_6</span> = param_find(<span style="color: #98be65;">"COM_FLTMODE6"</span>);
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">failsafe response to loss of navigation accuracy */</span>
+    <span style="color: #ECBE7B;">param_t</span> <span style="color: #dcaeea;">_param_posctl_nav_loss_act</span> = param_find(<span style="color: #98be65;">"COM_POSCTL_NAVL"</span>);
+
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#46972;&#48120;&#53552; &#46608;&#45716; &#52888;&#47532;&#48652;&#47112;&#51060;&#49496; &#44288;&#47144; &#50416;&#47112;&#46300;.</span>
+    <span style="color: #ECBE7B;">pthread_t</span> <span style="color: #dcaeea;">commander_low_prio_thread</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#52488;&#44592;&#54868;</span>
+    <span style="color: #51afef;">if</span> (led_init() != OK) {
+        PX4_WARN(<span style="color: #98be65;">"LED init failed"</span>);
+    }
+
+    <span style="color: #51afef;">if</span> (buzzer_init() != OK) {
+        PX4_WARN(<span style="color: #98be65;">"Buzzer init failed"</span>);
+    }
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#50892; &#48260;&#53948; &#49345;&#53468;&#50640; &#44288;&#54620; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">power_button_state_sub</span> = orb_subscribe(ORB_ID(power_button_state));
+    {
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">we need to do an initial publication to make sure uORB allocates the buffer, which cannot happen</span>
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">in IRQ context.</span>
+        <span style="color: #ECBE7B;">power_button_state_s</span> <span style="color: #dcaeea;">button_state</span>;
+        button_state.timestamp = 0;
+        button_state.event = 0xff;
+        power_button_state_pub = orb_advertise(ORB_ID(power_button_state), &amp;button_state);
+        orb_copy(ORB_ID(power_button_state), power_button_state_sub, &amp;button_state);
+    }
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#50892;&#49345;&#53468;&#47484; &#50508;&#46988;&#54616;&#45716; &#53084;&#48177; &#54632;&#49688; &#46321;&#47197;</span>
+    <span style="color: #51afef;">if</span> (board_register_power_state_notification_cb(power_button_state_notification_cb) != 0) {
+        PX4_ERR(<span style="color: #98be65;">"Failed to register power notification callback"</span>);
+    }
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">RC &#51077;&#47141; &#54540;&#47000;&#44536; &#52488;&#44592;.</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">We want to accept RC inputs as default</span>
+    status_flags.rc_input_blocked = <span style="color: #a9a1e1;">false</span>;
+    status.rc_input_mode = <span style="color: #a9a1e1;">vehicle_status_s</span>::RC_IN_MODE_DEFAULT;
+    internal_state.main_state = <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_MANUAL;
+    internal_state.timestamp = hrt_absolute_time();
+    status.nav_state = <span style="color: #a9a1e1;">vehicle_status_s</span>::NAVIGATION_STATE_MANUAL;
+    status.arming_state = <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_INIT;
+
+    status.failsafe = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Offboard &#49888;&#54840; &#54620;&#48264; &#51060;&#49345; &#48155;&#50520;&#45716;&#51648;, RC&#49888;&#54840; &#54620;&#48264; &#51060;&#49345; &#48155;&#50520;&#45716;&#51648; &#52404;&#53356; &#54540;&#47000;&#44536;</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">neither manual nor offboard control commands have been received */</span>
+    status_flags.offboard_control_signal_found_once = <span style="color: #a9a1e1;">false</span>;
+    status_flags.rc_signal_found_once = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">RC, Offboard, &#45936;&#51060;&#53552; &#53588;&#47112;&#47700;&#53944;&#47532; &#49888;&#54840; &#51075;&#51008;&#51201; &#51080;&#45716;&#51648; &#52404;&#53356; &#54540;&#47000;&#44536;</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">mark all signals lost as long as they haven't been found */</span>
+    status.rc_signal_lost = <span style="color: #a9a1e1;">true</span>;
+    status_flags.offboard_control_signal_lost = <span style="color: #a9a1e1;">true</span>;
+    status.data_link_lost = <span style="color: #a9a1e1;">true</span>;
+    status_flags.offboard_control_loss_timeout = <span style="color: #a9a1e1;">false</span>;
+
+    status_flags.condition_system_hotplug_timeout = <span style="color: #a9a1e1;">false</span>;
+
+    status.timestamp = hrt_absolute_time();
+
+    status_flags.condition_power_input_valid = <span style="color: #a9a1e1;">true</span>;
+    status_flags.usb_connected = <span style="color: #a9a1e1;">false</span>;
+    status_flags.rc_calibration_valid = <span style="color: #a9a1e1;">true</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#49436;&#53431; &#48660;&#47112;&#51060;&#52964;. &#44592;&#48376;&#51004;&#47196; &#47784;&#46160; false! circuit breaker&#44032; false&#44032; &#46104;&#47732; &#50672;&#44208; &#50668;&#48512;&#47484; &#52404;&#53356;&#54620;&#45796;.</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">power check&#45716; power &#52964;&#45349;&#53552;&#47196; &#48512;&#53552; &#51204;&#50896; &#46308;&#50612;&#50724;&#45716;&#51648; &#52404;&#53356;</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">airspd check&#45716; airspeed &#49468;&#49436; &#50672;&#44208; &#50668;&#48512; &#52404;&#53356;</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">engine failure check &#45716; RC &#50644;&#51652; &#50672;&#44208; &#50668;&#48512; &#52404;&#53356;</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">gps failure check &#45716; gps &#50640;&#47084; &#50668;&#48512; &#52404;&#53356;</span>
+    status_flags.circuit_breaker_engaged_power_check = <span style="color: #a9a1e1;">false</span>;
+    status_flags.circuit_breaker_engaged_airspd_check = <span style="color: #a9a1e1;">false</span>;
+    status_flags.circuit_breaker_engaged_enginefailure_check = <span style="color: #a9a1e1;">false</span>;
+    status_flags.circuit_breaker_engaged_gpsfailure_check = <span style="color: #a9a1e1;">false</span>;
+    get_circuit_breaker_params();
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#50948;&#52824;, &#49549;&#46020;&#44032; &#50976;&#54952;&#54620;&#51648; &#52404;&#53356; &#54616;&#45716; &#54540;&#47000;&#44536;.</span>
+    status_flags.condition_global_position_valid = <span style="color: #a9a1e1;">false</span>;
+    status_flags.condition_local_position_valid = <span style="color: #a9a1e1;">false</span>;
+    status_flags.condition_local_velocity_valid = <span style="color: #a9a1e1;">false</span>;
+    status_flags.condition_local_altitude_valid = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#44592;&#52404; &#49345;&#53468; vehicle_status &#44288;&#54620; &#53664;&#54589; &#52488;&#44592;&#54868;</span>
+    status_pub = orb_advertise(ORB_ID(vehicle_status), &amp;status);
+
+    <span style="color: #51afef;">if</span> (status_pub == <span style="color: #a9a1e1;">nullptr</span>) {
+        warnx(<span style="color: #98be65;">"ERROR: orb_advertise for topic vehicle_status failed (uorb app running?).\n"</span>);
+        warnx(<span style="color: #98be65;">"exiting."</span>);
+        px4_task_exit(PX4_ERROR);
+    }
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">arming &#44288;&#47144;&#46108; &#53664;&#54589; &#52488;&#44592;&#54868;</span>
+    memset(&amp;armed, 0, <span style="color: #51afef;">sizeof</span>(armed));
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">armed topic */</span>
+    <span style="color: #ECBE7B;">orb_advert_t</span> <span style="color: #dcaeea;">armed_pub</span> = orb_advertise(ORB_ID(actuator_armed), &amp;armed);
+    <span style="color: #ECBE7B;">hrt_abstime</span> <span style="color: #dcaeea;">last_disarmed_timestamp</span> = 0;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#44592;&#52404; &#52968;&#53944;&#47204; &#44288;&#47144;&#46108; &#53664;&#54589; &#52488;&#44592;&#54868;</span>
+    memset(&amp;control_mode, 0, <span style="color: #51afef;">sizeof</span>(control_mode));
+    <span style="color: #ECBE7B;">orb_advert_t</span> <span style="color: #dcaeea;">control_mode_pub</span> = orb_advertise(ORB_ID(vehicle_control_mode), &amp;control_mode);
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54856; &#50948;&#52824; &#44288;&#47144;&#46108; &#53664;&#54589; &#52488;&#44592;&#54868;</span>
+    <span style="color: #ECBE7B;">orb_advert_t</span> <span style="color: #dcaeea;">home_pub</span> = <span style="color: #a9a1e1;">nullptr</span>;
+    memset(&amp;_home, 0, <span style="color: #51afef;">sizeof</span>(_home));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#47749;&#47161; ACK &#44288;&#47144;&#46108; &#53664;&#54589; &#52488;&#44592;&#54868;</span>
+    <span style="color: #ECBE7B;">orb_advert_t</span> <span style="color: #dcaeea;">command_ack_pub</span> = <span style="color: #a9a1e1;">nullptr</span>;
+    <span style="color: #ECBE7B;">orb_advert_t</span> <span style="color: #dcaeea;">commander_state_pub</span> = <span style="color: #a9a1e1;">nullptr</span>;
+    <span style="color: #ECBE7B;">orb_advert_t</span> <span style="color: #dcaeea;">vehicle_status_flags_pub</span> = <span style="color: #a9a1e1;">nullptr</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#48120;&#49496; &#52488;&#44592;&#54868;</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">init mission state, do it here to allow navigator to use stored mission even if mavlink failed to start */</span>
+    mission_init();
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Start monitoring loop */</span>
+    <span style="color: #ECBE7B;">unsigned</span> <span style="color: #dcaeea;">counter</span> = 0;
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">stick_off_counter</span> = 0;
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">stick_on_counter</span> = 0;
+
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">low_battery_voltage_actions_done</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">critical_battery_voltage_actions_done</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">emergency_battery_voltage_actions_done</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">dangerous_battery_level_requests_poweroff</span> = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">status_changed</span> = <span style="color: #a9a1e1;">true</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">param_init_forced</span> = <span style="color: #a9a1e1;">true</span>;
+
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">updated</span> = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">safety &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">safety_sub</span> = orb_subscribe(ORB_ID(safety));
+    memset(&amp;safety, 0, <span style="color: #51afef;">sizeof</span>(safety));
+    safety.safety_switch_available = <span style="color: #a9a1e1;">false</span>;
+    safety.safety_off = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">geofence &#44208;&#44284; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">geofence_result_sub</span> = orb_subscribe(ORB_ID(geofence_result));
+    <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">geofence_result_s</span> <span style="color: #dcaeea;">geofence_result</span>;
+    memset(&amp;geofence_result, 0, <span style="color: #51afef;">sizeof</span>(geofence_result));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">manual control setpoint &#53664;&#54589; &#44396;&#46021;. RC&#51077;&#47141;&#50640; &#44288;&#54620; &#53664;&#54589;.</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">sp_man_sub</span> = orb_subscribe(ORB_ID(manual_control_setpoint));
+    memset(&amp;sp_man, 0, <span style="color: #51afef;">sizeof</span>(sp_man));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">offboard control &#53664;&#54589; &#44396;&#46021;.</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">offboard_control_mode_sub</span> = orb_subscribe(ORB_ID(offboard_control_mode));
+    memset(&amp;offboard_control_mode, 0, <span style="color: #51afef;">sizeof</span>(offboard_control_mode));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">landing &#50668;&#48512; &#54032;&#45800;&#54616;&#45716; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">land_detector_sub</span> = orb_subscribe(ORB_ID(vehicle_land_detected));
+    land_detector.landed = <span style="color: #a9a1e1;">true</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">mavlink, rc, navigator&#50640; &#51032;&#54644; &#45236;&#47140;&#51652; &#47749;&#47161;&#51012; &#51069;&#51012; &#49688; &#51080;&#45716; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Subscribe to command topic */</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">cmd_sub</span> = orb_subscribe(ORB_ID(vehicle_command));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#46972;&#48120;&#53552; &#48320;&#44221; &#50668;&#48512;&#47484; &#50508;&#47140;&#51452;&#45716; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">param_changed_sub</span> = orb_subscribe(ORB_ID(parameter_update));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#48176;&#53552;&#47532; &#49345;&#53468; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Subscribe to battery topic */</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">battery_sub</span> = orb_subscribe(ORB_ID(battery_status));
+    memset(&amp;battery, 0, <span style="color: #51afef;">sizeof</span>(battery));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">GPS, RC, &#53588;&#47112;&#47700;&#53944;&#47532; &#46321;&#51032; &#49884;&#49828;&#53596; &#49345;&#53468;&#50640; &#44288;&#54620; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Subscribe to subsystem info topic */</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">subsys_sub</span> = orb_subscribe(ORB_ID(subsystem_info));
+    <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">subsystem_info_s</span> <span style="color: #dcaeea;">info</span>;
+    memset(&amp;info, 0, <span style="color: #51afef;">sizeof</span>(info));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#49884;&#49828;&#53596; &#54028;&#50892;(USB, Battery, Servo Rail) &#50640; &#44288;&#54620; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">system_power_sub</span> = orb_subscribe(ORB_ID(system_power));
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#47784;&#53552; &#51228;&#50612; &#51221;&#48372;&#50640; &#44288;&#54620; &#53664;&#54589; &#44396;&#46021;</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">actuator_controls_sub</span> = orb_subscribe(ORB_ID_VEHICLE_ATTITUDE_CONTROLS);
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Subscribe to vtol vehicle status topic */</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">vtol_vehicle_status_sub</span> = orb_subscribe(ORB_ID(vtol_vehicle_status));
+    <span style="color: #5B6268;">//</span><span style="color: #5B6268;">struct vtol_vehicle_status_s vtol_status;</span>
+    memset(&amp;vtol_status, 0, <span style="color: #51afef;">sizeof</span>(vtol_status));
+    vtol_status.vtol_in_rw_mode = <span style="color: #a9a1e1;">true</span>;     <span style="color: #5B6268;">//</span><span style="color: #5B6268;">default for vtol is rotary wing</span>
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Estimator &#49345;&#53468; &#51221;&#48372; &#44396;&#46021;</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">estimator_status_sub</span> = orb_subscribe(ORB_ID(estimator_status));
+    <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">estimator_status_s</span> <span style="color: #dcaeea;">estimator_status</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#51060;&#47449; &#54980; navigator failure &#49345;&#53468; &#52404;&#53356;</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">class variables used to check for navigation failure after takeoff */</span>
+    <span style="color: #ECBE7B;">hrt_abstime</span> <span style="color: #dcaeea;">time_at_takeoff</span> = 0; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">last time we were on the ground</span>
+    <span style="color: #ECBE7B;">hrt_abstime</span> <span style="color: #dcaeea;">time_last_innov_pass</span> = 0; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">last time velocity innovations passed</span>
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">nav_test_passed</span> = <span style="color: #a9a1e1;">false</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">true if the post takeoff navigation test has passed</span>
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">nav_test_failed</span> = <span style="color: #a9a1e1;">false</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">true if the post takeoff navigation test has failed</span>
+
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">cpuload_sub</span> = orb_subscribe(ORB_ID(cpuload));
+    memset(&amp;cpuload, 0, <span style="color: #51afef;">sizeof</span>(cpuload));
+
+    control_status_leds(&amp;status, &amp;armed, <span style="color: #a9a1e1;">true</span>, &amp;battery, &amp;cpuload);
+
+    thread_running = <span style="color: #a9a1e1;">true</span>;
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">update vehicle status to find out vehicle type (required for preflight checks) */</span>
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">system_type</span>;
+    param_get(_param_sys_type, &amp;system_type); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">get system type</span>
+    status.system_type = (<span style="color: #ECBE7B;">uint8_t</span>)system_type;
+    status.is_rotary_wing = is_rotary_wing(&amp;status) || is_vtol(&amp;status);
+    status.is_vtol = is_vtol(&amp;status);
+
+    commander_boot_timestamp = hrt_absolute_time();
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">initially set to failed</span>
+    _last_lpos_fail_time_us = commander_boot_timestamp;
+    _last_gpos_fail_time_us = commander_boot_timestamp;
+    _last_lvel_fail_time_us = commander_boot_timestamp;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#49324;&#51204; &#48708;&#54665; &#52404;&#53356;</span>
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">rc_in_off</span> = 0;
+
+    param_get(_param_rc_in_off, &amp;rc_in_off);
+
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">arm_switch_is_button</span> = 0;
+    param_get(_param_arm_switch_is_button, &amp;arm_switch_is_button);
+
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">arm_without_gps_param</span> = 0;
+    param_get(_param_arm_without_gps, &amp;arm_without_gps_param);
+    arm_requirements = (arm_without_gps_param == 1) ? ARM_REQ_NONE : ARM_REQ_GPS_BIT;
+
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">arm_mission_required_param</span> = 0;
+    param_get(_param_arm_mission_required, &amp;arm_mission_required_param);
+    arm_requirements |= (arm_mission_required_param &amp; (ARM_REQ_MISSION_BIT | ARM_REQ_ARM_AUTH_BIT));
+
+    status.rc_input_mode = rc_in_off;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">user adjustable duration required to assert arm/disarm via throttle/rudder stick</span>
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">rc_arm_hyst</span> = 100;
+    param_get(_param_rc_arm_hyst, &amp;rc_arm_hyst);
+    rc_arm_hyst *= COMMANDER_MONITORING_LOOPSPERMSEC;
+
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">datalink_loss_act</span> = 0;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">rc_loss_act</span> = 0;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">datalink_loss_timeout</span> = 10;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">highlatencydatalink_loss_timeout</span> = 120;
+    <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">rc_loss_timeout</span> = 0.5;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">datalink_regain_timeout</span> = 0;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">highlatencydatalink_regain_timeout</span> = 0;
+    <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">offboard_loss_timeout</span> = 0.0f;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">offboard_loss_act</span> = 0;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">offboard_loss_rc_act</span> = 0;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">posctl_nav_loss_act</span> = 0;
+
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">geofence_action</span> = 0;
+
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">flight_uuid</span> = 0;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">AUTO MODE(MISSION, HOLD &#47784;&#46300;)&#50640;&#49436; RC &#49828;&#54001;&#51060; &#46308;&#50612;&#50772;&#51012;&#46412; &#51060;&#51204; &#47784;&#46300;(position mode)&#47196; &#46028;&#50500;&#44032;&#45716;&#51648; &#44208;&#51221;</span>
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">rc_override &#44032; 0 &#51060;&#47732;, AUTO MODE&#50640;&#49436; RC &#49828;&#54001; &#51077;&#47141;&#51060; &#46308;&#50612;&#50752;&#46020; &#44228;&#49549; AUTO MODE&#47484; &#50976;&#51648;&#54620;&#45796;.</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">RC override auto modes */</span>
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">rc_override</span> = 0;
+
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">takeoff_complete_act</span> = 0;
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Thresholds for engine failure detection */</span>
+    <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">ef_throttle_thres</span> = 1.0f;
+    <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">ef_current2throttle_thres</span> = 0.0f;
+    <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">ef_time_thres</span> = 1000.0f;
+    <span style="color: #ECBE7B;">uint64_t</span> <span style="color: #dcaeea;">timestamp_engine_healthy</span> = 0; <span style="color: #5B6268;">/**</span><span style="color: #5B6268;">&lt; absolute time when engine was healty */</span>
+
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">disarm_when_landed</span> = 0;
+    <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">low_bat_action</span> = 0;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">commander&#51032; &#49345;&#53468;&#47672;&#49888; &#48320;&#44221;&#50668;&#48512; &#54540;&#47000;&#44536;</span>
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">check which state machines for changes, clear "changed" flag */</span>
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">main_state_changed</span> = <span style="color: #a9a1e1;">false</span>;
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">failsafe_old</span> = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">have_taken_off_since_arming</span> = <span style="color: #a9a1e1;">false</span>;
+
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#49324;&#51204; &#48708;&#54665; &#52404;&#53356;, &#52888;&#47532;&#48652;&#47112;&#51060;&#49496; &#44288;&#47144;&#46108; &#53580;&#49828;&#53356; &#52488;&#44592;&#54868;</span>
+    <span style="color: #ECBE7B;">pthread_attr_t</span> <span style="color: #dcaeea;">commander_low_prio_attr</span>;
+    pthread_attr_init(&amp;commander_low_prio_attr);
+    pthread_attr_setstacksize(&amp;commander_low_prio_attr, PX4_STACK_ADJUSTED(3000));
+
+<span style="color: #51afef; font-weight: bold;">#if</span><span style="color: #51afef; font-weight: bold;">n</span><span style="color: #51afef; font-weight: bold;">def</span> __PX4_QURT
+    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">This is not supported by QURT (yet).</span>
+    <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">sched_param</span> <span style="color: #dcaeea;">param</span>;
+    (<span style="color: #ECBE7B;">void</span>)pthread_attr_getschedparam(&amp;commander_low_prio_attr, &amp;param);
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">low priority */</span>
+    param.sched_priority = SCHED_PRIORITY_DEFAULT - 50;
+    (<span style="color: #ECBE7B;">void</span>)pthread_attr_setschedparam(&amp;commander_low_prio_attr, &amp;param);
+<span style="color: #51afef; font-weight: bold;">#endif</span>
+
+    pthread_create(&amp;commander_low_prio_thread, &amp;commander_low_prio_attr, commander_low_prio_loop, <span style="color: #a9a1e1;">nullptr</span>);
+    pthread_attr_destroy(&amp;commander_low_prio_attr);
+
+    arm_auth_init(&amp;mavlink_log_pub, &amp;status.system_id);
+
+    <span style="color: #51afef;">while</span> (<span style="color: #51afef; font-weight: bold;">!</span>should_exit()) {
+
+        <span style="color: #ECBE7B;">transition_result_t</span> <span style="color: #dcaeea;">arming_ret</span> = TRANSITION_NOT_CHANGED;
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#46972;&#48120;&#53552; &#50629;&#45936;&#51060;&#53944;</span>
+        <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">params_updated</span> = <span style="color: #a9a1e1;">false</span>;
+        orb_check(param_changed_sub, &amp;params_updated);
+
+        <span style="color: #51afef;">if</span> (params_updated || param_init_forced) {
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#46972;&#48120;&#53552; &#48320;&#44221; &#50668;&#48512; &#52404;&#53356;</span>
+            <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">parameter_update_s</span> <span style="color: #dcaeea;">param_changed</span>;
+            orb_copy(ORB_ID(parameter_update), param_changed_sub, &amp;param_changed);
+
+            updateParams();
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#46972;&#48120;&#53552; &#50629;&#45936;&#51060;&#53944;</span>
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>armed.armed) {
+                <span style="color: #51afef;">if</span> (param_get(_param_sys_type, &amp;system_type) != OK) {
+                    PX4_ERR(<span style="color: #98be65;">"failed getting new system type"</span>);
+
+                } <span style="color: #51afef;">else</span> {
+                    status.system_type = (<span style="color: #ECBE7B;">uint8_t</span>)system_type;
+                }
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">disable manual override for all systems that rely on electronic stabilization */</span>
+                <span style="color: #51afef;">if</span> (is_rotary_wing(&amp;status) || (is_vtol(&amp;status) &amp;&amp; vtol_status.vtol_in_rw_mode)) {
+                    status.is_rotary_wing = <span style="color: #a9a1e1;">true</span>;
+
+                } <span style="color: #51afef;">else</span> {
+                    status.is_rotary_wing = <span style="color: #a9a1e1;">false</span>;
+                }
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">set vehicle_status.is_vtol flag */</span>
+                status.is_vtol = is_vtol(&amp;status);
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">check and update system / component ID */</span>
+                <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">sys_id</span> = 0;
+                param_get(_param_system_id, &amp;sys_id);
+                status.system_id = sys_id;
+
+                <span style="color: #ECBE7B;">int32_t</span> <span style="color: #dcaeea;">comp_id</span> = 0;
+                param_get(_param_component_id, &amp;comp_id);
+                status.component_id = comp_id;
+
+                get_circuit_breaker_params();
+
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+            }
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#50948;&#54744;(safety) &#44288;&#47144; &#54028;&#46972;&#48120;&#53552; &#44050; &#47196;&#46300;</span>
+            param_get(_param_enable_datalink_loss, &amp;datalink_loss_act);
+            param_get(_param_enable_rc_loss, &amp;rc_loss_act);
+            param_get(_param_datalink_loss_timeout, &amp;datalink_loss_timeout);
+            param_get(_param_highlatencydatalink_loss_timeout, &amp;highlatencydatalink_loss_timeout);
+            param_get(_param_rc_loss_timeout, &amp;rc_loss_timeout);
+            param_get(_param_rc_in_off, &amp;rc_in_off);
+            status.rc_input_mode = rc_in_off;
+            param_get(_param_rc_arm_hyst, &amp;rc_arm_hyst);
+            param_get(_param_min_stick_change, &amp;min_stick_change);
+            param_get(_param_rc_override, &amp;rc_override);
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">percentage (* 0.01) needs to be doubled because RC total interval is 2, not 1</span>
+            min_stick_change *= 0.02f;
+            rc_arm_hyst *= COMMANDER_MONITORING_LOOPSPERMSEC;
+            param_get(_param_datalink_regain_timeout, &amp;datalink_regain_timeout);
+            param_get(_param_highlatencydatalink_regain_timeout, &amp;highlatencydatalink_regain_timeout);
+            param_get(_param_ef_throttle_thres, &amp;ef_throttle_thres);
+            param_get(_param_ef_current2throttle_thres, &amp;ef_current2throttle_thres);
+            param_get(_param_ef_time_thres, &amp;ef_time_thres);
+            param_get(_param_geofence_action, &amp;geofence_action);
+            param_get(_param_disarm_land, &amp;disarm_when_landed);
+            param_get(_param_flight_uuid, &amp;flight_uuid);
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">If we update parameters the first time</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">make sure the hysteresis time gets set.</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">After that it will be set in the main state</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">machine based on the arming state.</span>
+            <span style="color: #51afef;">if</span> (param_init_forced) {
+                auto_disarm_hysteresis.set_hysteresis_time_from(<span style="color: #a9a1e1;">false</span>, <span style="color: #ECBE7B;">disarm_when_landed</span> * 1_s);
+            }
+
+            param_get(_param_low_bat_act, &amp;low_bat_action);
+            param_get(_param_offboard_loss_timeout, &amp;offboard_loss_timeout);
+            param_get(_param_offboard_loss_act, &amp;offboard_loss_act);
+            param_get(_param_offboard_loss_rc_act, &amp;offboard_loss_rc_act);
+            param_get(_param_arm_switch_is_button, &amp;arm_switch_is_button);
+
+            param_get(_param_arm_without_gps, &amp;arm_without_gps_param);
+            arm_requirements = (arm_without_gps_param == 1) ? ARM_REQ_NONE : ARM_REQ_GPS_BIT;
+            param_get(_param_arm_mission_required, &amp;arm_mission_required_param);
+            arm_requirements |= (arm_mission_required_param &amp; (ARM_REQ_MISSION_BIT | ARM_REQ_ARM_AUTH_BIT));
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">flight mode slots */</span>
+            param_get(_param_fmode_1, &amp;_flight_mode_slots[0]);
+            param_get(_param_fmode_2, &amp;_flight_mode_slots[1]);
+            param_get(_param_fmode_3, &amp;_flight_mode_slots[2]);
+            param_get(_param_fmode_4, &amp;_flight_mode_slots[3]);
+            param_get(_param_fmode_5, &amp;_flight_mode_slots[4]);
+            param_get(_param_fmode_6, &amp;_flight_mode_slots[5]);
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">failsafe response to loss of navigation accuracy */</span>
+            param_get(_param_posctl_nav_loss_act, &amp;posctl_nav_loss_act);
+
+            param_get(_param_takeoff_finished_action, &amp;takeoff_complete_act);
+
+            param_init_forced = <span style="color: #a9a1e1;">false</span>;
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54028;&#50892; &#48260;&#53948; &#53664;&#54589; &#48320;&#44221; &#50668;&#48512; &#52404;&#53356;</span>
+        orb_check(power_button_state_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            <span style="color: #ECBE7B;">power_button_state_s</span> <span style="color: #dcaeea;">button_state</span>;
+            orb_copy(ORB_ID(power_button_state), power_button_state_sub, &amp;button_state);
+
+            <span style="color: #51afef;">if</span> (button_state.event == <span style="color: #a9a1e1;">power_button_state_s</span>::PWR_BUTTON_STATE_REQUEST_SHUTDOWN) {
+                px4_shutdown_request(<span style="color: #a9a1e1;">false</span>, <span style="color: #a9a1e1;">false</span>);
+            }
+        }
+
+        <span style="color: #5B6268;">//  </span><span style="color: #5B6268;">RC(manual control setpoint) &#48320;&#44221; &#50668;&#48512; &#52404;&#53356;</span>
+        orb_check(sp_man_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            orb_copy(ORB_ID(manual_control_setpoint), sp_man_sub, &amp;sp_man);
+        }
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Offboard &#51228;&#50612; &#47784;&#46300; &#51064;&#51648; &#52404;&#53356;</span>
+        orb_check(offboard_control_mode_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            orb_copy(ORB_ID(offboard_control_mode), offboard_control_mode_sub, &amp;offboard_control_mode);
+        }
+
+        <span style="color: #51afef;">if</span> (offboard_control_mode.timestamp != 0 &amp;&amp;
+            offboard_control_mode.timestamp + OFFBOARD_TIMEOUT &gt; hrt_absolute_time()) {
+            <span style="color: #51afef;">if</span> (status_flags.offboard_control_signal_lost) {
+                status_flags.offboard_control_signal_lost = <span style="color: #a9a1e1;">false</span>;
+                status_flags.offboard_control_loss_timeout = <span style="color: #a9a1e1;">false</span>;
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+            }
+
+        } <span style="color: #51afef;">else</span> {
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.offboard_control_signal_lost) {
+                status_flags.offboard_control_signal_lost = <span style="color: #a9a1e1;">true</span>;
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+            }
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">check timer if offboard was there but now lost */</span>
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.offboard_control_loss_timeout &amp;&amp; offboard_control_mode.timestamp != 0) {
+                <span style="color: #51afef;">if</span> (offboard_loss_timeout &lt; FLT_EPSILON) {
+                    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">execute loss action immediately */</span>
+                    status_flags.offboard_control_loss_timeout = <span style="color: #a9a1e1;">true</span>;
+
+                } <span style="color: #51afef;">else</span> {
+                    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">wait for timeout if set */</span>
+                    status_flags.offboard_control_loss_timeout = offboard_control_mode.timestamp +
+                            OFFBOARD_TIMEOUT + offboard_loss_timeout * 1e6f &lt; hrt_absolute_time();
+                }
+
+                <span style="color: #51afef;">if</span> (status_flags.offboard_control_loss_timeout) {
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#53588;&#47112;&#47700;&#53944;&#47532; &#49345;&#53468; &#47336;&#54532;.</span>
+        poll_telemetry_status();
+
+        orb_check(system_power_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            <span style="color: #ECBE7B;">system_power_s</span> <span style="color: #dcaeea;">system_power</span> = {};
+            orb_copy(ORB_ID(system_power), system_power_sub, &amp;system_power);
+
+            <span style="color: #51afef;">if</span> (hrt_elapsed_time(&amp;system_power.timestamp) &lt; 200_ms) {
+                <span style="color: #51afef;">if</span> (system_power.servo_valid &amp;&amp;
+                    <span style="color: #51afef; font-weight: bold;">!</span>system_power.brick_valid &amp;&amp;
+                    <span style="color: #51afef; font-weight: bold;">!</span>system_power.usb_connected) {
+                    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">flying only on servo rail, this is unsafe */</span>
+                    status_flags.condition_power_input_valid = <span style="color: #a9a1e1;">false</span>;
+
+                } <span style="color: #51afef;">else</span> {
+                    status_flags.condition_power_input_valid = <span style="color: #a9a1e1;">true</span>;
+                }
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">if the USB hardware connection went away, reboot */</span>
+                <span style="color: #51afef;">if</span> (status_flags.usb_connected &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>system_power.usb_connected) {
+                    <span style="color: #5B6268;">/*</span>
+<span style="color: #5B6268;">                     * apparently the USB cable went away but we are still powered,</span>
+<span style="color: #5B6268;">                     * so lets reset to a classic non-usb state.</span>
+<span style="color: #5B6268;">                     */</span>
+                    mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"USB disconnected, rebooting."</span>)
+                    usleep(400000);
+                    px4_shutdown_request(<span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">false</span>);
+                }
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">safety &#53664;&#54589; &#48320;&#44221; &#50668;&#48512; &#52404;&#53356;</span>
+        orb_check(safety_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">previous_safety_off</span> = safety.safety_off;
+
+            <span style="color: #51afef;">if</span> (orb_copy(ORB_ID(safety), safety_sub, &amp;safety) == PX4_OK) {
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">disarm if safety is now on and still armed */</span>
+                <span style="color: #51afef;">if</span> (armed.armed &amp;&amp; (status.hil_state == <span style="color: #a9a1e1;">vehicle_status_s</span>::HIL_STATE_OFF)
+                    &amp;&amp; safety.safety_switch_available &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>safety.safety_off) {
+
+                    <span style="color: #51afef;">if</span> (TRANSITION_CHANGED == arming_state_transition(&amp;status, battery, safety, <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_STANDBY,
+                            &amp;armed, <span style="color: #a9a1e1;">true</span> <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">fRunPreArmChecks */</span>, &amp;mavlink_log_pub,
+                            &amp;status_flags, arm_requirements, hrt_elapsed_time(&amp;commander_boot_timestamp))
+                       ) {
+                        status_changed = <span style="color: #a9a1e1;">true</span>;
+                    }
+                }
+
+                <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Notify the user if the status of the safety switch changes</span>
+                <span style="color: #51afef;">if</span> (safety.safety_switch_available &amp;&amp; previous_safety_off != safety.safety_off) {
+
+                    <span style="color: #51afef;">if</span> (safety.safety_off) {
+                        set_tune(TONE_NOTIFY_POSITIVE_TUNE);
+
+                    } <span style="color: #51afef;">else</span> {
+                        tune_neutral(<span style="color: #a9a1e1;">true</span>);
+                    }
+
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">VTOL &#44592;&#52404; &#49345;&#53468; &#48320;&#44221; &#51080;&#45716;&#51648; &#52404;&#53356;</span>
+        orb_check(vtol_vehicle_status_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">vtol status changed */</span>
+            orb_copy(ORB_ID(vtol_vehicle_status), vtol_vehicle_status_sub, &amp;vtol_status);
+            status.vtol_fw_permanent_stab = vtol_status.fw_permanent_stab;
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Make sure that this is only adjusted if vehicle really is of type vtol */</span>
+            <span style="color: #51afef;">if</span> (is_vtol(&amp;status)) {
+
+                <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Check if there has been any change while updating the flags</span>
+                <span style="color: #51afef;">if</span> (status.is_rotary_wing != vtol_status.vtol_in_rw_mode) {
+                    status.is_rotary_wing = vtol_status.vtol_in_rw_mode;
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+
+                <span style="color: #51afef;">if</span> (status.in_transition_mode != vtol_status.vtol_in_trans_mode) {
+                    status.in_transition_mode = vtol_status.vtol_in_trans_mode;
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+
+                <span style="color: #51afef;">if</span> (status.in_transition_to_fw != vtol_status.in_transition_to_fw) {
+                    status.in_transition_to_fw = vtol_status.in_transition_to_fw;
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+
+                <span style="color: #51afef;">if</span> (status_flags.vtol_transition_failure != vtol_status.vtol_transition_failsafe) {
+                    status_flags.vtol_transition_failure = vtol_status.vtol_transition_failsafe;
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+
+                <span style="color: #51afef;">if</span> (armed.soft_stop != <span style="color: #51afef; font-weight: bold;">!</span>status.is_rotary_wing) {
+                    armed.soft_stop = <span style="color: #51afef; font-weight: bold;">!</span>status.is_rotary_wing;
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#47196;&#52972; &#50948;&#52824;, &#44544;&#47196;&#48268; &#50948;&#52824;(GPS)  &#48320;&#44221; &#50668;&#48512; &#52404;&#53356;&#54616;&#44256;, &#48320;&#44221;&#46104;&#50612; &#51080;&#51004;&#47732; &#50629;&#45936;&#51060;&#53944;</span>
+        _local_position_sub.update();
+        _global_position_sub.update();
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Set the allowable positon uncertainty based on combination of flight and estimator state</span>
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">When we are in a operator demanded position control mode and are solely reliant on optical flow, do not check position error becasue it will gradually increase throughout flight and the operator will compensate for the drift</span>
+        <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">reliant_on_opt_flow</span> = ((estimator_status.control_mode_flags &amp; (1 &lt;&lt; <span style="color: #a9a1e1;">estimator_status_s</span>::CS_OPT_FLOW))
+                        &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>(estimator_status.control_mode_flags &amp; (1 &lt;&lt; <span style="color: #a9a1e1;">estimator_status_s</span>::CS_GPS))
+                        &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>(estimator_status.control_mode_flags &amp; (1 &lt;&lt; <span style="color: #a9a1e1;">estimator_status_s</span>::CS_EV_POS)));
+        <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">operator_controlled_position</span> = (internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_POSCTL);
+        _skip_pos_accuracy_check = reliant_on_opt_flow &amp;&amp; operator_controlled_position;
+        <span style="color: #51afef;">if</span> (_skip_pos_accuracy_check) {
+            _eph_threshold_adj = INFINITY;
+        } <span style="color: #51afef;">else</span> {
+            _eph_threshold_adj = _eph_threshold.get();
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Check if quality checking of position accuracy and consistency is to be performed</span>
+        <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">run_quality_checks</span> = <span style="color: #51afef; font-weight: bold;">!</span>status_flags.circuit_breaker_engaged_posfailure_check;
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Check estimator status for signs of bad yaw induced post takeoff navigation failure</span>
+<span style="color: #5B6268;">         * for a short time interval after takeoff. Fixed wing vehicles can recover using GPS heading,</span>
+<span style="color: #5B6268;">         * but rotary wing vehicles cannot so the position and velocity validity needs to be latched</span>
+<span style="color: #5B6268;">         * to false after failure to prevent flyaway crashes */</span>
+        <span style="color: #51afef;">if</span> (run_quality_checks &amp;&amp; status.is_rotary_wing) {
+            <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">estimator_status_updated</span> = <span style="color: #a9a1e1;">false</span>;
+            orb_check(estimator_status_sub, &amp;estimator_status_updated);
+
+            <span style="color: #51afef;">if</span> (estimator_status_updated) {
+                orb_copy(ORB_ID(estimator_status), estimator_status_sub, &amp;estimator_status);
+
+                <span style="color: #51afef;">if</span> (status.arming_state == <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_STANDBY) {
+                    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">reset flags and timer</span>
+                    time_at_takeoff = hrt_absolute_time();
+                    nav_test_failed = <span style="color: #a9a1e1;">false</span>;
+                    nav_test_passed = <span style="color: #a9a1e1;">false</span>;
+
+                } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (land_detector.landed) {
+                    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">record time of takeoff</span>
+                    time_at_takeoff = hrt_absolute_time();
+
+                } <span style="color: #51afef;">else</span> {
+                    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">if nav status is unconfirmed, confirm yaw angle as passed after 30 seconds or achieving 5 m/s of speed</span>
+                    <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">sufficient_time</span> = (hrt_elapsed_time(&amp;time_at_takeoff) &gt; 30_s);
+
+                    <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">vehicle_local_position_s</span> &amp;<span style="color: #dcaeea;">lpos</span> = _local_position_sub.get();
+                    <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">sufficient_speed</span> = (lpos.vx * lpos.vx + lpos.vy * lpos.vy &gt; 25.0f);
+
+                    <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">innovation_pass</span> = estimator_status.vel_test_ratio &lt; 1.0f &amp;&amp; estimator_status.pos_test_ratio &lt; 1.0f;
+
+                    <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>nav_test_failed) {
+                        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>nav_test_passed) {
+                            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">pass if sufficient time or speed</span>
+                            <span style="color: #51afef;">if</span> (sufficient_time || sufficient_speed) {
+                                nav_test_passed = <span style="color: #a9a1e1;">true</span>;
+                            }
+
+                            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">record the last time the innovation check passed</span>
+                            <span style="color: #51afef;">if</span> (innovation_pass) {
+                                time_last_innov_pass = hrt_absolute_time();
+                            }
+
+                            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">if the innovation test has failed continuously, declare the nav as failed</span>
+                            <span style="color: #51afef;">if</span> (hrt_elapsed_time(&amp;time_last_innov_pass) &gt; 1_s) {
+                                nav_test_failed = <span style="color: #a9a1e1;">true</span>;
+                                mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"CRITICAL NAVIGATION FAILURE - CHECK SENSOR CALIBRATION"</span>);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#44544;&#47196;&#48268; &#50948;&#52824; &#51221;&#54869;&#46020; &#52404;&#53356;</span>
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">run global position accuracy checks */</span>
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Check if quality checking of position accuracy and consistency is to be performed</span>
+        <span style="color: #51afef;">if</span> (run_quality_checks) {
+            <span style="color: #51afef;">if</span> (nav_test_failed) {
+                status_flags.condition_global_position_valid = <span style="color: #a9a1e1;">false</span>;
+                status_flags.condition_local_position_valid = <span style="color: #a9a1e1;">false</span>;
+                status_flags.condition_local_velocity_valid = <span style="color: #a9a1e1;">false</span>;
+
+            } <span style="color: #51afef;">else</span> {
+                <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>_skip_pos_accuracy_check) {
+                    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">use global position message to determine validity</span>
+                    <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">vehicle_global_position_s</span>&amp;<span style="color: #dcaeea;">global_position</span> = _global_position_sub.get();
+                    check_posvel_validity(<span style="color: #a9a1e1;">true</span>, global_position.eph, _eph_threshold_adj, global_position.timestamp, &amp;_last_gpos_fail_time_us, &amp;_gpos_probation_time_us, &amp;status_flags.condition_global_position_valid, &amp;status_changed);
+                }
+
+                <span style="color: #5B6268;">// </span><span style="color: #5B6268;">use local position message to determine validity</span>
+                <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">vehicle_local_position_s</span> &amp;<span style="color: #dcaeea;">local_position</span> = _local_position_sub.get();
+                check_posvel_validity(local_position.xy_valid, local_position.eph, _eph_threshold_adj, local_position.timestamp, &amp;_last_lpos_fail_time_us, &amp;_lpos_probation_time_us, &amp;status_flags.condition_local_position_valid, &amp;status_changed);
+                check_posvel_validity(local_position.v_xy_valid, local_position.evh, _evh_threshold.get(), local_position.timestamp, &amp;_last_lvel_fail_time_us, &amp;_lvel_probation_time_us, &amp;status_flags.condition_local_velocity_valid, &amp;status_changed);
+            }
+        }
+
+        <span style="color: #51afef;">if</span>((_last_condition_global_position_valid != status_flags.condition_global_position_valid) &amp;&amp; status_flags.condition_global_position_valid) {
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">If global position state changed and is now valid, set respective health flags to true. For now also assume GPS is OK if global pos is OK, but not vice versa.</span>
+            set_health_flags_healthy(<span style="color: #a9a1e1;">subsystem_info_s</span>::SUBSYSTEM_TYPE_AHRS, <span style="color: #a9a1e1;">true</span>, status);
+            set_health_flags_present_healthy(<span style="color: #a9a1e1;">subsystem_info_s</span>::SUBSYSTEM_TYPE_GPS, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">true</span>, status);
+        }
+
+        check_valid(_local_position_sub.get().timestamp, _failsafe_pos_delay.get() * 1_s, _local_position_sub.get().z_valid, &amp;(status_flags.condition_local_altitude_valid), &amp;status_changed);
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#52265;&#47449; &#50668;&#48512; &#54032;&#45800; &#53664;&#54589; &#48320;&#44221;&#50668;&#48512; &#52404;&#53356;</span>
+        orb_check(land_detector_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            orb_copy(ORB_ID(vehicle_land_detected), land_detector_sub, &amp;land_detector);
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Only take actions if armed</span>
+            <span style="color: #51afef;">if</span> (armed.armed) {
+                <span style="color: #51afef;">if</span> (was_landed != land_detector.landed) {
+                    <span style="color: #51afef;">if</span> (land_detector.landed) {
+                        mavlink_and_console_log_info(&amp;mavlink_log_pub, <span style="color: #98be65;">"Landing detected"</span>);
+
+                    } <span style="color: #51afef;">else</span> {
+                        mavlink_and_console_log_info(&amp;mavlink_log_pub, <span style="color: #98be65;">"Takeoff detected"</span>);
+                        have_taken_off_since_arming = <span style="color: #a9a1e1;">true</span>;
+
+                        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Set all position and velocity test probation durations to takeoff value</span>
+                        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">This is a larger value to give the vehicle time to complete a failsafe landing</span>
+                        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">if faulty sensors cause loss of navigation shortly after takeoff.</span>
+                        _gpos_probation_time_us = _failsafe_pos_probation.get() * 1_s;
+                        _lpos_probation_time_us = _failsafe_pos_probation.get() * 1_s;
+                        _lvel_probation_time_us = _failsafe_pos_probation.get() * 1_s;
+                    }
+                }
+
+                <span style="color: #51afef;">if</span> (was_falling != land_detector.freefall) {
+                    <span style="color: #51afef;">if</span> (land_detector.freefall) {
+                        mavlink_and_console_log_info(&amp;mavlink_log_pub, <span style="color: #98be65;">"Freefall detected"</span>);
+                    }
+                }
+            }
+
+            was_landed = land_detector.landed;
+            was_falling = land_detector.freefall;
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Update hysteresis time. Use a time of factor 5 longer if we have not taken off yet. */</span>
+        <span style="color: #ECBE7B;">hrt_abstime</span> <span style="color: #dcaeea;">timeout_time</span> = disarm_when_landed * 1_s;
+
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>have_taken_off_since_arming) {
+            timeout_time *= 5;
+        }
+
+        auto_disarm_hysteresis.set_hysteresis_time_from(<span style="color: #a9a1e1;">false</span>, timeout_time);
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Check for auto-disarm</span>
+        <span style="color: #51afef;">if</span> (armed.armed &amp;&amp; land_detector.landed &amp;&amp; disarm_when_landed &gt; 0) {
+            auto_disarm_hysteresis.set_state_and_update(<span style="color: #a9a1e1;">true</span>);
+
+        } <span style="color: #51afef;">else</span> {
+            auto_disarm_hysteresis.set_state_and_update(<span style="color: #a9a1e1;">false</span>);
+        }
+
+        <span style="color: #51afef;">if</span> (auto_disarm_hysteresis.get_state()) {
+            arm_disarm(<span style="color: #a9a1e1;">false</span>, &amp;mavlink_log_pub, <span style="color: #98be65;">"auto disarm on land"</span>);
+        }
+
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>warning_action_on) {
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">store the last good main_state when not in an navigation</span>
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">hold state</span>
+            main_state_before_rtl = internal_state.main_state;
+
+        } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_RTL
+               &amp;&amp; internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LOITER
+               &amp;&amp; internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LAND) {
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">reset flag again when we switched out of it</span>
+            warning_action_on = <span style="color: #a9a1e1;">false</span>;
+        }
+
+        orb_check(cpuload_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            orb_copy(ORB_ID(cpuload), cpuload_sub, &amp;cpuload);
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#48176;&#53552;&#47532; &#49345;&#53468; &#53664;&#54589; &#48320;&#44221; &#50668;&#48512; &#52404;&#53356;</span>
+        orb_check(battery_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            orb_copy(ORB_ID(battery_status), battery_sub, &amp;battery);
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">only consider battery voltage if system has been running 6s (usb most likely detected) and battery voltage is valid */</span>
+            <span style="color: #51afef;">if</span> ((hrt_elapsed_time(&amp;commander_boot_timestamp) &gt; 6_s)
+                &amp;&amp; battery.voltage_filtered_v &gt; 2.0f * FLT_EPSILON) {
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">if battery voltage is getting lower, warn using buzzer, etc. */</span>
+                <span style="color: #51afef;">if</span> (battery.warning == <span style="color: #a9a1e1;">battery_status_s</span>::BATTERY_WARNING_LOW &amp;&amp;
+                    <span style="color: #51afef; font-weight: bold;">!</span>low_battery_voltage_actions_done) {
+
+                    low_battery_voltage_actions_done = <span style="color: #a9a1e1;">true</span>;
+
+                    <span style="color: #51afef;">if</span> (armed.armed) {
+                        mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"LOW BATTERY, RETURN TO LAND ADVISED"</span>);
+
+                    } <span style="color: #51afef;">else</span> {
+                        mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"LOW BATTERY, TAKEOFF DISCOURAGED"</span>);
+                    }
+
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+
+                } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (battery.warning == <span style="color: #a9a1e1;">battery_status_s</span>::BATTERY_WARNING_CRITICAL &amp;&amp;
+                       <span style="color: #51afef; font-weight: bold;">!</span>critical_battery_voltage_actions_done) {
+
+                    critical_battery_voltage_actions_done = <span style="color: #a9a1e1;">true</span>;
+
+                    <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>armed.armed) {
+                        mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"CRITICAL BATTERY, SHUT SYSTEM DOWN"</span>);
+
+                    } <span style="color: #51afef;">else</span> {
+                        <span style="color: #51afef;">if</span> (low_bat_action == 1 || low_bat_action == 3) {
+                            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">let us send the critical message even if already in RTL</span>
+                            <span style="color: #51afef;">if</span> (TRANSITION_DENIED != main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_RTL, status_flags, &amp;internal_state)) {
+                                warning_action_on = <span style="color: #a9a1e1;">true</span>;
+                                mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"CRITICAL BATTERY, RETURNING TO LAND"</span>);
+
+                            } <span style="color: #51afef;">else</span> {
+                                mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"CRITICAL BATTERY, RTL FAILED"</span>);
+                            }
+
+                        } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (low_bat_action == 2) {
+                            <span style="color: #51afef;">if</span> (TRANSITION_DENIED != main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LAND, status_flags, &amp;internal_state)) {
+                                warning_action_on = <span style="color: #a9a1e1;">true</span>;
+                                mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"CRITICAL BATTERY, LANDING AT CURRENT POSITION"</span>);
+
+                            } <span style="color: #51afef;">else</span> {
+                                mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"CRITICAL BATTERY, LANDING FAILED"</span>);
+                            }
+
+                        } <span style="color: #51afef;">else</span> {
+                            mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"CRITICAL BATTERY, RETURN TO LAUNCH ADVISED!"</span>);
+                        }
+                    }
+
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+
+                } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (battery.warning == <span style="color: #a9a1e1;">battery_status_s</span>::BATTERY_WARNING_EMERGENCY &amp;&amp;
+                       <span style="color: #51afef; font-weight: bold;">!</span>emergency_battery_voltage_actions_done) {
+
+                    emergency_battery_voltage_actions_done = <span style="color: #a9a1e1;">true</span>;
+
+                    <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>armed.armed) {
+                        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Request shutdown at the end of the cycle. This allows</span>
+                        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">the vehicle state to be published after emergency landing</span>
+                        dangerous_battery_level_requests_poweroff = <span style="color: #a9a1e1;">true</span>;
+                    } <span style="color: #51afef;">else</span> {
+                        <span style="color: #51afef;">if</span> (low_bat_action == 2 || low_bat_action == 3) {
+                            <span style="color: #51afef;">if</span> (TRANSITION_CHANGED == main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LAND, status_flags, &amp;internal_state)) {
+                                warning_action_on = <span style="color: #a9a1e1;">true</span>;
+                                mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"DANGEROUS BATTERY LEVEL, LANDING IMMEDIATELY"</span>);
+
+                            } <span style="color: #51afef;">else</span> {
+                                mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"DANGEROUS BATTERY LEVEL, LANDING FAILED"</span>);
+                            }
+
+                        } <span style="color: #51afef;">else</span> {
+                            mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"DANGEROUS BATTERY LEVEL, LANDING ADVISED!"</span>);
+                        }
+                    }
+
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">End battery voltage check */</span>
+            }
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">update subsystem info which arrives from outside of commander*/</span>
+        <span style="color: #51afef;">do</span> {
+            orb_check(subsys_sub, &amp;updated);
+            <span style="color: #51afef;">if</span> (updated) {
+                orb_copy(ORB_ID(subsystem_info), subsys_sub, &amp;info);
+                set_health_flags(info.subsystem_type, info.present, info.enabled, info.ok, status);
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+            }
+        } <span style="color: #51afef;">while</span>(updated);
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">If in INIT state, try to proceed to STANDBY state */</span>
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.condition_calibration_enabled &amp;&amp; status.arming_state == <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_INIT) {
+
+            arming_ret = arming_state_transition(&amp;status, battery, safety, <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_STANDBY, &amp;armed,
+                                 <span style="color: #a9a1e1;">true</span> <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">fRunPreArmChecks */</span>, &amp;mavlink_log_pub, &amp;status_flags,
+                                 arm_requirements, hrt_elapsed_time(&amp;commander_boot_timestamp));
+
+            <span style="color: #51afef;">if</span> (arming_ret == TRANSITION_DENIED) {
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">do not complain if not allowed into standby */</span>
+                arming_ret = TRANSITION_NOT_CHANGED;
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#48120;&#49496; &#44208;&#44284; &#52404;&#53356;</span>
+        <span style="color: #51afef;">const</span> <span style="color: #51afef;">auto</span> prev_mission_instance_count = _mission_result_sub.get().instance_count;
+
+        <span style="color: #51afef;">if</span> (_mission_result_sub.update()) {
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">mission_result_s</span> &amp;<span style="color: #dcaeea;">mission_result</span> = _mission_result_sub.get();
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">if mission_result is valid for the current mission</span>
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">mission_result_ok</span> = (mission_result.timestamp &gt; commander_boot_timestamp) &amp;&amp; (mission_result.instance_count &gt; 0);
+
+            status_flags.condition_auto_mission_available = mission_result_ok &amp;&amp; mission_result.valid;
+
+            <span style="color: #51afef;">if</span> (mission_result_ok) {
+
+                <span style="color: #51afef;">if</span> (status.mission_failure != mission_result.failure) {
+                    status.mission_failure = mission_result.failure;
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+
+                    <span style="color: #51afef;">if</span> (status.mission_failure) {
+                        mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"Mission cannot be completed"</span>);
+                    }
+                }
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Only evaluate mission state if home is set */</span>
+                <span style="color: #51afef;">if</span> (status_flags.condition_home_position_valid &amp;&amp;
+                    (prev_mission_instance_count != mission_result.instance_count)) {
+
+                    <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.condition_auto_mission_available) {
+                        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">the mission is invalid */</span>
+                        tune_mission_fail(<span style="color: #a9a1e1;">true</span>);
+
+                    } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (mission_result.warning) {
+                        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">the mission has a warning */</span>
+                        tune_mission_fail(<span style="color: #a9a1e1;">true</span>);
+
+                    } <span style="color: #51afef;">else</span> {
+                        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">the mission is valid */</span>
+                        tune_mission_ok(<span style="color: #a9a1e1;">true</span>);
+                    }
+                }
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#51648;&#50724;&#54172;&#49828; &#44208;&#44284; &#50668;&#48512; &#52404;&#53356;</span>
+        orb_check(geofence_result_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            orb_copy(ORB_ID(geofence_result), geofence_result_sub, &amp;geofence_result);
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#51648;&#50724;&#54172;&#49828;&#44032; &#51080;&#51004;&#47732; &#51648;&#50724;&#54172;&#49828; &#48279;&#50612;&#45228;&#45716;&#51648; &#52404;&#53356;&#54616;&#44256;, &#48708;&#54665; &#47749;&#47161; &#49688;&#54665;</span>
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Geofence actions</span>
+        <span style="color: #51afef;">if</span> (armed.armed &amp;&amp; (geofence_result.geofence_action != <span style="color: #a9a1e1;">geofence_result_s</span>::GF_ACTION_NONE)) {
+
+            <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">geofence_loiter_on</span> = <span style="color: #a9a1e1;">false</span>;
+            <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">geofence_rtl_on</span> = <span style="color: #a9a1e1;">false</span>;
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">check for geofence violation</span>
+            <span style="color: #51afef;">if</span> (geofence_result.geofence_violated) {
+                <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">hrt_abstime</span> <span style="color: #dcaeea;">last_geofence_violation</span> = 0;
+                <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">hrt_abstime</span> <span style="color: #dcaeea;">geofence_violation_action_interval</span> = 10_s;
+
+                <span style="color: #51afef;">if</span> (hrt_elapsed_time(&amp;last_geofence_violation) &gt; geofence_violation_action_interval) {
+
+                    last_geofence_violation = hrt_absolute_time();
+
+                    <span style="color: #51afef;">switch</span> (geofence_result.geofence_action) {
+                        <span style="color: #51afef;">case</span> (<span style="color: #a9a1e1;">geofence_result_s</span>::GF_ACTION_NONE) : {
+                            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do nothing</span>
+                            <span style="color: #51afef;">break</span>;
+                        }
+                        <span style="color: #51afef;">case</span> (<span style="color: #a9a1e1;">geofence_result_s</span>::GF_ACTION_WARN) : {
+                            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do nothing, mavlink critical messages are sent by navigator</span>
+                            <span style="color: #51afef;">break</span>;
+                        }
+                        <span style="color: #51afef;">case</span> (<span style="color: #a9a1e1;">geofence_result_s</span>::GF_ACTION_LOITER) : {
+                            <span style="color: #51afef;">if</span> (TRANSITION_CHANGED == main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LOITER, status_flags, &amp;internal_state)) {
+                                geofence_loiter_on = <span style="color: #a9a1e1;">true</span>;
+                            }
+
+                            <span style="color: #51afef;">break</span>;
+                        }
+                        <span style="color: #51afef;">case</span> (<span style="color: #a9a1e1;">geofence_result_s</span>::GF_ACTION_RTL) : {
+                            <span style="color: #51afef;">if</span> (TRANSITION_CHANGED == main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_RTL, status_flags, &amp;internal_state)) {
+                                geofence_rtl_on = <span style="color: #a9a1e1;">true</span>;
+                            }
+
+                            <span style="color: #51afef;">break</span>;
+                        }
+                        <span style="color: #51afef;">case</span> (<span style="color: #a9a1e1;">geofence_result_s</span>::GF_ACTION_TERMINATE) : {
+                            warnx(<span style="color: #98be65;">"Flight termination because of geofence"</span>);
+                            mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"Geofence violation: flight termination"</span>);
+                            armed.force_failsafe = <span style="color: #a9a1e1;">true</span>;
+                            status_changed = <span style="color: #a9a1e1;">true</span>;
+                            <span style="color: #51afef;">break</span>;
+                        }
+                    }
+                }
+            }
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">reset if no longer in LOITER or if manually switched to LOITER</span>
+            geofence_loiter_on = geofence_loiter_on
+                         &amp;&amp; (internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LOITER)
+                         &amp;&amp; (sp_man.loiter_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_OFF
+                         || sp_man.loiter_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_NONE);
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">reset if no longer in RTL or if manually switched to RTL</span>
+            geofence_rtl_on = geofence_rtl_on
+                      &amp;&amp; (internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_RTL)
+                      &amp;&amp; (sp_man.return_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_OFF
+                          || sp_man.return_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_NONE);
+
+            warning_action_on = warning_action_on || (geofence_loiter_on || geofence_rtl_on);
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">revert geofence failsafe transition if sticks are moved and we were previously in a manual mode</span>
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">but only if not in a low battery handling action</span>
+        <span style="color: #51afef;">if</span> (rc_override != 0 &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>critical_battery_voltage_actions_done &amp;&amp; (warning_action_on &amp;&amp;
+                (main_state_before_rtl == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_MANUAL ||
+                 main_state_before_rtl == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ALTCTL ||
+                 main_state_before_rtl == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_POSCTL ||
+                 main_state_before_rtl == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ACRO ||
+                 main_state_before_rtl == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_RATTITUDE ||
+                 main_state_before_rtl == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_STAB))) {
+
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">transition to previous state if sticks are touched</span>
+            <span style="color: #51afef;">if</span> ((_last_sp_man.timestamp != sp_man.timestamp) &amp;&amp;
+                ((fabsf(sp_man.x - _last_sp_man.x) &gt; min_stick_change) ||
+                 (fabsf(sp_man.y - _last_sp_man.y) &gt; min_stick_change) ||
+                 (fabsf(sp_man.z - _last_sp_man.z) &gt; min_stick_change) ||
+                 (fabsf(sp_man.r - _last_sp_man.r) &gt; min_stick_change))) {
+
+                <span style="color: #5B6268;">// </span><span style="color: #5B6268;">revert to position control in any case</span>
+                main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_POSCTL, status_flags, &amp;internal_state);
+                mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"Autopilot off, returned control to pilot"</span>);
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">abort landing or auto or loiter if sticks are moved significantly</span>
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">but only if not in a low battery handling action</span>
+        <span style="color: #51afef;">if</span> (rc_override != 0 &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>critical_battery_voltage_actions_done &amp;&amp;
+            (internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LAND ||
+             internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_MISSION ||
+             internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LOITER)) {
+            <span style="color: #5B6268;">// </span><span style="color: #5B6268;">transition to previous state if sticks are touched</span>
+
+            <span style="color: #51afef;">if</span> ((_last_sp_man.timestamp != sp_man.timestamp) &amp;&amp;
+                ((fabsf(sp_man.x - _last_sp_man.x) &gt; min_stick_change) ||
+                 (fabsf(sp_man.y - _last_sp_man.y) &gt; min_stick_change) ||
+                 (fabsf(sp_man.z - _last_sp_man.z) &gt; min_stick_change) ||
+                 (fabsf(sp_man.r - _last_sp_man.r) &gt; min_stick_change))) {
+
+                <span style="color: #5B6268;">// </span><span style="color: #5B6268;">revert to position control in any case</span>
+                main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_POSCTL, status_flags, &amp;internal_state);
+                mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"Autopilot off, returned control to pilot"</span>);
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#48120;&#49496; &#48708;&#54665; &#45149;</span>
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Check for mission flight termination */</span>
+        <span style="color: #51afef;">if</span> (armed.armed &amp;&amp; _mission_result_sub.get().flight_termination &amp;&amp;
+            <span style="color: #51afef; font-weight: bold;">!</span>status_flags.circuit_breaker_flight_termination_disabled) {
+
+            armed.force_failsafe = <span style="color: #a9a1e1;">true</span>;
+            status_changed = <span style="color: #a9a1e1;">true</span>;
+            <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">flight_termination_printed</span> = <span style="color: #a9a1e1;">false</span>;
+
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>flight_termination_printed) {
+                mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"Geofence violation: flight termination"</span>);
+                flight_termination_printed = <span style="color: #a9a1e1;">true</span>;
+            }
+
+            <span style="color: #51afef;">if</span> (counter % (1000000 / COMMANDER_MONITORING_INTERVAL) == 0) {
+                mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"Flight termination active"</span>);
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">RC &#51077;&#47141; &#49888;&#54840; &#52404;&#53356;</span>
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.rc_input_blocked &amp;&amp; sp_man.timestamp != 0 &amp;&amp;
+            (hrt_elapsed_time(&amp;sp_man.timestamp) &lt; (rc_loss_timeout * 1_s))) {
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">handle the case where RC signal was regained */</span>
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.rc_signal_found_once) {
+                status_flags.rc_signal_found_once = <span style="color: #a9a1e1;">true</span>;
+                set_health_flags(<span style="color: #a9a1e1;">subsystem_info_s</span>::SUBSYSTEM_TYPE_RCRECEIVER, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">true</span> &amp;&amp; status_flags.rc_calibration_valid, status);
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+
+            } <span style="color: #51afef;">else</span> {
+                <span style="color: #51afef;">if</span> (status.rc_signal_lost) {
+                    mavlink_log_info(&amp;mavlink_log_pub, <span style="color: #98be65;">"MANUAL CONTROL REGAINED after %llums"</span>, hrt_elapsed_time(&amp;rc_signal_lost_timestamp) / 1000);
+                    set_health_flags(<span style="color: #a9a1e1;">subsystem_info_s</span>::SUBSYSTEM_TYPE_RCRECEIVER, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">true</span> &amp;&amp; status_flags.rc_calibration_valid, status);
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+            }
+
+            status.rc_signal_lost = <span style="color: #a9a1e1;">false</span>;
+
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">in_armed_state</span> = (status.arming_state == <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_ARMED);
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">arm_switch_or_button_mapped</span> = sp_man.arm_switch != <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_NONE;
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">arm_button_pressed</span> = arm_switch_is_button == 1
+                            &amp;&amp; sp_man.arm_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_ON;
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">DISARM</span>
+<span style="color: #5B6268;">             * check if left stick is in lower left position or arm button is pushed or arm switch has transition from arm to disarm</span>
+<span style="color: #5B6268;">             * and we are in MANUAL, Rattitude, or AUTO_READY mode or (ASSIST mode and landed)</span>
+<span style="color: #5B6268;">             * do it only for rotary wings in manual mode or fixed wing if landed.</span>
+<span style="color: #5B6268;">             * Disable stick-disarming if arming switch or button is mapped */</span>
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">stick_in_lower_left</span> = sp_man.r &lt; -STICK_ON_OFF_LIMIT &amp;&amp; sp_man.z &lt; 0.1f
+                    &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>arm_switch_or_button_mapped;
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">arm_switch_to_disarm_transition</span> =  arm_switch_is_button == 0 &amp;&amp;
+                    _last_sp_man_arm_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_ON &amp;&amp;
+                    sp_man.arm_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_OFF;
+
+            <span style="color: #51afef;">if</span> (in_armed_state &amp;&amp;
+                status.rc_input_mode != <span style="color: #a9a1e1;">vehicle_status_s</span>::RC_IN_MODE_OFF &amp;&amp;
+                (status.is_rotary_wing || (<span style="color: #51afef; font-weight: bold;">!</span>status.is_rotary_wing &amp;&amp; land_detector.landed)) &amp;&amp;
+                (stick_in_lower_left || arm_button_pressed || arm_switch_to_disarm_transition)) {
+
+                <span style="color: #51afef;">if</span> (internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_MANUAL &amp;&amp;
+                    internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ACRO &amp;&amp;
+                    internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_STAB &amp;&amp;
+                    internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_RATTITUDE &amp;&amp;
+                    <span style="color: #51afef; font-weight: bold;">!</span>land_detector.landed) {
+                    print_reject_arm(<span style="color: #98be65;">"NOT DISARMING: Not in manual mode or landed yet."</span>);
+
+                } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> ((stick_off_counter == rc_arm_hyst &amp;&amp; stick_on_counter &lt; rc_arm_hyst) || arm_switch_to_disarm_transition) {
+                    arming_ret = arming_state_transition(&amp;status, battery, safety, <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_STANDBY, &amp;armed,
+                                         <span style="color: #a9a1e1;">true</span> <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">fRunPreArmChecks */</span>,
+                                         &amp;mavlink_log_pub, &amp;status_flags, arm_requirements, hrt_elapsed_time(&amp;commander_boot_timestamp));
+                }
+
+                stick_off_counter++;
+
+            } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>(arm_switch_is_button == 1 &amp;&amp; sp_man.arm_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_ON)) {
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">do not reset the counter when holding the arm button longer than needed */</span>
+                stick_off_counter = 0;
+            }
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">ARM</span>
+<span style="color: #5B6268;">             * check if left stick is in lower right position or arm button is pushed or arm switch has transition from disarm to arm</span>
+<span style="color: #5B6268;">             * and we're in MANUAL mode.</span>
+<span style="color: #5B6268;">             * Disable stick-arming if arming switch or button is mapped */</span>
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">stick_in_lower_right</span> = sp_man.r &gt; STICK_ON_OFF_LIMIT &amp;&amp; sp_man.z &lt; 0.1f
+                    &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>arm_switch_or_button_mapped;
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">allow a grace period for re-arming: preflight checks don't need to pass during that time,</span>
+<span style="color: #5B6268;">             * for example for accidential in-air disarming */</span>
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">in_arming_grace_period</span> = last_disarmed_timestamp != 0 &amp;&amp; hrt_elapsed_time(&amp;last_disarmed_timestamp) &lt; 5_s;
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">arm_switch_to_arm_transition</span> = arm_switch_is_button == 0 &amp;&amp;
+                    _last_sp_man_arm_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_OFF &amp;&amp;
+                    sp_man.arm_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_ON &amp;&amp;
+                    (sp_man.z &lt; 0.1f || in_arming_grace_period);
+
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>in_armed_state &amp;&amp;
+                status.rc_input_mode != <span style="color: #a9a1e1;">vehicle_status_s</span>::RC_IN_MODE_OFF &amp;&amp;
+                (stick_in_lower_right || arm_button_pressed || arm_switch_to_arm_transition)) {
+                <span style="color: #51afef;">if</span> ((stick_on_counter == rc_arm_hyst &amp;&amp; stick_off_counter &lt; rc_arm_hyst) || arm_switch_to_arm_transition) {
+
+                    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">we check outside of the transition function here because the requirement</span>
+<span style="color: #5B6268;">                     * for being in manual mode only applies to manual arming actions.</span>
+<span style="color: #5B6268;">                     * the system can be armed in auto if armed via the GCS.</span>
+<span style="color: #5B6268;">                     */</span>
+
+                    <span style="color: #51afef;">if</span> ((internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_MANUAL)
+                        &amp;&amp; (internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ACRO)
+                        &amp;&amp; (internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_STAB)
+                        &amp;&amp; (internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ALTCTL)
+                        &amp;&amp; (internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_POSCTL)
+                        &amp;&amp; (internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_RATTITUDE)
+                       ) {
+                        print_reject_arm(<span style="color: #98be65;">"NOT ARMING: Switch to a manual mode first."</span>);
+
+                    } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.condition_home_position_valid &amp;&amp;
+                           geofence_action == <span style="color: #a9a1e1;">geofence_result_s</span>::GF_ACTION_RTL) {
+                        print_reject_arm(<span style="color: #98be65;">"NOT ARMING: Geofence RTL requires valid home"</span>);
+
+                    } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (status.arming_state == <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_STANDBY) {
+                        arming_ret = arming_state_transition(&amp;status, battery, safety, <span style="color: #a9a1e1;">vehicle_status_s</span>::ARMING_STATE_ARMED, &amp;armed,
+                                             <span style="color: #51afef; font-weight: bold;">!</span>in_arming_grace_period <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">fRunPreArmChecks */</span>,
+                                             &amp;mavlink_log_pub, &amp;status_flags, arm_requirements, hrt_elapsed_time(&amp;commander_boot_timestamp));
+
+                        <span style="color: #51afef;">if</span> (arming_ret != TRANSITION_CHANGED) {
+                            usleep(100000);
+                            print_reject_arm(<span style="color: #98be65;">"NOT ARMING: Preflight checks failed"</span>);
+                        }
+                    }
+                }
+
+                stick_on_counter++;
+
+            } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>(arm_switch_is_button == 1 &amp;&amp; sp_man.arm_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_ON)) {
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">do not reset the counter when holding the arm button longer than needed */</span>
+                stick_on_counter = 0;
+            }
+
+            _last_sp_man_arm_switch = sp_man.arm_switch;
+
+            <span style="color: #51afef;">if</span> (arming_ret == TRANSITION_DENIED) {
+                <span style="color: #5B6268;">/*</span>
+<span style="color: #5B6268;">                 * the arming transition can be denied to a number of reasons:</span>
+<span style="color: #5B6268;">                 *  - pre-flight check failed (sensors not ok or not calibrated)</span>
+<span style="color: #5B6268;">                 *  - safety not disabled</span>
+<span style="color: #5B6268;">                 *  - system not in manual mode</span>
+<span style="color: #5B6268;">                 */</span>
+                tune_negative(<span style="color: #a9a1e1;">true</span>);
+            }
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">evaluate the main state machine according to mode switches */</span>
+            <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">first_rc_eval</span> = (_last_sp_man.timestamp == 0) &amp;&amp; (sp_man.timestamp &gt; 0);
+            <span style="color: #ECBE7B;">transition_result_t</span> <span style="color: #dcaeea;">main_res</span> = set_main_state(status, &amp;status_changed);
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">store last position lock state */</span>
+            _last_condition_global_position_valid = status_flags.condition_global_position_valid;
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">play tune on mode change only if armed, blink LED always */</span>
+            <span style="color: #51afef;">if</span> (main_res == TRANSITION_CHANGED || first_rc_eval) {
+                tune_positive(armed.armed);
+                main_state_changed = <span style="color: #a9a1e1;">true</span>;
+
+            } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (main_res == TRANSITION_DENIED) {
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">DENIED here indicates bug in the commander */</span>
+                mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"Switching to this mode is currently not possible"</span>);
+            }
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">check throttle kill switch */</span>
+            <span style="color: #51afef;">if</span> (sp_man.kill_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_ON) {
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">set lockdown flag */</span>
+                <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>armed.manual_lockdown) {
+                    mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"MANUAL KILL SWITCH ENGAGED"</span>);
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                    armed.manual_lockdown = <span style="color: #a9a1e1;">true</span>;
+                }
+
+            } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (sp_man.kill_switch == <span style="color: #a9a1e1;">manual_control_setpoint_s</span>::SWITCH_POS_OFF) {
+                <span style="color: #51afef;">if</span> (armed.manual_lockdown) {
+                    mavlink_log_emergency(&amp;mavlink_log_pub, <span style="color: #98be65;">"MANUAL KILL SWITCH OFF"</span>);
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                    armed.manual_lockdown = <span style="color: #a9a1e1;">false</span>;
+                }
+            }
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">no else case: do not change lockdown flag in unconfigured case */</span>
+
+        } <span style="color: #51afef;">else</span> {
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.rc_input_blocked &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>status.rc_signal_lost) {
+                mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"MANUAL CONTROL LOST (at t=%llums)"</span>, hrt_absolute_time() / 1000);
+                status.rc_signal_lost = <span style="color: #a9a1e1;">true</span>;
+                rc_signal_lost_timestamp = sp_man.timestamp;
+                set_health_flags(<span style="color: #a9a1e1;">subsystem_info_s</span>::SUBSYSTEM_TYPE_RCRECEIVER, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">false</span>, status);
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#45936;&#51060;&#53552; &#47553;&#53356;(&#53588;&#47112;&#47700;&#53944;&#47532;) &#52404;&#53356;</span>
+        data_link_checks(highlatencydatalink_loss_timeout, highlatencydatalink_regain_timeout, datalink_loss_timeout, datalink_regain_timeout, &amp;status_changed);
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">engine failure detection</span>
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">TODO: move out of commander</span>
+        orb_check(actuator_controls_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Check engine failure</span>
+<span style="color: #5B6268;">             * only for fixed wing for now</span>
+<span style="color: #5B6268;">             */</span>
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.circuit_breaker_engaged_enginefailure_check &amp;&amp;
+                <span style="color: #51afef; font-weight: bold;">!</span>status.is_rotary_wing &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>status.is_vtol &amp;&amp; armed.armed) {
+
+                <span style="color: #ECBE7B;">actuator_controls_s</span> <span style="color: #dcaeea;">actuator_controls</span> = {};
+                orb_copy(ORB_ID_VEHICLE_ATTITUDE_CONTROLS, actuator_controls_sub, &amp;actuator_controls);
+
+                <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">throttle</span> = actuator_controls.control[<span style="color: #a9a1e1;">actuator_controls_s</span>::INDEX_THROTTLE];
+                <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">current2throttle</span> = battery.current_a / throttle;
+
+                <span style="color: #51afef;">if</span> (((throttle &gt; ef_throttle_thres) &amp;&amp; (current2throttle &lt; ef_current2throttle_thres))
+                    || status.engine_failure) {
+
+                    <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">elapsed</span> = hrt_elapsed_time(&amp;timestamp_engine_healthy) / 1e6f;
+
+                    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">potential failure, measure time */</span>
+                    <span style="color: #51afef;">if</span> ((timestamp_engine_healthy &gt; 0) &amp;&amp; (elapsed &gt; ef_time_thres)
+                        &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>status.engine_failure) {
+
+                        status.engine_failure = <span style="color: #a9a1e1;">true</span>;
+                        status_changed = <span style="color: #a9a1e1;">true</span>;
+
+                        PX4_ERR(<span style="color: #98be65;">"Engine Failure"</span>);
+                        set_health_flags(<span style="color: #a9a1e1;">subsystem_info_s</span>::SUBSYSTEM_TYPE_MOTORCONTROL, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">true</span>, <span style="color: #a9a1e1;">false</span>, status);
+                    }
+                }
+
+            } <span style="color: #51afef;">else</span> {
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">no failure reset flag */</span>
+                timestamp_engine_healthy = hrt_absolute_time();
+
+                <span style="color: #51afef;">if</span> (status.engine_failure) {
+                    status.engine_failure = <span style="color: #a9a1e1;">false</span>;
+                    status_changed = <span style="color: #a9a1e1;">true</span>;
+                }
+            }
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Reset main state to loiter or auto-mission after takeoff is completed.</span>
+<span style="color: #5B6268;">         * Sometimes, the mission result topic is outdated and the mission is still signaled</span>
+<span style="color: #5B6268;">         * as finished even though we only just started with the takeoff. Therefore, we also</span>
+<span style="color: #5B6268;">         * check the timestamp of the mission_result topic. */</span>
+        <span style="color: #51afef;">if</span> (internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_TAKEOFF
+            &amp;&amp; (_mission_result_sub.get().timestamp &gt; internal_state.timestamp)
+            &amp;&amp; _mission_result_sub.get().finished) {
+
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">mission_available</span> = (_mission_result_sub.get().timestamp &gt; commander_boot_timestamp)
+                               &amp;&amp; (_mission_result_sub.get().instance_count &gt; 0) &amp;&amp; _mission_result_sub.get().valid;
+
+            <span style="color: #51afef;">if</span> ((takeoff_complete_act == 1) &amp;&amp; mission_available) {
+                main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_MISSION, status_flags, &amp;internal_state);
+
+            } <span style="color: #51afef;">else</span> {
+                main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LOITER, status_flags, &amp;internal_state);
+            }
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">check if we are disarmed and there is a better mode to wait in */</span>
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>armed.armed) {
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">if there is no radio control but GPS lock the user might want to fly using</span>
+<span style="color: #5B6268;">             * just a tablet. Since the RC will force its mode switch setting on connecting</span>
+<span style="color: #5B6268;">             * we can as well just wait in a hold mode which enables tablet control.</span>
+<span style="color: #5B6268;">             */</span>
+            <span style="color: #51afef;">if</span> (status.rc_signal_lost &amp;&amp; (internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_MANUAL)
+                &amp;&amp; status_flags.condition_home_position_valid) {
+
+                main_state_transition(status, <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_AUTO_LOITER, status_flags, &amp;internal_state);
+            }
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">handle commands last, as the system needs to be updated to handle them */</span>
+        orb_check(cmd_sub, &amp;updated);
+
+        <span style="color: #51afef;">if</span> (updated) {
+            <span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">vehicle_command_s</span> <span style="color: #dcaeea;">cmd</span>;
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">got command */</span>
+            orb_copy(ORB_ID(vehicle_command), cmd_sub, &amp;cmd);
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">handle it */</span>
+            <span style="color: #51afef;">if</span> (handle_command(&amp;status, cmd, &amp;armed, &amp;_home, &amp;home_pub, &amp;command_ack_pub, &amp;status_changed)) {
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+            }
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Check for failure combinations which lead to flight termination */</span>
+        <span style="color: #51afef;">if</span> (armed.armed &amp;&amp;
+            <span style="color: #51afef; font-weight: bold;">!</span>status_flags.circuit_breaker_flight_termination_disabled) {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">At this point the data link and the gps system have been checked</span>
+<span style="color: #5B6268;">             * If we are not in a manual (RC stick controlled mode)</span>
+<span style="color: #5B6268;">             * and both failed we want to terminate the flight */</span>
+            <span style="color: #51afef;">if</span> (internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_MANUAL &amp;&amp;
+                internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ACRO &amp;&amp;
+                internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_RATTITUDE &amp;&amp;
+                internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_STAB &amp;&amp;
+                internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ALTCTL &amp;&amp;
+                internal_state.main_state != <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_POSCTL &amp;&amp;
+                status.data_link_lost) {
+
+                armed.force_failsafe = <span style="color: #a9a1e1;">true</span>;
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+                <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">flight_termination_printed</span> = <span style="color: #a9a1e1;">false</span>;
+
+                <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>flight_termination_printed) {
+                    mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"DL and GPS lost: flight termination"</span>);
+                    flight_termination_printed = <span style="color: #a9a1e1;">true</span>;
+                }
+
+                <span style="color: #51afef;">if</span> (counter % (1000000 / COMMANDER_MONITORING_INTERVAL) == 0) {
+                    mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"DL and GPS lost: flight termination"</span>);
+                }
+            }
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">At this point the rc signal and the gps system have been checked</span>
+<span style="color: #5B6268;">             * If we are in manual (controlled with RC):</span>
+<span style="color: #5B6268;">             * if both failed we want to terminate the flight */</span>
+            <span style="color: #51afef;">if</span> ((internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ACRO ||
+                 internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_RATTITUDE ||
+                 internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_MANUAL ||
+                 internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_STAB ||
+                 internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_ALTCTL ||
+                 internal_state.main_state == <span style="color: #a9a1e1;">commander_state_s</span>::MAIN_STATE_POSCTL) &amp;&amp;
+                status.rc_signal_lost) {
+
+                armed.force_failsafe = <span style="color: #a9a1e1;">true</span>;
+                status_changed = <span style="color: #a9a1e1;">true</span>;
+                <span style="color: #51afef;">static</span> <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">flight_termination_printed</span> = <span style="color: #a9a1e1;">false</span>;
+
+                <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>flight_termination_printed) {
+                    warnx(<span style="color: #98be65;">"Flight termination because of RC signal loss and GPS failure"</span>);
+                    flight_termination_printed = <span style="color: #a9a1e1;">true</span>;
+                }
+
+                <span style="color: #51afef;">if</span> (counter % (1000000 / COMMANDER_MONITORING_INTERVAL) == 0) {
+                    mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"RC and GPS lost: flight termination"</span>);
+                }
+            }
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Get current timestamp */</span>
+        <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">hrt_abstime</span> <span style="color: #dcaeea;">now</span> = hrt_absolute_time();
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#54856; &#50948;&#52824; &#51088;&#46041; &#51648;&#51221;</span>
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">automatically set or update home position</span>
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>_home.manual_home) {
+            <span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">vehicle_local_position_s</span> &amp;<span style="color: #dcaeea;">local_position</span> = _local_position_sub.get();
+
+            <span style="color: #51afef;">if</span> (armed.armed) {
+                <span style="color: #51afef;">if</span> ((<span style="color: #51afef; font-weight: bold;">!</span>was_armed || (was_landed &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>land_detector.landed)) &amp;&amp;
+                    (hrt_elapsed_time(&amp;commander_boot_timestamp) &gt; INAIR_RESTART_HOLDOFF_INTERVAL)) {
+
+                    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">update home position on arming if at least 500 ms from commander start spent to avoid setting home on in-air restart */</span>
+                    set_home_position(home_pub, _home, <span style="color: #a9a1e1;">false</span>);
+                }
+
+            } <span style="color: #51afef;">else</span> {
+                <span style="color: #51afef;">if</span> (status_flags.condition_home_position_valid) {
+                    <span style="color: #51afef;">if</span> (land_detector.landed &amp;&amp; local_position.xy_valid &amp;&amp; local_position.z_valid) {
+                        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">distance from home */</span>
+                        <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">home_dist_xy</span> = -1.0f;
+                        <span style="color: #ECBE7B;">float</span> <span style="color: #dcaeea;">home_dist_z</span> = -1.0f;
+                        mavlink_wpm_distance_to_point_local(_home.x, _home.y, _home.z,
+                                            local_position.x, local_position.y, local_position.z,
+                                            &amp;home_dist_xy, &amp;home_dist_z);
+
+                        <span style="color: #51afef;">if</span> ((home_dist_xy &gt; local_position.eph * 2) || (home_dist_z &gt; local_position.epv * 2)) {
+
+                            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">update when disarmed, landed and moved away from current home position */</span>
+                            set_home_position(home_pub, _home, <span style="color: #a9a1e1;">false</span>);
+                        }
+                    }
+
+                } <span style="color: #51afef;">else</span> {
+                    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">First time home position update - but only if disarmed */</span>
+                    set_home_position(home_pub, _home, <span style="color: #a9a1e1;">false</span>);
+                }
+            }
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Set home position altitude to EKF origin height if home is not set and the EKF has a global origin.</span>
+<span style="color: #5B6268;">             * This allows home atitude to be used in the calculation of height above takeoff location when GPS</span>
+<span style="color: #5B6268;">             * use has commenced after takeoff. */</span>
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>_home.valid_alt &amp;&amp; local_position.z_global) {
+                set_home_position(home_pub, _home, <span style="color: #a9a1e1;">true</span>);
+
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">check for arming state change</span>
+        <span style="color: #51afef;">if</span> (was_armed != armed.armed) {
+            status_changed = <span style="color: #a9a1e1;">true</span>;
+
+            <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>armed.armed) { <span style="color: #5B6268;">// </span><span style="color: #5B6268;">increase the flight uuid upon disarming</span>
+                ++flight_uuid;
+                <span style="color: #5B6268;">// </span><span style="color: #5B6268;">no need for param notification: the only user is mavlink which reads the param upon request</span>
+                param_set_no_notification(_param_flight_uuid, &amp;flight_uuid);
+                last_disarmed_timestamp = hrt_absolute_time();
+            }
+        }
+
+        was_armed = armed.armed;
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#44592;&#52404; &#49345;&#53468; &#46608;&#45716; failsafe &#49345;&#53468;&#50640; &#46384;&#46972; navigation &#49345;&#53468; &#48148;&#44984;&#44592;</span>
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">now set navigation state according to failsafe and main state */</span>
+        <span style="color: #ECBE7B;">bool</span> <span style="color: #dcaeea;">nav_state_changed</span> = set_nav_state(&amp;status,
+                               &amp;armed,
+                               &amp;internal_state,
+                               &amp;mavlink_log_pub,
+                               (<span style="color: #ECBE7B;">link_loss_actions_t</span>)datalink_loss_act,
+                               _mission_result_sub.get().finished,
+                               _mission_result_sub.get().stay_in_failsafe,
+                               status_flags,
+                               land_detector.landed,
+                               (<span style="color: #ECBE7B;">link_loss_actions_t</span>)rc_loss_act,
+                               offboard_loss_act,
+                               offboard_loss_rc_act,
+                               posctl_nav_loss_act);
+
+        <span style="color: #51afef;">if</span> (status.failsafe != failsafe_old) {
+            status_changed = <span style="color: #a9a1e1;">true</span>;
+
+            <span style="color: #51afef;">if</span> (status.failsafe) {
+                mavlink_log_info(&amp;mavlink_log_pub, <span style="color: #98be65;">"Failsafe mode enabled"</span>);
+
+            } <span style="color: #51afef;">else</span> {
+                mavlink_log_info(&amp;mavlink_log_pub, <span style="color: #98be65;">"Failsafe mode disabled"</span>);
+            }
+
+            failsafe_old = status.failsafe;
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">TODO handle mode changes by commands</span>
+        <span style="color: #51afef;">if</span> (main_state_changed || nav_state_changed) {
+            status_changed = <span style="color: #a9a1e1;">true</span>;
+            main_state_changed = <span style="color: #a9a1e1;">false</span>;
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">&#44592;&#52404; &#49345;&#53468; &#52636;&#54032;(publish)</span>
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">publish states (armed, control_mode, vehicle_status, commander_state, vehicle_status_flags) at 1 Hz or immediately when changed */</span>
+        <span style="color: #51afef;">if</span> (hrt_elapsed_time(&amp;status.timestamp) &gt;= 1_s || status_changed) {
+
+            set_control_mode();
+            control_mode.timestamp = now;
+            orb_publish(ORB_ID(vehicle_control_mode), control_mode_pub, &amp;control_mode);
+
+            status.timestamp = now;
+            orb_publish(ORB_ID(vehicle_status), status_pub, &amp;status);
+
+            armed.timestamp = now;
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">set prearmed state if safety is off, or safety is not present and 5 seconds passed */</span>
+            <span style="color: #51afef;">if</span> (safety.safety_switch_available) {
+
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">safety is off, go into prearmed */</span>
+                armed.prearmed = safety.safety_off;
+
+            } <span style="color: #51afef;">else</span> {
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">safety is not present, go into prearmed</span>
+<span style="color: #5B6268;">                 * (all output drivers should be started / unlocked last in the boot process</span>
+<span style="color: #5B6268;">                 * when the rest of the system is fully initialized)</span>
+<span style="color: #5B6268;">                 */</span>
+                armed.prearmed = (hrt_elapsed_time(&amp;commander_boot_timestamp) &gt; 5_s);
+            }
+
+            orb_publish(ORB_ID(actuator_armed), armed_pub, &amp;armed);
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">publish internal state for logging purposes */</span>
+            <span style="color: #51afef;">if</span> (commander_state_pub != <span style="color: #a9a1e1;">nullptr</span>) {
+                orb_publish(ORB_ID(commander_state), commander_state_pub, &amp;internal_state);
+
+            } <span style="color: #51afef;">else</span> {
+                commander_state_pub = orb_advertise(ORB_ID(commander_state), &amp;internal_state);
+            }
+
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">publish vehicle_status_flags */</span>
+            status_flags.timestamp = hrt_absolute_time();
+
+            <span style="color: #51afef;">if</span> (vehicle_status_flags_pub != <span style="color: #a9a1e1;">nullptr</span>) {
+                orb_publish(ORB_ID(vehicle_status_flags), vehicle_status_flags_pub, &amp;status_flags);
+
+            } <span style="color: #51afef;">else</span> {
+                vehicle_status_flags_pub = orb_advertise(ORB_ID(vehicle_status_flags), &amp;status_flags);
+            }
+        }
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">arming &#51068;&#50612;&#45216;&#46468; &#49548;&#47532;&#45236;&#44256;, &#48176;&#53552;&#47532; &#44221;&#44256;&#49884; &#49548;&#47532;&#45236;&#44592;</span>
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">play arming and battery warning tunes */</span>
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>arm_tune_played &amp;&amp; armed.armed &amp;&amp; (<span style="color: #51afef; font-weight: bold;">!</span>safety.safety_switch_available || (safety.safety_switch_available
+                            &amp;&amp; safety.safety_off))) {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">play tune when armed */</span>
+            set_tune(TONE_ARMING_WARNING_TUNE);
+            arm_tune_played = <span style="color: #a9a1e1;">true</span>;
+
+        } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.usb_connected &amp;&amp;
+               (status.hil_state != <span style="color: #a9a1e1;">vehicle_status_s</span>::HIL_STATE_ON) &amp;&amp;
+               (battery.warning == <span style="color: #a9a1e1;">battery_status_s</span>::BATTERY_WARNING_CRITICAL)) {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">play tune on battery critical */</span>
+            set_tune(TONE_BATTERY_WARNING_FAST_TUNE);
+
+        } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> ((status.hil_state != <span style="color: #a9a1e1;">vehicle_status_s</span>::HIL_STATE_ON) &amp;&amp;
+               (battery.warning == <span style="color: #a9a1e1;">battery_status_s</span>::BATTERY_WARNING_LOW)) {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">play tune on battery warning */</span>
+            set_tune(TONE_BATTERY_WARNING_SLOW_TUNE);
+
+        } <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> (status.failsafe) {
+            tune_failsafe(<span style="color: #a9a1e1;">true</span>);
+
+        } <span style="color: #51afef;">else</span> {
+            set_tune(TONE_STOP_TUNE);
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">reset arm_tune_played when disarmed */</span>
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>armed.armed || (safety.safety_switch_available &amp;&amp; <span style="color: #51afef; font-weight: bold;">!</span>safety.safety_off)) {
+
+            <span style="color: #5B6268;">//</span><span style="color: #5B6268;">Notify the user that it is safe to approach the vehicle</span>
+            <span style="color: #51afef;">if</span> (arm_tune_played) {
+                tune_neutral(<span style="color: #a9a1e1;">true</span>);
+            }
+
+            arm_tune_played = <span style="color: #a9a1e1;">false</span>;
+        }
+
+        <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">play sensor failure tunes if we already waited for hotplug sensors to come up and failed */</span>
+        status_flags.condition_system_hotplug_timeout = (hrt_elapsed_time(&amp;commander_boot_timestamp) &gt; HOTPLUG_SENS_TIMEOUT);
+
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>sensor_fail_tune_played &amp;&amp; (<span style="color: #51afef; font-weight: bold;">!</span>status_flags.condition_system_sensors_initialized
+                         &amp;&amp; status_flags.condition_system_hotplug_timeout)) {
+            set_tune_override(TONE_GPS_WARNING_TUNE);
+            sensor_fail_tune_played = <span style="color: #a9a1e1;">true</span>;
+            status_changed = <span style="color: #a9a1e1;">true</span>;
+        }
+
+        counter++;
+
+        <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">blink_state</span> = blink_msg_state();
+
+        <span style="color: #51afef;">if</span> (blink_state &gt; 0) {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">blinking LED message, don't touch LEDs */</span>
+            <span style="color: #51afef;">if</span> (blink_state == 2) {
+                <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">blinking LED message completed, restore normal state */</span>
+                control_status_leds(&amp;status, &amp;armed, <span style="color: #a9a1e1;">true</span>, &amp;battery, &amp;cpuload);
+            }
+
+        } <span style="color: #51afef;">else</span> {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">normal state */</span>
+            control_status_leds(&amp;status, &amp;armed, status_changed, &amp;battery, &amp;cpuload);
+        }
+
+        status_changed = <span style="color: #a9a1e1;">false</span>;
+
+        <span style="color: #51afef;">if</span> (<span style="color: #51afef; font-weight: bold;">!</span>armed.armed) {
+            <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">Reset the flag if disarmed. */</span>
+            have_taken_off_since_arming = <span style="color: #a9a1e1;">false</span>;
+        }
+
+        arm_auth_update(now, params_updated || param_init_forced);
+
+        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">Handle shutdown request from emergency battery action</span>
+        <span style="color: #51afef;">if</span>(<span style="color: #51afef; font-weight: bold;">!</span>armed.armed &amp;&amp; dangerous_battery_level_requests_poweroff){
+            mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"DANGEROUSLY LOW BATTERY, SHUT SYSTEM DOWN"</span>);
+            usleep(200000);
+            <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">ret_val</span> = px4_shutdown_request(<span style="color: #a9a1e1;">false</span>, <span style="color: #a9a1e1;">false</span>);
+
+            <span style="color: #51afef;">if</span> (ret_val) {
+                mavlink_log_critical(&amp;mavlink_log_pub, <span style="color: #98be65;">"SYSTEM DOES NOT SUPPORT SHUTDOWN"</span>);
+                dangerous_battery_level_requests_poweroff = <span style="color: #a9a1e1;">false</span>;
+
+            } <span style="color: #51afef;">else</span> {
+                <span style="color: #51afef;">while</span> (1) { usleep(1); }
+            }
+        }
+
+        usleep(COMMANDER_MONITORING_INTERVAL);
+    }
+
+    thread_should_exit = <span style="color: #a9a1e1;">true</span>;
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">wait for threads to complete */</span>
+    <span style="color: #ECBE7B;">int</span> <span style="color: #dcaeea;">ret</span> = pthread_join(commander_low_prio_thread, <span style="color: #a9a1e1;">nullptr</span>);
+
+    <span style="color: #51afef;">if</span> (ret) {
+        warn(<span style="color: #98be65;">"join failed: %d"</span>, ret);
+    }
+
+    rgbled_set_color_and_mode(<span style="color: #a9a1e1;">led_control_s</span>::COLOR_WHITE, <span style="color: #a9a1e1;">led_control_s</span>::MODE_OFF);
+
+    <span style="color: #5B6268;">/* </span><span style="color: #5B6268;">close fds */</span>
+    led_deinit();
+    buzzer_deinit();
+    px4_close(sp_man_sub);
+    px4_close(offboard_control_mode_sub);
+    px4_close(safety_sub);
+    px4_close(cmd_sub);
+    px4_close(subsys_sub);
+    px4_close(param_changed_sub);
+    px4_close(battery_sub);
+    px4_close(land_detector_sub);
+    px4_close(estimator_status_sub);
+
+    thread_running = <span style="color: #a9a1e1;">false</span>;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org7c529aa" class="outline-2">
+<h2 id="org7c529aa"><span class="section-number-2">2</span> 한줄 읽기</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org136d27a" class="outline-3">
+<h3 id="org136d27a"><span class="section-number-3">2.1</span> <span class="timestamp-wrapper"><span class="timestamp">&lt;2018-07-31 Tue&gt;</span></span></h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+왜 <code>stick_on_counter</code> &lt; <code>rc_arm_hyst</code> ?
+</p>
+
+<pre class="example">
+
+commit 94c8371ffe8b3118bb03d2874669bfbed93da747
+Author: Matthias Grob &lt;maetugr@gmail.com&gt;
+Date:   Thu Dec 1 17:59:00 2016 +0100
+
+    Arm button fix: toggle arming state only once per arm button press
+
+diff --git a/src/modules/commander/commander.cpp b/src/modules/commander/commander.cpp
+--- a/src/modules/commander/commander.cpp
++++ b/src/modules/commander/commander.cpp
+@@ -2565,10 +2565,10 @@
+                        if ((status.is_rotary_wing || (!status.is_rotary_wing &amp;&amp; land_detector.landed)) &amp;&amp; status.rc_input_mode != vehicle_status_s::RC_IN_MODE
+_OFF &amp;&amp;
+                            (status.arming_state == vehicle_status_s::ARMING_STATE_ARMED || status.arming_state == vehicle_status_s::ARMING_STATE_ARMED_ERROR)
+&amp;&amp;
+                            (internal_state.main_state == commander_state_s::MAIN_STATE_MANUAL ||
+                                internal_state.main_state == commander_state_s::MAIN_STATE_ACRO ||
+                                internal_state.main_state == commander_state_s::MAIN_STATE_STAB ||
+                                internal_state.main_state == commander_state_s::MAIN_STATE_RATTITUDE ||
+                                land_detector.landed) &amp;&amp;
+                            ((sp_man.r &lt; -STICK_ON_OFF_LIMIT &amp;&amp; sp_man.z &lt; 0.1f) || (arm_switch_is_button == 1 &amp;&amp; sp_man.arm_switch == manual_control_setpoint_
+s::SWITCH_POS_ON)) ) {
+
+-                               if (stick_off_counter &gt; rc_arm_hyst) {
++                               if (stick_off_counter == rc_arm_hyst &amp;&amp; stick_on_counter &lt; rc_arm_hyst) {
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: 박동희</p>
+<p class="date">Created: 2019-01-31 Thu 12:24</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+o* graphql 서버 구현
+
+<2018-08-14 화>
+
+dronemap-cloud directory 구조
+
+https://dev.to/keatz55/what-are-some-file-structure-best-practices-for-apollo-server-2ii5
+
+#+BEGIN_SRC
+ app.js
+ api/
+ models/
+ schema.js
+ api/
+    mutation/
+    query/
+    resolver/
+    scalar/
+    subscription/
+    types
+#+END_SRC
+
+* Datasource
+using rest api
+
+https://glitch.com/edit/#!/as2-subscriptions-datasources?path=datasource.js:1:0
+
+* schema
+
+https://github.com/withspectrum/spectrum/blob/alpha/api/schema.js
+
+* subscription
+
+apollo-server 2 subscription
+
+ - https://github.com/apollographql/graphql-subscriptions/blob/master/README.md
+ - https://github.com/daniele-zurico/apollo2-subscriptions-how-to
+ - https://github.com/rwieruch/fullstack-apollo-subscription-example/ client server 구현
+ - https://github.com/apollographql/GitHunt-React/blob/master/process/devlog.md fetchMore 사용. passport 인증, sqlite, 개발일지 좋네.
+
+* auth
+
+ - TODO: auth0 spike solution  https://fullstack-developer.academy/using-next-js-and-auth0/
+ - https://github.com/zeit/next.js/blob/master/examples/with-apollo-auth/components/SigninBox.js
+ - https://github.com/howtographql/react-apollo/blob/9d02109e090e1c7cf7c9ba7bfabf9897767b7674/server/src/resolvers/Mutation.js
+   signup
+ - https://www.apollographql.com/docs/react/recipes/authentication.html
+ - https://jwt.io/
+ - https://blog.pusher.com/handling-authentication-in-graphql-jwt/
+
+next.js localStorage
+https://medium.com/@valentijnnieman_79984/apollo-next-js-authentication-and-csrf-protection-4d897b9a703f
+https://www.youtube.com/watch?v=Jz-zJ7lA4io
+
+* apollo client 2.0
+
+단지 apollo-client 2.0 이용
+ - https://github.com/zeit/next.js/blob/master/examples/with-apollo/components/PostList.js
+
+* 잠깐스크랩
+
+ - https://github.com/apollographql/GitHunt-React/blob/master/src/client.js
+ - https://github.com/Pau1fitz/react-spotify/search?utf8=%E2%9C%93&q=fetchPlaylistSongs&type=
+ - https://github.com/zeit/next.js/blob/54e152b11bedea0c88e1799d27ed815160b7b040/examples/with-apollo-auth/pages/create-account.js
+ - https://github.com/howtographql/react-apollo/blob/master/src/index.js
+
+* next.js cms
+https://github.com/valentijnnieman/ncms
+* 참고
+ - https://github.com/vicros0723/redux-apollo-container
+ - graphql client insomia

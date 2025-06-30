@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-01-09 Wed 15:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Commander 코드 분석</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="박동희 Donghee Park" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/javascript" src="../js/readtheorg.js"></script>
+<script type="text/javascript" src="https://dh8.kr/docs/js/readtheorg.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/gongzhitaao_org.css"/>
+<link rel="stylesheet" type="text/css" href="https://dh8.kr/docs/css/gongzhitaao_org.css"/>
+<link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css"/>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+<style type="text/css">img {  width: auto ;  max-width: 100% ;  height: auto ;} </style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Commander 코드 분석
+<br />
+<span class="subtitle">오픈 소스 PX4 를 지원하는 비행제어장치 설계 및 시스템 분석(EA20180971)</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6ab43d5">1. 궁금점</a></li>
+<li><a href="#orgf2b4955">2. Guidance, Navigation, Control</a></li>
+<li><a href="#orgca559fa">3. PX4 모듈 구조</a></li>
+<li><a href="#orga25a17f">4. 제어기</a></li>
+<li><a href="#org54aa7d4">5. Position controller for Multi Copter <code>mc_pos_control</code></a>
+<ul>
+<li><a href="#orgc449b92">5.1. 위치 제어기 컨트롤러</a>
+<ul>
+<li><a href="#org1f57e5d">5.1.1. PX4 전체 제어기</a></li>
+<li><a href="#org16f58f6">5.1.2. 위치 제어기</a></li>
+<li><a href="#orge3db112">5.1.3. 제어기 토픽의 흐름</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgf84ded5">6. 용어 정리</a></li>
+<li><a href="#org7b1d17f">7. rotation</a>
+<ul>
+<li><a href="#org7db04be">7.1. Euler angle</a></li>
+<li><a href="#org34ddb68">7.2. Quaternion</a></li>
+<li><a href="#orge00441c">7.3. 내적</a></li>
+<li><a href="#org22a628c">7.4. 외적</a></li>
+<li><a href="#orgb6a61a2">7.5. <code>cross_sphere_line</code> 알고리즘</a></li>
+</ul>
+</li>
+<li><a href="#org7329f1a">8. 코드 설명</a></li>
+<li><a href="#org4ea0d61">9. 참고</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6ab43d5" class="outline-2">
+<h2 id="org6ab43d5"><span class="section-number-2">1</span> 궁금점</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2019-01-09 Wed&gt;</span></span>
+</p>
+<ul class="org-ul">
+<li>이동현: 데이터 흐름도, SW구조, 태스크 내부 구조. 고정익기 설정하는 방법. 내부적으로 돌아가는지</li>
+<li>성창현: sw구조, 각 모듈별 입력 및 출력. 고정익, 드론 상관없이 여러가지 모드 스위칭 될때 어떤 식으로 구조가 들어가는지
+수동입력 데이터, 자동입력 데이터 구조, 각 모드별 제어 알고리즘 블록 구조. 비행 데이터 저장할때 어떤걸 저장하는지!
+액츄레이터 값을 저장하는것 구조를 할 수 있는지(?)</li>
+<li>김호준: 인터페이스, can, companion pc. 어떻게 구현하는지. 제어 변경. state estimation. 전환.</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgf2b4955" class="outline-2">
+<h2 id="orgf2b4955"><span class="section-number-2">2</span> Guidance, Navigation, Control</h2>
+<div class="outline-text-2" id="text-2">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/9AwX0Sf.png" alt="9AwX0Sf.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgca559fa" class="outline-2">
+<h2 id="orgca559fa"><span class="section-number-2">3</span> PX4 모듈 구조</h2>
+<div class="outline-text-2" id="text-3">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/48VZMUP.png" alt="48VZMUP.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga25a17f" class="outline-2">
+<h2 id="orga25a17f"><span class="section-number-2">4</span> 제어기</h2>
+<div class="outline-text-2" id="text-4">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/Yl5puG7.png" alt="Yl5puG7.png" />
+</p>
+</div>
+
+<p>
+제어기 성능 지표
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/QyBcIUQ.png" alt="QyBcIUQ.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org54aa7d4" class="outline-2">
+<h2 id="org54aa7d4"><span class="section-number-2">5</span> Position controller for Multi Copter <code>mc_pos_control</code></h2>
+<div class="outline-text-2" id="text-5">
+<p>
+PX4 위치 제어기
+</p>
+
+<p>
+자동비행: navigator로 부터 위치를(position triplet)를 입력 받아서 자세(attitude setpoint)를 출력 한다.
+</p>
+
+<p>
+관련 코드:
+</p>
+<ul class="org-ul">
+<li><a href="https://github.com/PX4/Firmware/tree/master/src/modules/mc_pos_control">https://github.com/PX4/Firmware/tree/master/src/modules/mc_pos_control</a></li>
+<li><a href="https://github.com/PX4/Firmware/blob/master/src/modules/mc_pos_control/PositionControl.cpp">https://github.com/PX4/Firmware/blob/master/src/modules/mc_pos_control/PositionControl.cpp</a></li>
+</ul>
+</div>
+
+<div id="outline-container-orgc449b92" class="outline-3">
+<h3 id="orgc449b92"><span class="section-number-3">5.1</span> 위치 제어기 컨트롤러</h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="outline-container-org1f57e5d" class="outline-4">
+<h4 id="org1f57e5d"><span class="section-number-4">5.1.1</span> PX4 전체 제어기</h4>
+<div class="outline-text-4" id="text-5-1-1">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/9rmldOm.png" alt="9rmldOm.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org16f58f6" class="outline-4">
+<h4 id="org16f58f6"><span class="section-number-4">5.1.2</span> 위치 제어기</h4>
+<div class="outline-text-4" id="text-5-1-2">
+
+<div class="figure">
+<p><img src="https://dev.px4.io/assets/diagrams/px4_mc_position_controller_diagram.png" alt="px4_mc_position_controller_diagram.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orge3db112" class="outline-4">
+<h4 id="orge3db112"><span class="section-number-4">5.1.3</span> 제어기 토픽의 흐름</h4>
+<div class="outline-text-4" id="text-5-1-3">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/ZfdwVKg.png" alt="ZfdwVKg.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf84ded5" class="outline-2">
+<h2 id="orgf84ded5"><span class="section-number-2">6</span> 용어 정리</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li>Position Control: 위치(local x,y,z, yaw)를 입력 받아서 기체를 제어.</li>
+<li>position triplet: previous, currrent, next 3개 위치.</li>
+<li>setpoint: 기체가 이동하고자 하는 위치. 타겟위치.</li>
+<li>smooth takeoff: takeoff시 와류 때문에 발생하는 기체 불안정함 때문에 takeoff 스피드를 조정.</li>
+<li>flight task: 서브 포지션 모드에따라 setpoint를 생성하는 테스크. sub position 모드의 종류는 다음과 같다. Auto, AutoFollowMe, AutoLine, AutoMapper, Failsafe, Manual, ManualAltitude, ManualAltitudeSmooth, ManualPosition, ManualPositionSmooth, ManualStabilized, Offboard, Orbit, Sport</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7b1d17f" class="outline-2">
+<h2 id="org7b1d17f"><span class="section-number-2">7</span> rotation</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<a href="https://www.andre-gaschler.com/rotationconverter/">https://www.andre-gaschler.com/rotationconverter/</a>
+</p>
+</div>
+
+<div id="outline-container-org7db04be" class="outline-3">
+<h3 id="org7db04be"><span class="section-number-3">7.1</span> Euler angle</h3>
+<div class="outline-text-3" id="text-7-1">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/1XxziOF.png" alt="1XxziOF.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/XdnYWx2.png" alt="XdnYWx2.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org34ddb68" class="outline-3">
+<h3 id="org34ddb68"><span class="section-number-3">7.2</span> Quaternion</h3>
+</div>
+
+<div id="outline-container-orge00441c" class="outline-3">
+<h3 id="orge00441c"><span class="section-number-3">7.3</span> 내적</h3>
+</div>
+
+<div id="outline-container-org22a628c" class="outline-3">
+<h3 id="org22a628c"><span class="section-number-3">7.4</span> 외적</h3>
+</div>
+
+<div id="outline-container-orgb6a61a2" class="outline-3">
+<h3 id="orgb6a61a2"><span class="section-number-3">7.5</span> <code>cross_sphere_line</code> 알고리즘</h3>
+</div>
+</div>
+
+<div id="outline-container-org7329f1a" class="outline-2">
+<h2 id="org7329f1a"><span class="section-number-2">8</span> 코드 설명</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+MulticopterPositionControl 클래스
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #a9a1e1;">&#54632;&#49688;&#47749;</span>: <span style="color: #ECBE7B;">void</span> <span style="color: #c678dd;">MulticopterPositionControl</span>:MulticopterPositionControl();
+<span style="color: #a9a1e1;">&#44592;&#45733;</span>: <span style="color: #ECBE7B;">MulticopterPositionControl</span> <span style="color: #c678dd;">&#49373;&#49457;&#51088;</span>. PositionControl &#53364;&#47000;&#49828; &#52488;&#44592;&#54868;. &#54028;&#46972;&#48120;&#53552; &#50629;&#45936;&#51060;&#53944;
+Caller:
+&#47588;&#44060;&#48320;&#49688;:
+&#49548;&#49828;
+
+----
+
+&#54632;&#49688;&#47749;: <span style="color: #ECBE7B;">void</span> MulticopterPositionControl:run();
+<span style="color: #a9a1e1;">&#44592;&#45733;</span>: &#47680;&#54000;&#53093;&#45908; &#54252;&#51648;&#49496; &#52968;&#53944;&#47204;&#51032; <span style="color: #ECBE7B;">&#47700;&#51064;</span> <span style="color: #dcaeea;">&#47336;&#54392;</span>, <span style="color: #dcaeea;">vehicle_local_position</span> &#53664;&#54589;&#50640; &#46041;&#44592;&#54868;(250hz) &#46104;&#50612; <span style="color: #ECBE7B;">&#49892;&#54665;</span>
+<span style="color: #c678dd;">Caller</span>:
+&#47588;&#44060;&#48320;&#49688;:
+&#49548;&#49828;
+
+&#51452;&#50836; &#49892;&#54665; &#49692;&#49436;
+ 1. &#53664;&#54589; &#44396;&#46021;
+ 2. 250hz &#51452;&#44592;&#47196; &#47336;&#54532;&#49892;&#54665;
+  3. &#44396;&#46021; &#45936;&#51060;&#53552; &#50629;&#45936;&#51060;&#53944;
+  4. flight task &#49884;&#51089;
+  5. flight task &#47196;&#48512;&#53552; setpoint &#48155;&#51020;
+  6. &#51109;&#50528;&#47932; &#54924;&#54588;&#50857; waypoints&#47484; &#50629;&#45936;&#51060;&#53944;(&#54788;&#51116; <span style="color: #ECBE7B;">&#44592;&#52404;</span> <span style="color: #dcaeea;">&#49345;&#53468;&#50752;</span>, <span style="color: #ECBE7B;">setpoint&#47484;</span> <span style="color: #dcaeea;">&#44592;&#48152;&#51004;&#47196;</span>)
+  7. smooth takeoff &#49892;&#49884; (0.3m&#51204;&#44620;&#51648; smooth takeoff)
+  8. &#52265;&#47449; &#49884; throttle &#51460;&#51076;. (&#52265;&#47449; <span style="color: #ECBE7B;">&#51456;&#48708;</span>)
+  9. &#54252;&#51648;&#49496; &#52968;&#53944;&#47204;&#47084; &#50629;&#45936;&#51060;&#53944;
+  10. &#51109;&#50528;&#47932; &#54924;&#54588;&#50857; waypoints &#49892;&#54665;&#54616;&#50668; setpoint &#51312;&#51221;.
+  11. &#54252;&#51648;&#49496; &#52968;&#53944;&#47204;&#47084;&#51032; &#44208;&#44284;&#47196; Thrust&#50752; yaw Setpoint &#52636;&#47141;
+  12. &#51088;&#49464; &#52968;&#53944;&#47204;&#47084;&#50640; attitude&#50752; yaw &#44050; publish
+
+</pre>
+</div>
+
+
+<p>
+PositionControl 클래스
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++">----
+&#54632;&#49688;&#47749;: <span style="color: #ECBE7B;">void</span> PositionControl:updateState(<span style="color: #51afef;">const</span> <span style="color: #ECBE7B;">PositionControlStates</span> &amp;<span style="color: #dcaeea;">states</span>);
+<span style="color: #a9a1e1;">&#44592;&#45733;</span>: &#54788;&#51116; &#44592;&#52404;&#51032; <span style="color: #ECBE7B;">&#49345;&#53468;</span> <span style="color: #c678dd;">&#50629;&#45936;&#51060;&#53944;</span>.
+Caller:
+&#47588;&#44060;&#48320;&#49688;:  states &#44592;&#52404;&#51032; &#54788;&#51116; &#49345;&#53468;(position, velocity, acceleration, yaw)
+&#49548;&#49828;
+----
+
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4ea0d61" class="outline-2">
+<h2 id="org4ea0d61"><span class="section-number-2">9</span> 참고</h2>
+<div class="outline-text-2" id="text-9">
+<ul class="org-ul">
+<li><code>mc_pos_control</code> <a href="https://blog.csdn.net/weixin_37501173/article/details/80035051">https://blog.csdn.net/weixin_37501173/article/details/80035051</a></li>
+<li><code>mc_att_control</code> <a href="https://blog.csdn.net/qq_21842557/article/details/51439171">https://blog.csdn.net/qq_21842557/article/details/51439171</a></li>
+</ul>
+<ul class="org-ul">
+<li>PX4 Flight Static Structure(PX4 Firmware v1.8): <a href="https://docs.google.com/drawings/d/1oJ6x8HaqiRiW7cl-WFoC24Gn1lOkpjIPyGak5cfryPw/edit">https://docs.google.com/drawings/d/1oJ6x8HaqiRiW7cl-WFoC24Gn1lOkpjIPyGak5cfryPw/edit</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: 박동희 Donghee Park</p>
+<p class="date">Created: 2019-01-09 Wed 15:37</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

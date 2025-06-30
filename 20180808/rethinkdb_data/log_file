@@ -1,0 +1,46 @@
+2018-08-08T15:04:37.706304749 0.023768s notice: Recursively removing directory /home/donghee/Dropbox/dev/CodingLife/20180808/rethinkdb_data/tmp
+2018-08-08T15:04:37.710012819 0.027475s notice: Initializing directory /home/donghee/Dropbox/dev/CodingLife/20180808/rethinkdb_data
+2018-08-08T15:04:37.710104471 0.027566s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/donghee/Dropbox/dev/CodingLife/20180808/rethinkdb_data' did not already exist or is empty.)
+2018-08-08T15:04:37.710149328 0.027611s notice: Running rethinkdb 2.3.6~0xenial (GCC 5.3.1)...
+2018-08-08T15:04:37.712511012 0.029975s notice: Running on Linux 4.15.0-29-generic x86_64
+2018-08-08T15:04:37.712562506 0.030024s notice: Loading data from directory /home/donghee/Dropbox/dev/CodingLife/20180808/rethinkdb_data
+2018-08-08T15:04:37.766584319 0.084047s info: Automatically using cache size of 1677 MB
+2018-08-08T15:04:37.767000857 0.084463s notice: Listening for intracluster connections on port 29015
+2018-08-08T15:04:37.767905991 0.085368s notice: Listening for client driver connections on port 28015
+2018-08-08T15:04:37.768158284 0.085620s notice: Listening for administrative HTTP connections on port 8080
+2018-08-08T15:04:37.768161929 0.085624s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-08T15:04:37.768167734 0.085629s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-08T15:04:37.768171269 0.085633s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-08T15:04:37.768176079 0.085638s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-08-08T15:04:37.768181376 0.085643s notice: Server ready, "bari_osp" 49f360be-99f4-4702-8d6d-796be40b531f
+2018-08-08T15:04:53.245839293 15.563301s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2018-08-08T15:04:53.245916859 15.563379s notice: Shutting down client connections...
+2018-08-08T15:04:53.246666324 15.564128s notice: All client connections closed.
+2018-08-08T15:04:53.246671581 15.564133s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2018-08-08T15:04:53.247096001 15.564558s notice: Storage engine shut down.
+2018-08-08T15:05:12.439941317 0.022504s notice: Running rethinkdb 2.3.6~0xenial (GCC 5.3.1)...
+2018-08-08T15:05:12.441655705 0.024220s notice: Running on Linux 4.15.0-29-generic x86_64
+2018-08-08T15:05:12.441704732 0.024267s notice: Loading data from directory /home/donghee/Dropbox/dev/CodingLife/20180808/rethinkdb_data
+2018-08-08T15:05:12.463221772 0.045784s info: Automatically using cache size of 1673 MB
+2018-08-08T15:05:12.464499783 0.047062s notice: Listening for intracluster connections on port 29015
+2018-08-08T15:05:12.467252827 0.049815s notice: Listening for client driver connections on port 28015
+2018-08-08T15:05:12.467403510 0.049966s notice: Listening for administrative HTTP connections on port 8080
+2018-08-08T15:05:12.467407149 0.049969s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-08T15:05:12.467413741 0.049976s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-08T15:05:12.467417325 0.049979s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2018-08-08T15:05:12.467423152 0.049985s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2018-08-08T15:05:12.467429405 0.049991s notice: Server ready, "bari_osp" 49f360be-99f4-4702-8d6d-796be40b531f
+2018-08-08T15:10:50.168209811 337.750772s info: Table 343f249f-28d0-43cd-beef-2b276618064f: Starting a new Raft election for term 1.
+2018-08-08T15:10:50.168390649 337.750953s info: Table 343f249f-28d0-43cd-beef-2b276618064f: Added replica on this server.
+2018-08-08T15:10:50.183633385 337.766196s info: Table 343f249f-28d0-43cd-beef-2b276618064f: This server is Raft leader for term 1. Latest log index is 0.
+2018-08-09T02:20:16.338949661 40503.921512s info: Table a7298dca-a16a-46c3-ab92-4f1c982d3730: Starting a new Raft election for term 1.
+2018-08-09T02:20:16.347991326 40503.930553s info: Table a7298dca-a16a-46c3-ab92-4f1c982d3730: Added replica on this server.
+2018-08-09T02:20:16.348277085 40503.930839s info: Table a5e41073-bf67-4efe-8047-184dd799af91: Starting a new Raft election for term 1.
+2018-08-09T02:20:16.348591256 40503.931153s info: Table a5e41073-bf67-4efe-8047-184dd799af91: Added replica on this server.
+2018-08-09T02:20:16.358473125 40503.941035s info: Table a7298dca-a16a-46c3-ab92-4f1c982d3730: This server is Raft leader for term 1. Latest log index is 0.
+2018-08-09T02:20:16.370562812 40503.953125s info: Table a5e41073-bf67-4efe-8047-184dd799af91: This server is Raft leader for term 1. Latest log index is 0.
+2018-08-09T02:22:04.399048585 40611.981611s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2018-08-09T02:22:04.402450721 40611.985013s notice: Shutting down client connections...
+2018-08-09T02:22:04.402561074 40611.985123s notice: All client connections closed.
+2018-08-09T02:22:04.402564544 40611.985127s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2018-08-09T02:22:04.409415559 40611.991978s notice: Storage engine shut down.
